@@ -1,0 +1,529 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────
+
+enum EmploymentStage {
+  job_search
+  recruitment
+  onboarding
+  active_employment
+  change_instability
+  return_to_work
+  retention_risk
+}
+
+enum WorkplaceType {
+  public_sector
+  private_company
+  ngo
+  education
+  customer_facing
+  security_sensitive
+  small_business
+}
+
+enum DisclosureLevel {
+  none
+  functional
+  partial_contextual
+  full_voluntary
+}
+
+enum ConsentState {
+  pending
+  granted
+  withdrawn
+}
+
+enum InterviewState {
+  onboarding
+  active
+  paused
+  completed
+  follow_up
+}
+
+enum MessageDirection {
+  inbound
+  outbound
+}
+
+enum MessageType {
+  text
+  voice
+  image
+  quick_reply
+}
+
+enum KnowledgeUnitType {
+  barrier_definition
+  signal_indicator
+  context_modifier
+  trigger
+  workplace_amplifier
+  workplace_manifestation
+  recommendation_family
+  recommendation_template
+  implementation_action
+  communication_framing
+  boundary_caution
+  sales_signal
+}
+
+enum KnowledgeSourceRole {
+  classification
+  interpretation
+  applied_pattern
+  implementation
+  communication
+}
+
+enum KnowledgePromotionState {
+  case_only
+  candidate_pattern
+  validated
+  rule_update_candidate
+}
+
+enum ChangeEventType {
+  hired
+  new_role
+  promotion
+  new_boss
+  team_change
+  shift_change
+  work_mode_change
+  performance_issue
+  leave_return
+  job_ended
+  moved_city
+  moved_abroad
+  commute_change
+}
+
+enum RevalidationLevel {
+  light_refresh
+  partial
+  full_reassessment
+}
+
+enum ReportType {
+  user
+  employer
+  org_signal
+}
+
+enum ReleaseState {
+  draft_generated
+  admin_review_required
+  admin_edited_approved
+  user_delivery_ready
+  delivered_to_user
+  user_viewed
+  user_requested_correction
+  user_approved_employer_sharing
+  employer_delivery_ready
+  sent_to_employer
+  employer_viewed
+  withheld_cancelled
+  archived_replaced
+}
+
+enum DeliveryChannel {
+  whatsapp
+  secure_link
+  email
+  admin_manual
+}
+
+enum RecommendationLifecycle {
+  draft
+  active
+  monitored
+  experimental
+  deprecated
+  archived
+}
+
+enum TimeHorizon {
+  immediate
+  near_term
+  longer_term
+}
+
+enum ActorType {
+  user_self
+  user_communication
+  manager
+  hr_organizational
+  external_specialist
+}
+
+enum ConfidenceLevel {
+  high
+  medium
+  low
+  escalate
+}
+
+enum Audience {
+  user
+  employer
+  org
+}
+
+enum LeadHandoffState {
+  detected
+  lead_created
+  exported
+  confirmed
+}
+
+enum ApprovalAction {
+  approve
+  reject
+  edit
+}
+
+enum RuleType {
+  global
+  knowledge
+  logic
+  campaign
+  case_level
+}
+
+enum SupportState {
+  stable
+  monitoring
+  distress_detected
+  escalated
+}
+
+enum GapType {
+  knowledge
+  logic_gap
+  rule
+  workflow_interface
+}
+
+// ─── User & Profile ──────────────────────────────────────────────────
+
+model User {
+  id           String       @id @default(cuid())
+  phone        String?      @unique
+  name         String?
+  consentState ConsentState @default(pending)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  profile                UserProfile?
+  interviewSessions      InterviewSession[]
+  barriers               Barrier[]
+  triggers               Trigger[]
+  workplaceAmplifiers    WorkplaceAmplifier[]
+  changeEvents           ChangeEvent[]
+  renderedRecommendations RenderedRecommendation[]
+  reports                ReportObject[]
+  leads                  LeadObject[]
+}
+
+model UserProfile {
+  id                          String           @id @default(cuid())
+  userId                      String           @unique
+  user                        User             @relation(fields: [userId], references: [id])
+  employmentStage             EmploymentStage?
+  workplaceType               WorkplaceType?
+  jobTitle                    String?
+  disclosureLevel             DisclosureLevel  @default(none)
+  supportState                SupportState     @default(stable)
+  knowledgeContributionStatus String?
+  updatedAt                   DateTime         @updatedAt
+}
+
+// ─── Interview ───────────────────────────────────────────────────────
+
+model InterviewSession {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  state       InterviewState @default(onboarding)
+  startedAt   DateTime       @default(now())
+  pausedAt    DateTime?
+  completedAt DateTime?
+  updatedAt   DateTime       @updatedAt
+
+  messages           Message[]
+  barriers           Barrier[]
+  triggers           Trigger[]
+  workplaceAmplifiers WorkplaceAmplifier[]
+}
+
+model Message {
+  id          String           @id @default(cuid())
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id])
+  direction   MessageDirection
+  type        MessageType
+  content     String
+  questionId  String?
+  processedAt DateTime?
+  createdAt   DateTime         @default(now())
+
+  normalizedSignals NormalizedSignal[]
+}
+
+model NormalizedSignal {
+  id              String            @id @default(cuid())
+  messageId       String
+  message         Message           @relation(fields: [messageId], references: [id])
+  signalType      KnowledgeUnitType
+  rawValue        String
+  normalizedValue String
+  confidence      Float
+  createdAt       DateTime          @default(now())
+
+  barriers            Barrier[]
+  triggers            Trigger[]
+  workplaceAmplifiers WorkplaceAmplifier[]
+}
+
+// ─── Barriers & Context ──────────────────────────────────────────────
+
+model Barrier {
+  id              String           @id @default(cuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id])
+  sessionId       String
+  session         InterviewSession @relation(fields: [sessionId], references: [id])
+  signalId        String?
+  signal          NormalizedSignal? @relation(fields: [signalId], references: [id])
+  category        String
+  severity        Float?
+  employmentStage EmploymentStage?
+  confidence      ConfidenceLevel  @default(medium)
+  createdAt       DateTime         @default(now())
+}
+
+model Trigger {
+  id                 String           @id @default(cuid())
+  userId             String
+  user               User             @relation(fields: [userId], references: [id])
+  sessionId          String
+  session            InterviewSession @relation(fields: [sessionId], references: [id])
+  signalId           String?
+  signal             NormalizedSignal? @relation(fields: [signalId], references: [id])
+  category           String
+  contextDescription String?
+  confidence         ConfidenceLevel  @default(medium)
+  createdAt          DateTime         @default(now())
+}
+
+model WorkplaceAmplifier {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  sessionId   String
+  session     InterviewSession @relation(fields: [sessionId], references: [id])
+  signalId    String?
+  signal      NormalizedSignal? @relation(fields: [signalId], references: [id])
+  category    String
+  description String?
+  confidence  ConfidenceLevel  @default(medium)
+  createdAt   DateTime         @default(now())
+}
+
+model ChangeEvent {
+  id                String            @id @default(cuid())
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  eventType         ChangeEventType
+  description       String?
+  detectedAt        DateTime          @default(now())
+  revalidationLevel RevalidationLevel @default(light_refresh)
+}
+
+// ─── Knowledge Base ──────────────────────────────────────────────────
+
+model KnowledgeSource {
+  id          String              @id @default(cuid())
+  name        String
+  role        KnowledgeSourceRole
+  description String?
+  createdAt   DateTime            @default(now())
+
+  items KnowledgeItem[]
+}
+
+model KnowledgeItem {
+  id             String                  @id @default(cuid())
+  type           KnowledgeUnitType
+  contentHe      String
+  contentEn      String?
+  sourceId       String?
+  source         KnowledgeSource?        @relation(fields: [sourceId], references: [id])
+  promotionState KnowledgePromotionState @default(case_only)
+  scope          String?
+  createdBy      String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+}
+
+// ─── Recommendations ─────────────────────────────────────────────────
+
+model RecommendationFamily {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  nameHe      String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  templates RecommendationTemplate[]
+}
+
+model RecommendationTemplate {
+  id                   String                  @id @default(cuid())
+  familyId             String
+  family               RecommendationFamily    @relation(fields: [familyId], references: [id])
+  version              Int                     @default(1)
+  stableRefId          String                  @unique
+  barrierTags          String[]
+  employmentStageTags  EmploymentStage[]
+  workplaceTypeTags    WorkplaceType[]
+  actorTags            ActorType[]
+  disclosureSuitability DisclosureLevel[]
+  confidenceLevel      ConfidenceLevel         @default(medium)
+  lifecycleState       RecommendationLifecycle @default(draft)
+  timeHorizon          TimeHorizon             @default(near_term)
+  contentHe            String
+  contentEn            String?
+  retrievalCount       Int                     @default(0)
+  inclusionCount       Int                     @default(0)
+  editCount            Int                     @default(0)
+  approvalCount        Int                     @default(0)
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
+
+  renderedRecommendations RenderedRecommendation[]
+}
+
+model RenderedRecommendation {
+  id                String                  @id @default(cuid())
+  templateId        String
+  template          RecommendationTemplate  @relation(fields: [templateId], references: [id])
+  userId            String
+  user              User                    @relation(fields: [userId], references: [id])
+  audience          Audience
+  renderedContentHe String
+  tracePath         Json
+  score             Float?
+  createdAt         DateTime                @default(now())
+
+  reportRecommendations ReportRecommendation[]
+}
+
+// ─── Reports & Output ────────────────────────────────────────────────
+
+model ReportObject {
+  id              String          @id @default(cuid())
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
+  type            ReportType
+  releaseState    ReleaseState    @default(draft_generated)
+  contentJson     Json
+  version         Int             @default(1)
+  generatedAt     DateTime        @default(now())
+  reviewedBy      String?
+  approvedAt      DateTime?
+  deliveredAt     DateTime?
+  deliveryChannel DeliveryChannel?
+  updatedAt       DateTime        @updatedAt
+
+  approvals       ApprovalObject[]
+  recommendations ReportRecommendation[]
+}
+
+model ReportRecommendation {
+  id               String                 @id @default(cuid())
+  reportId         String
+  report           ReportObject           @relation(fields: [reportId], references: [id])
+  recommendationId String
+  recommendation   RenderedRecommendation @relation(fields: [recommendationId], references: [id])
+  position         Int
+}
+
+// ─── Lead Object ─────────────────────────────────────────────────────
+
+model LeadObject {
+  id             String           @id @default(cuid())
+  userId         String?
+  user           User?            @relation(fields: [userId], references: [id])
+  orgName        String?
+  contactPerson  String?
+  contactChannel String?
+  signalType     String?
+  reason         String
+  orgType        String?
+  lectureAngle   String?
+  consentStatus  ConsentState     @default(pending)
+  handoffState   LeadHandoffState @default(detected)
+  exportedAt     DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+// ─── Admin & Governance ──────────────────────────────────────────────
+
+model ApprovalObject {
+  id         String         @id @default(cuid())
+  reportId   String
+  report     ReportObject   @relation(fields: [reportId], references: [id])
+  reviewerId String
+  action     ApprovalAction
+  notes      String?
+  createdAt  DateTime       @default(now())
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  entityType     String
+  entityId       String
+  action         String
+  changedBy      String?
+  changeSummary  String?
+  meaningChanged Boolean  @default(false)
+  reusable       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model RuleObject {
+  id        String   @id @default(cuid())
+  type      RuleType
+  scope     String?
+  content   String
+  changedBy String?
+  changedAt DateTime @default(now())
+  reason    String?
+}
+
+// ─── Gap Tracking ────────────────────────────────────────────────────
+
+model GapRecord {
+  id              String          @id @default(cuid())
+  gapType         GapType
+  barrier         String?
+  employmentStage EmploymentStage?
+  workplaceType   WorkplaceType?
+  actorType       ActorType?
+  description     String
+  sourceNeeded    String?
+  detectedAt      DateTime        @default(now())
+  resolvedAt      DateTime?
+}

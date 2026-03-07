@@ -1,0 +1,42 @@
+[
+  {
+    "name": "predictability",
+    "nameHe": "צפיות ושגרה",
+    "description": "Interventions that increase predictability, routine, and clarity of expectations"
+  },
+  {
+    "name": "communication_clarity",
+    "nameHe": "בהירות תקשורתית",
+    "description": "Interventions that improve clarity, directness, and safety in workplace communication"
+  },
+  {
+    "name": "sensory_environment",
+    "nameHe": "התאמת סביבה חושית",
+    "description": "Adjustments to physical environment — noise, lighting, space, crowding"
+  },
+  {
+    "name": "meeting_adaptation",
+    "nameHe": "התאמת ישיבות",
+    "description": "Changes to meeting format, frequency, participation expectations"
+  },
+  {
+    "name": "schedule_flexibility",
+    "nameHe": "גמישות בלוח זמנים",
+    "description": "Flexibility in work hours, breaks, shift patterns, remote options"
+  },
+  {
+    "name": "manager_behavior",
+    "nameHe": "התנהלות ניהולית",
+    "description": "Changes in how managers communicate, give feedback, set expectations"
+  },
+  {
+    "name": "hr_process_adaptation",
+    "nameHe": "התאמת תהליכי HR",
+    "description": "Changes to HR processes — evaluations, onboarding, procedures"
+  },
+  {
+    "name": "external_resource",
+    "nameHe": "הפניה למשאב חיצוני",
+    "description": "Referrals to external support — organizations, professionals, programs"
+  }
+]

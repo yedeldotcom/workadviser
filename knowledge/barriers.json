@@ -1,0 +1,82 @@
+[
+  {
+    "id": "barrier_uncertainty",
+    "category": "uncertainty",
+    "nameHe": "חוסר ודאות",
+    "nameEn": "Uncertainty",
+    "descriptionHe": "קושי להתמודד עם שינויים לא צפויים, חוסר מידע, או אי-בהירות לגבי ציפיות ותהליכים",
+    "descriptionEn": "Difficulty coping with unexpected changes, lack of information, or unclear expectations and processes"
+  },
+  {
+    "id": "barrier_overload",
+    "category": "overload",
+    "nameHe": "עומס",
+    "nameEn": "Overload",
+    "descriptionHe": "קושי להתמודד עם כמות גדולה של משימות, גירויים, או דרישות בו-זמנית",
+    "descriptionEn": "Difficulty coping with a large volume of tasks, stimuli, or simultaneous demands"
+  },
+  {
+    "id": "barrier_communication",
+    "category": "communication",
+    "nameHe": "תקשורת",
+    "nameEn": "Communication",
+    "descriptionHe": "קושי בתקשורת עם ממונים, עמיתים, או לקוחות — כולל קונפליקטים, ביקורת, או אי-הבנות",
+    "descriptionEn": "Difficulty communicating with supervisors, colleagues, or clients — including conflicts, criticism, or misunderstandings"
+  },
+  {
+    "id": "barrier_sensory",
+    "category": "sensory_environment",
+    "nameHe": "סביבה חושית",
+    "nameEn": "Sensory Environment",
+    "descriptionHe": "רגישות לרעש, תאורה, צפיפות, או תנאים פיזיים אחרים בסביבת העבודה",
+    "descriptionEn": "Sensitivity to noise, lighting, crowding, or other physical conditions in the work environment"
+  },
+  {
+    "id": "barrier_schedule",
+    "category": "schedule",
+    "nameHe": "לוח זמנים",
+    "nameEn": "Schedule",
+    "descriptionHe": "קושי עם שעות קבועות, משמרות, שעות נוקשות, או חוסר גמישות בזמנים",
+    "descriptionEn": "Difficulty with fixed hours, shifts, rigid schedules, or lack of time flexibility"
+  },
+  {
+    "id": "barrier_concentration",
+    "category": "concentration",
+    "nameHe": "ריכוז וזיכרון",
+    "nameEn": "Concentration and Memory",
+    "descriptionHe": "קושי להתרכז לאורך זמן, לזכור הוראות, או לעקוב אחרי תהליכים מורכבים",
+    "descriptionEn": "Difficulty concentrating for extended periods, remembering instructions, or following complex processes"
+  },
+  {
+    "id": "barrier_trust",
+    "category": "trust",
+    "nameHe": "אמון וביטחון",
+    "nameEn": "Trust and Safety",
+    "descriptionHe": "קושי לבטוח בסביבה, בעמיתים, או במנהלים — תחושת חוסר ביטחון בסביבת העבודה",
+    "descriptionEn": "Difficulty trusting the environment, colleagues, or managers — feeling unsafe in the workplace"
+  },
+  {
+    "id": "barrier_autonomy",
+    "category": "autonomy",
+    "nameHe": "אוטונומיה ושליטה",
+    "nameEn": "Autonomy and Control",
+    "descriptionHe": "קושי כשחסרה שליטה על תהליכי עבודה, קבלת החלטות, או סדר יום",
+    "descriptionEn": "Difficulty when lacking control over work processes, decision-making, or daily agenda"
+  },
+  {
+    "id": "barrier_social",
+    "category": "social",
+    "nameHe": "אינטראקציות חברתיות",
+    "nameEn": "Social Interactions",
+    "descriptionHe": "קושי באירועים חברתיים, עבודת צוות אינטנסיבית, או מפגשים לא מובנים",
+    "descriptionEn": "Difficulty with social events, intensive teamwork, or unstructured gatherings"
+  },
+  {
+    "id": "barrier_performance_pressure",
+    "category": "performance_pressure",
+    "nameHe": "לחץ ביצועים",
+    "nameEn": "Performance Pressure",
+    "descriptionHe": "קושי להתמודד עם הערכות, יעדים, לחץ לתוצאות, או חשש מכישלון",
+    "descriptionEn": "Difficulty coping with evaluations, targets, pressure for results, or fear of failure"
+  }
+]

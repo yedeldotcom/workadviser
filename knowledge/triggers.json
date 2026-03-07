@@ -1,0 +1,50 @@
+[
+  {
+    "id": "trigger_sudden_change",
+    "category": "sudden_change",
+    "nameHe": "שינוי פתאומי",
+    "descriptionHe": "שינוי לא צפוי בתנאים, בסביבה, או בדרישות העבודה"
+  },
+  {
+    "id": "trigger_loud_noise",
+    "category": "loud_noise",
+    "nameHe": "רעש חזק",
+    "descriptionHe": "רעשים פתאומיים או חזקים בסביבת העבודה"
+  },
+  {
+    "id": "trigger_confrontation",
+    "category": "confrontation",
+    "nameHe": "עימות",
+    "descriptionHe": "עימות ישיר עם ממונה, עמית, או לקוח"
+  },
+  {
+    "id": "trigger_criticism",
+    "category": "criticism",
+    "nameHe": "ביקורת",
+    "descriptionHe": "קבלת ביקורת — גם כזו שנועדה לבנות"
+  },
+  {
+    "id": "trigger_deadline_pressure",
+    "category": "deadline_pressure",
+    "nameHe": "לחץ דדליין",
+    "descriptionHe": "לחץ זמנים חזק או דדליינים צפופים"
+  },
+  {
+    "id": "trigger_loss_of_control",
+    "category": "loss_of_control",
+    "nameHe": "אובדן שליטה",
+    "descriptionHe": "מצב שבו העובד מרגיש שאין לו שליטה על מה שקורה"
+  },
+  {
+    "id": "trigger_isolation",
+    "category": "isolation",
+    "nameHe": "בידוד",
+    "descriptionHe": "תחושת בדידות או ניתוק מהצוות"
+  },
+  {
+    "id": "trigger_crowding",
+    "category": "crowding",
+    "nameHe": "צפיפות",
+    "descriptionHe": "צפיפות פיזית או חברתית בסביבת העבודה"
+  }
+]
