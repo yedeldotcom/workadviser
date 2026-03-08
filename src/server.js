@@ -14,6 +14,9 @@
  *   PORT=3000 node src/server.js
  */
 
+import { webcrypto } from 'crypto';
+if (!globalThis.crypto) globalThis.crypto = webcrypto;
+
 import express from 'express';
 import adminRouter from './admin/router.js';
 import webhookRouter from './whatsapp/webhook.js';
