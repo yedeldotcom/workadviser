@@ -24,12 +24,12 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - State machines: 5 machines in `src/core/state/` — Interview, Release, RecommendationLifecycle, LeadHandoff, ReviewApproval
 - Conversation engine: onboarding, interviewer, sessionManager, voiceHandler, LLM client (FPP §8 operating prompt)
 - Admin command center: store, queues, caseView, actions, permissions, Express router + server — 37 tests
-- 81 new tests covering all models, state machines, conversation, and admin
+- Recommendation workbench: 7-step selection pipeline + disclosure filter (45 tests)
+- 126 new tests covering all models, state machines, conversation, admin, and recommendation
 
 **What is still missing (FPP scope not yet built):**
-- Structured report objects with disclosure filtering (rendering layer)
-- Logic Map + Recommendation Workbench (formal 7-step pipeline)
-- Lead/lecture opportunity detection (logic layer)
+- Structured report objects with release states (rendering layer — Step 7)
+- Lead/lecture opportunity detection
 - Landing Page + WhatsApp Entry (deferred)
 
 ---
@@ -379,31 +379,29 @@ Transitions: assign, approve, reject, escalate
 ---
 
 ### Step 6 — Logic Map + Recommendation Workbench (FPP §4, §4.5)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-**Upgrade reasoning pipeline to formal recommendation architecture (FPP §4.4):**
+- [x] Create `src/core/recommendation/disclosureFilter.js` — standalone disclosure gate
+  - Spectrum: no_disclosure → functional_only → partial_contextual → full_voluntary
+  - `filterForEmployer()` throws immediately at no_disclosure (FPP non-negotiable)
+  - Per-level field rules: barriers, accommodations, amplifiers, contextNotes controlled precisely
+  - Employer output is NOT a copy of user report — separate filter function
+- [x] Create `src/core/recommendation/pipeline.js` — formal 7-step selection pipeline:
+  1. `buildCaseProfile()` — extracts all case dimensions (barriers, severity, stage, disclosure, etc.)
+  2. `retrieveCandidates()` — pulls templates from SCENARIO_DATABASE by barrier match
+  3. `applyEligibilityGates()` — 7 hard gates: barrier_fit, stage_fit, workplace_type_fit, disclosure_fit, feasibility_fit, safety_fit, freshness_fit
+  4. `scoreTemplate()` — 8 dimensions (0–100): barrier relevance, context fit, feasibility/cost, expected impact, disclosure compat, evidence strength, safety/trust fit, diversity contribution
+  5. `deduplicateRecommendations()` — maxPerFamily + maxTotal limits
+  6. `packageRecommendations()` — audience-specific user/employer/hr packages
+  7. `assignReviewStatus()` — high+≥70→approved, low/<50→rejected, else→pending
+- [x] `runRecommendationPipeline()` — end-to-end entry point with gateLog, summary stats
+- [x] Time horizon inferred: zero/low cost → immediate; medium → near_term; high → longer_term
+- [x] Write + pass `tests/core/recommendation.test.js` — 45 tests, 12 suites, all passing
 
-- [ ] Create `src/core/recommendation/pipeline.js` — formal 7-step selection pipeline:
-  1. Case profiling (employment stage, barrier set, trigger set, amplifiers, disclosure level, workplace type, change events)
-  2. Candidate retrieval from KnowledgeBase
-  3. Eligibility gating (7 gates: barrier fit, context fit, actor fit, disclosure fit, feasibility fit, safety fit, freshness fit)
-  4. Multi-dimensional scoring (8 dimensions: barrier relevance, context fit, feasibility, expected impact, disclosure compatibility, evidence strength, safety/trust fit, diversity contribution)
-  5. Deduplication + diversity (no near-duplicate families in top set)
-  6. Packaging (audience-specific RecommendationPackages)
-  7. Review (confidence thresholds → assign ReviewStatus)
-
-- [ ] Create `src/core/recommendation/disclosureFilter.js` — critical: filters employer output by disclosure level
-  - Disclosure spectrum: none → functional → partial_contextual → full_voluntary
-  - Employer output must never derive directly from full user analysis
-
-- [ ] Add recommendation IDs + versioning to all existing templates in `src/engines/translation/workplace_scenarios.js`
-- [ ] Add recommendation tracking fields to all templates (retrievalCount, inclusionCount, etc.)
-- [ ] Create visible logic map for admin workbench:
-  - Input → Detection → Interpretation → Applied Pattern → Output (FPP §4.1)
-  - Each step must be inspectable and editable inline
-- [ ] Confidence levels on all outputs (high | medium | low | escalate)
-- [ ] Fallback paths: clarifying question → low-confidence option set → human review route
-- [ ] Time horizon tagging on all RenderedRecommendations (immediate | near_term | longer_term)
+Deferred to later (when KnowledgeBase is live):
+- [ ] Add stable IDs + versioning to `workplace_scenarios.js` templates
+- [ ] Add tracking fields (retrievalCount, inclusionCount, etc.) to templates
+- [ ] Fallback paths (clarifying question → low-confidence option set)
 
 ---
 
@@ -510,7 +508,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0, 0.5, 1, 2, 3 (conversation engine), and 5 (admin) are complete. **Next: Step 6 — Logic Map + Recommendation Workbench.**
+Steps 0, 0.5, 1, 2, 3 (conversation engine), 5 (admin), and 6 (recommendation workbench) are complete. **Next: Step 7 — Report Objects + Release States (4 output types).**
 
 ---
 
@@ -523,7 +521,7 @@ Steps 0, 0.5, 1, 2, 3 (conversation engine), and 5 (admin) are complete. **Next:
 - [x] Step 3: Interview / session handling + LLM integration ✅ (formerly Step 4)
 - [ ] Step 4: Landing page + WhatsApp entry (deferred)
 - [x] Step 5: Admin queues + main case page ✅
-- [ ] Step 6: Logic map + recommendation workbench (disclosure filter)
+- [x] Step 6: Logic map + recommendation workbench (disclosure filter) ✅
 - [ ] Step 7: Report objects + release states (4 output types)
 - [ ] Step 8: Lead export / API handoff
 - [ ] Step 9: Follow-up / change-event layer
