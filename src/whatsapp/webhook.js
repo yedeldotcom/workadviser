@@ -61,6 +61,7 @@ router.get('/webhook', (req, res) => {
 // ─── Inbound message handler (POST) ──────────────────────────────────────────
 
 router.post('/webhook', async (req, res) => {
+  console.log('[whatsapp:webhook] POST received', { provider: PROVIDER, body: JSON.stringify(req.body).slice(0, 200) });
   try {
     const parsed = parseInbound(req);
 
