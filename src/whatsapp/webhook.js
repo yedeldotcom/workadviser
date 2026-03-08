@@ -87,7 +87,11 @@ router.post('/webhook', async (req, res) => {
 
     // 5. Send outbound messages
     if (result.outboundTexts.length > 0) {
-      await sendMessages(from, result.outboundTexts);
+      const sendResults = await sendMessages(from, result.outboundTexts);
+      for (const sr of sendResults) {
+        if (!sr.ok) console.error('[whatsapp:send] failed:', sr.error, { to: from, provider: sr.provider });
+        else console.log('[whatsapp:send] ok', { provider: sr.provider, messageId: sr.messageId });
+      }
     }
 
     res.status(200).json({
