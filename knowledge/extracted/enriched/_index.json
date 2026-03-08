@@ -1,0 +1,174 @@
+{
+  "generated_at": "2026-03-08T09:34:05.116Z",
+  "version": "1.0",
+  "description": "Master traceability index for all enriched knowledge units",
+  "id_prefix_map": {
+    "KU-BARRIER": {
+      "file": "01_barriers_questionnaire.json",
+      "source": "barriers_questionnaire.docx",
+      "role": "classification_authority",
+      "count": 13
+    },
+    "KU-INTERP": {
+      "file": "02_barriers_background.json",
+      "source": "barriers_background.docx",
+      "role": "interpretation_authority",
+      "count": 6
+    },
+    "KU-WRK": {
+      "file": "03_interview_workplace.json",
+      "source": "interview_challenges.xlsx",
+      "role": "applied_pattern_authority",
+      "count": 6
+    },
+    "KU-GENREC": {
+      "file": "04_interview_general_recs.json",
+      "source": "interview_challenges.xlsx",
+      "role": "applied_pattern_authority",
+      "count": 12
+    },
+    "KU-PROC": {
+      "file": "05_procedures_book.json",
+      "source": "org_procedures.docx",
+      "role": "implementation_authority",
+      "count": 243
+    },
+    "KU-PDF": {
+      "file": "06_feelings_at_work.json",
+      "source": "ptsd_at_work.pdf",
+      "role": "communication_authority",
+      "count": 9
+    }
+  },
+  "barrier_id_reference": [
+    {
+      "barrier_id": "fatigue",
+      "index": 1,
+      "text_he": "עייפות",
+      "text_en": "Fatigue",
+      "cluster": "physical_functional",
+      "ku_id": "KU-BARRIER-001"
+    },
+    {
+      "barrier_id": "morning_functioning",
+      "index": 2,
+      "text_he": "יכולת להיות פעיל.ה בבקרים",
+      "text_en": "Morning functioning",
+      "cluster": "physical_functional",
+      "ku_id": "KU-BARRIER-002"
+    },
+    {
+      "barrier_id": "procrastination",
+      "index": 3,
+      "text_he": "דחיינות או קושי בהתארגנות וניהול עצמי",
+      "text_en": "Procrastination / self-organisation",
+      "cluster": "self_regulation",
+      "ku_id": "KU-BARRIER-003"
+    },
+    {
+      "barrier_id": "sensory_discomfort",
+      "index": 4,
+      "text_he": "אי-נוחות בסביבת העבודה (יותר מידי רעשים, צפיפות, תאורה וכדומה)",
+      "text_en": "Workplace sensory discomfort",
+      "cluster": "environmental",
+      "ku_id": "KU-BARRIER-004"
+    },
+    {
+      "barrier_id": "avoidance",
+      "index": 5,
+      "text_he": "מיעוט ביציאה מהבית (או הימנעות אחרת)",
+      "text_en": "Avoidance / reduced leaving home",
+      "cluster": "avoidance_social",
+      "ku_id": "KU-BARRIER-005"
+    },
+    {
+      "barrier_id": "irritability",
+      "index": 6,
+      "text_he": "רגזנות יתר (פתיל קצר)",
+      "text_en": "Irritability / short fuse",
+      "cluster": "relational",
+      "ku_id": "KU-BARRIER-006"
+    },
+    {
+      "barrier_id": "anxiety_attacks",
+      "index": 7,
+      "text_he": "התקפי חרדה",
+      "text_en": "Anxiety attacks",
+      "cluster": "psychological",
+      "ku_id": "KU-BARRIER-007"
+    },
+    {
+      "barrier_id": "concentration",
+      "index": 8,
+      "text_he": "קשיי ריכוז",
+      "text_en": "Concentration difficulties",
+      "cluster": "cognitive",
+      "ku_id": "KU-BARRIER-008"
+    },
+    {
+      "barrier_id": "authority",
+      "index": 9,
+      "text_he": "התמודדות עם גורם סמכות",
+      "text_en": "Coping with authority figures",
+      "cluster": "relational",
+      "ku_id": "KU-BARRIER-009"
+    },
+    {
+      "barrier_id": "motivation",
+      "index": 10,
+      "text_he": "היעדר מוטיבציה",
+      "text_en": "Lack of motivation",
+      "cluster": "self_regulation",
+      "ku_id": "KU-BARRIER-010"
+    },
+    {
+      "barrier_id": "emotional_regulation",
+      "index": 11,
+      "text_he": "ויסות רגשי בעבודה",
+      "text_en": "Emotional regulation at work",
+      "cluster": "psychological",
+      "ku_id": "KU-BARRIER-011"
+    },
+    {
+      "barrier_id": "time_management",
+      "index": 12,
+      "text_he": "ניהול זמן וניהול עצמי בעבודה",
+      "text_en": "Time management / self-management at work",
+      "cluster": "self_regulation",
+      "ku_id": "KU-BARRIER-012"
+    },
+    {
+      "barrier_id": "self_worth",
+      "index": 13,
+      "text_he": "הערך העצמי שלי",
+      "text_en": "Self-worth",
+      "cluster": "psychological",
+      "ku_id": "KU-BARRIER-013"
+    }
+  ],
+  "total_enriched_units": 289,
+  "enriched_files": [
+    "enriched/01_barriers_questionnaire.json",
+    "enriched/02_barriers_background.json",
+    "enriched/03_interview_workplace.json",
+    "enriched/04_interview_general_recs.json",
+    "enriched/05_procedures_book.json",
+    "enriched/06_feelings_at_work.json"
+  ],
+  "out_of_scope_files": [
+    {
+      "file": "02_visual_questionnaire.json",
+      "reason": "Image-only file — no extractable text"
+    },
+    {
+      "file": "06_employer_presentation.json",
+      "reason": "PPTX image-heavy — framing.js is canonical"
+    }
+  ],
+  "how_to_look_up": [
+    "To find a unit: read the file listed in id_prefix_map for its prefix",
+    "To find all units for a barrier: grep barrier_ids_inferred in any enriched file",
+    "To trace back to source: use source_ref.file + source_ref.sheet/section + source_ref.row_index",
+    "To find barrier metadata: see barrier_id_reference or src/engines/intake/barriers.js"
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.101Z",
+  "source_file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+  "source_role": "applied_pattern_authority",
+  "sheet": "המלצות כלליות",
+  "unit_count": 12,
+  "id_prefix": "KU-GENREC",
+  "description": "Cross-domain general recommendations from the interview study. These apply across multiple accessibility domains, not just workplace.",
+  "units": [
+    {
+      "id": "KU-GENREC-001",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 1,
+        "row_index": 0
+      },
+      "challenge_type_he": "נונתי שירות מייצרים רה-טראומטיזציה או הצפה",
+      "general_solution_he": "הכשרה תקופתית והדרכות עובדים על שירות מותאם טראומה",
+      "technical_description_he": "כלל נותני שירותים למיניהם יהיו מחוייבים בהדרכות תקופתיות על שירות נגיש רגשית",
+      "barrier_ids_inferred": [
+        "emotional_regulation"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-002",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 2,
+        "row_index": 1
+      },
+      "challenge_type_he": "אי-מימוש פטור מתור בגלל עימות עם לקוחות אחרים",
+      "general_solution_he": "נוהל פטור מתור מותאם טראומה ושילוט",
+      "technical_description_he": "שילוט המכריז על מימו שפטור מתור מתחת לשלט, מאפשר עקיפה של תור. סימון בתופס צ׳קאוט שאני נעזר בפטור מתור. חברה יוזמת קשר כדי לתאם",
+      "barrier_ids_inferred": [],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-003",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 3,
+        "row_index": 2
+      },
+      "challenge_type_he": "הצפה במקומות ציבוריים וקושי מימוש זכויות",
+      "general_solution_he": "דייל נגישות",
+      "technical_description_he": "אדם שתקפידו הרשמי והמסומן הוא ללוות בעלי תעודת נכה ופטור מטור בתהליך השירות (רכשית כרטיסים, הושבה, איוף אוכל בבופה, ליווי ברכבת לרציף וכולי)",
+      "barrier_ids_inferred": [
+        "emotional_regulation"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-004",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 4,
+        "row_index": 3
+      },
+      "challenge_type_he": "חוסר ביטחון בישיבה במקומות ציבוריים, תחבורה, הסעדה",
+      "general_solution_he": "ישיבה נגישה",
+      "technical_description_he": "עמדת ישיבה במערך ישיבה עם גב למגנן, תצפית על הכניסה, במיקום מכובד",
+      "barrier_ids_inferred": [],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-005",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 5,
+        "row_index": 4
+      },
+      "challenge_type_he": "מקומות הומי אדם הדורשים המתנה מציפים",
+      "general_solution_he": "חדרי המתנה שקט",
+      "technical_description_he": "בכל מתקן ציבורי מרובה מבקרים, יהיה צריך לייצר חדר המתנה בו יש מנוחה חושית",
+      "barrier_ids_inferred": [],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-006",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 6,
+        "row_index": 5
+      },
+      "challenge_type_he": "מרחבים עסקיים רועשים, שאינם מודעים למקורות הרעש ולסוגי הרעש.",
+      "general_solution_he": "השקטת העסק",
+      "technical_description_he": "איפיון רעשים צפויים בעסק, בחינת האקוסטיקה הספציפית. התאמתם על ידי צמצום הרעש שהם מייצרים. לדוגמה, מדבקות ברגליים של כיסא שמעלימות רעשי גרירה, לדוגמה משטח גומי עליו ברסיטה מנקה את המכונה של הקפה ובכך מצמצם את רעשי המכות המתכתיות, להשתיק טריקת דלתות על ידי כרית סופגת רעשים, אם יש כריזה לוודא שאפשר להנמיך את הווליום, שזה לא בווליום קבוע; מוזיקת רקע בווליום גבוהה. דו״ח שקט חובה, עם סעיפים מוגדרים מראש",
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-007",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 7,
+        "row_index": 6
+      },
+      "challenge_type_he": "מקומות הומי אדם מציפים רגשית וחושית",
+      "general_solution_he": "שעות שקטות ונגישות",
+      "technical_description_he": "במקרים בהם קיים קושי להנגשה פיזית, יש להציע שעות מסויימות בה ניתן לקבל שירות בהתאמה חושית",
+      "barrier_ids_inferred": [],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-008",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 10,
+        "row_index": 7
+      },
+      "challenge_type_he": "קושי להשתמש בקנאביס במקומות",
+      "general_solution_he": "הקצאת מקום נגיש לצריכת קנאביס רפואי, יצירת נהלים שמאפשרים שימוש בקנאביס רפואי",
+      "technical_description_he": "כל מקום עבודה או עסק יצטרך להקצות שטח/אזור לצריכת קנאביס, כולל שילוט ועדכון נהלים כדי לאפשר זאת, כולל לפרסם בהסדרי נגישות",
+      "barrier_ids_inferred": [],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-009",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 11,
+        "row_index": 8
+      },
+      "challenge_type_he": "במרחבים ציבוריים מייצרים הרבה רעש כשמזיזים אותם או משתמשים בהם. רעשים חדים וחודרניים",
+      "general_solution_he": "ריהוט נגיש עם השתקה (מדבקת סילקון לדוגמה), לדלתות, חלונות ולרגליים של שולחנות וכיסאות",
+      "technical_description_he": "כשמזיזים או גוררים כיסא הוא מייצר רעש. סיכאות פלסטיק רעשניים. דלתות נתרקות. ",
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-010",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 12,
+        "row_index": 9
+      },
+      "challenge_type_he": "נכים אינם יודעים מה ההתאמות וההנגשות הקיימות בעסק, בטח הקשורות לפוסט רטאומה",
+      "general_solution_he": "פרסום הסדרי נגישות",
+      "technical_description_he": "פרסום שעות שקטות, גרף התפלגות רעש לפי שעות בימממה, מקומות נגישים, מפת עסק, יצירת קשר לתיאום מראש. כל מה שעושים לטובת העניין לפרסם",
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-011",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 13,
+        "row_index": 10
+      },
+      "challenge_type_he": "שלטים דיגיטלים ומסכי פרסום מהבהבים, בוהקים, מרצדים",
+      "general_solution_he": "לייצר תקן שמגדיר את עצמת התאורה של המסך, את קצב הריצוד בדומה לאפילפסיה וצ׳קלקות, להגביל קצב החלפת מסכים ולעמעם תאורה; לאפשר מסלול הליכה שעוקף מסכים ועמודי כריזה.",
+      "technical_description_he": null,
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-GENREC-012",
+      "type": "implementation_action",
+      "subtype": "general_recommendation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "המלצות כלליות",
+        "seq_id": 14,
+        "row_index": 11
+      },
+      "challenge_type_he": "תוכן פוגעני מטרגר, שמפורסם ללא אזהרה במדיה (מלחמה, אלימות, מיניות, בריונות, אבדנות, תאונות, דם, סירנות, רעשים פתאומיים)",
+      "general_solution_he": "אזהרת תוכן לטלוויזיה, רדיו, פרסום, פרסום דיגיטלי, פרסום חוצות, באינטרנט, רשתות חברתיות",
+      "technical_description_he": null,
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "cross_domain": true,
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    }
+  ]
+}

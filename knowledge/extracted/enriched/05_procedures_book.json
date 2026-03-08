@@ -1,0 +1,4366 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.112Z",
+  "source_file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+  "source_role": "implementation_authority",
+  "unit_count": 243,
+  "id_prefix": "KU-PROC",
+  "description": "Organizational procedure book: employer implementation actions, principles, and role assignments. Module hints are heuristic — verify against procedures.js.",
+  "units": [
+    {
+      "id": "KU-PROC-001",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 1,
+      "text_he": "המסמך שלפניכם נוצר עבורכם – מנהלים ואנשי HR. הוא לא נועד להיות ספר שתקראו מהתחלה עד הסוף, אלא מדריך פרקטי, ידידותי ובהיר, שאליו תוכלו לחזור בכל פעם שיתעורר אתגר, צורך או שאלה. הבסיס לספר הזה נולד מתוך ההבנה שאנשים הם הלב של כל ארגון, וארגון מוצלח הוא כזה שמצליח לראות את האנשים שלו באמת. הגישה שלנו, שאותה אנחנו מכנים \"נגישות רגשית\", התפתחה מתוך ניסיון אישי וחברתי של התמודדות עם פוסט-טראומה. מתוך ההכרה שלצדנו חיים ועובדים אנשים רבים שחוו טראומות שונות, הבנו כמה חשוב ליצור סביבה בטוחה, ברורה ומדויקת – סביבה שמייצרת תחושת ביטחון ושליטה, ומאפשרת לכולם, לא רק למתמודדי טראומה, לפרוח ולהצליח. נגישות רגשית היא לא רק כלי עבור מי שמתמודד עם פוסט-טראומה, היא מייצרת סביבת עבודה רגישה ומכילה התורמת באופן ברור לשיפור הרווחה והביצועים של כלל העובדים. מטרתנו במסמך זה היא לתת לכם בסיס ברור ופשוט ליצירת תהליכי עבודה איכותיים ומסודרים בארגון שלכם. אנחנו מאמינים שברגע שתתחילו להשתמש בו, תרגישו שאתם מסוגלים לנהל את האתגרים שיצוצו, לייצר בהירות בצוות, ולהוביל את הארגון שלכם להצלחה תוך שמירה על אנושיות, חמלה ורגישות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 1,
+        "original_index": 1
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "sensory_discomfort",
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-002",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 2,
+      "text_he": "נגישות רגשית היא גישה ניהולית שמטרתה לעזור לעובדים להתמודד טוב יותר עם חסמים רגשיים במקום העבודה, באמצעות יצירת תחושת ביטחון, טיפוח יחסי אמון ומתן תחושת ודאות ושליטה. בדומה למעלית בבניין, שמשפרת את איכות השימוש לכולם ולא רק למי שמתמודד עם מגבלה פיזית, כך גם נגישות רגשית. ארגונים הבוחרים להטמיע גישה זו צפויים לחוות שיפור ברווחה הרגשית של העובדים, שבא לידי ביטוי בדרך כלל ברוגע רב יותר, במוטיבציה גבוהה יותר ובתחושת מעורבות עמוקה במשימות ובארגון עצמו. עובדים שחשים ביטחון וודאות נוטים לשתף פעולה טוב יותר, עשויים להיות יצירתיים ופרואקטיביים יותר, ולהתמודד בצורה טובה יותר עם אתגרים ושינויים. גישה זו יכולה לסייע בשיפור היציבות הארגונית, איכות התפוקה והביצועים העסקיים לאורך זמן.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 2,
+        "original_index": 2
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "motivation"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-003",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 3,
+      "text_he": "יצירת סביבה מפחיתת עומסים - ברמה הראשונה, שהיא כמעט פיזיולוגית, אנו מתמקדים ביצירת תנאים בסיסיים שבהם העובד פנוי רגשית ומנטלית לעבודה. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 3,
+        "original_index": 3
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-004",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 4,
+      "text_he": "יצירת בהירות ושליטה באמצעות מידע - השלב השני מתמקד בהקניית כלים וידע שיאפשרו לעובדים תחושת שליטה ויכולת קבלת החלטות מושכלות. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 4,
+        "original_index": 4
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-005",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 5,
+      "text_he": "חיזוק חיבור רגשי וחברתי - השלב השלישי הוא הרגשי-חברתי, ומטרתו יצירת תחושת חיבור, שייכות והדדיות בין העובדים למנהלים ובין העובדים עצמם. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 5,
+        "original_index": 5
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-006",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 6,
+      "text_he": "במהלך המיונים חשוב לנו לשמור על התנהלות מכובדת מול המועמדים שלנו. התקשורת עם המועמדים תתבצע ע״י מנהלת מש״א, בכתב או בע״פ על פי הנדרש. תשובה למועמד.ת תינתן, לכל המאוחר, תוך 3 ימי עסקים (על קבלת קו\"ח, ראיונות ומשימות). התשובות יינתנו תמיד בכתב, והחל מתחילת שלב הראיונות תתבצע גם שיחת טלפון. בתשובות שנספק, נשתדל לתת מענה עם ערך:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 6,
+        "original_index": 6
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-007",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 7,
+      "text_he": "אנרגיה חיובית והשראה - להתמקד בעתיד, לדבר על המטרות ועל הערך בהשגתן, על הדרך לפתור את הקשיים ולהתגבר על המורכבויות. לא להתעכב על העבר ועל טעויות שאין יכולת לשנות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 7,
+        "original_index": 7
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-008",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 8,
+      "text_he": "פוקוס ארגוני - להיצמד לתמונה הגדולה ואיך המשימות של העובד משתלבות בה. להזכיר את הערך היחסי כחלק מצוות ועשייה רחבה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 8,
+        "original_index": 8
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-009",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 9,
+      "text_he": "שליחת חומרים מקדימים - שאלון הכנה יישלח לעובד (להתבסס על שלושת הרגלים״ - אתגר, חיברות, תנאים) ומסמך פירוט הנושאים שיעלו בפגישה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 9,
+        "original_index": 9
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-010",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 10,
+      "text_he": "הבהרת מטרות השיחה ויצירת אווירה פתוחה, נעימה ומכבדת. לאחר מכן, פתיחת המשוב במעבר על שאלון ההכנה לפגישה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 10,
+        "original_index": 10
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-011",
+      "type": "implementation_action",
+      "subtype": "principle",
+      "original_index": 11,
+      "text_he": "בסמיכות לסיום הפגישה ית.ישלח המנהל.ת הישיר.ה לעובד.ת במייל זימון לשימוע ופירוט בכתב של הדברים שעלו בשיחה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 11,
+        "original_index": 11
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-012",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 1,
+      "text_he": "נגישות רגשית היא גישה ניהולית שמטרתה לעזור לעובדים להתמודד טוב יותר עם חסמים רגשיים במקום העבודה, באמצעות יצירת תחושת ביטחון, טיפוח יחסי אמון ומתן תחושת ודאות ושליטה. בדומה למעלית בבניין, שמשפרת את איכות השימוש לכולם ולא רק למי שמתמודד עם מגבלה פיזית, כך גם נגישות רגשית. ארגונים הבוחרים להטמיע גישה זו צפויים לחוות שיפור ברווחה הרגשית של העובדים, שבא לידי ביטוי בדרך כלל ברוגע רב יותר, במוטיבציה גבוהה יותר ובתחושת מעורבות עמוקה במשימות ובארגון עצמו. עובדים שחשים ביטחון וודאות נוטים לשתף פעולה טוב יותר, עשויים להיות יצירתיים ופרואקטיביים יותר, ולהתמודד בצורה טובה יותר עם אתגרים ושינויים. גישה זו יכולה לסייע בשיפור היציבות הארגונית, איכות התפוקה והביצועים העסקיים לאורך זמן.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 12,
+        "original_index": 1
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "motivation"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-013",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 2,
+      "text_he": "נגישות רגשית מבוססת על שלושה עקרונות מרכזיים המייצגים שלוש רמות פעולה משלימות, ליצירת סביבה ארגונית המאפשרת לעובדים להיות פנויים, מצוידים ומחוברים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 13,
+        "original_index": 2
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-014",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 3,
+      "text_he": "מנהל תהליך: תהליכי גיוס בארגון הם בדרך כלל באחריות מלאה של מנהלת מש״א. ריכוז כל שלבי התהליך, הגדרת לו״ז בהתאם לצורך, יצירת פול מועדמים, קשר עם מועמדים ותיאומים. במידה ואין מנהלת מש״א במשרה מלאה, יש להגדיר בצורה ברורה מנהל.ת יחיד לתהליך גיוס המשרה. אחראי על הבירוקרטיה של התהליך, ואחראי על ביצוע מלא של הנוהל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 14,
+        "original_index": 3
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "concentration",
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-015",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 4,
+      "text_he": "התהליך יכלול ראיונות ובמידת הצורך משימה מקצועית. את המשימה יש לכתוב מראש, לפני תחילת התהליך.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 15,
+        "original_index": 4
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-016",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 5,
+      "text_he": "בעת פרסום המשרה, יש לציין במפורש את כל התאריכים, בדגש על ראיונות והאם יהיה תרגיל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 16,
+        "original_index": 5
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-017",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 6,
+      "text_he": "ככל שזה מתאים למשרה, יש לבקש תיק עבודות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 17,
+        "original_index": 6
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-018",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 7,
+      "text_he": "ניתן להשתמש בוועד המנהל או וועדת ביקורת או שאר יועצים לקיום הראיונות. במקרה של גיוסים מקצועיים שאין לנו את הידע בתוך הצוות, השימוש במראיין חיצוני הוא חובה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 18,
+        "original_index": 7
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-019",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 8,
+      "text_he": "בשלב ההחלטה, התהליך מתפצל בין המועמד המוביל לבין שאר המועמדים. אנחנו מעוניינים להחתים את המוביל, ובמידה ושלב החוזה לא עובר כמו שצריך, אז יש לנו עדיין מועמד חלופי לגייס. כדי לייצר את המצב הזה, נגדיר שבוע מראיון המנכ״ל ועד להודעה למועמדים שלא התקבלו. במהלך השבוע הזה, על הצוות לחתור להחתים את המועמד המוביל על חוזה. ובפירוט:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 19,
+        "original_index": 8
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-020",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 9,
+      "text_he": "המועמדים ידעו שההחלטה תקרה עד שבוע אחרי ראיון מנכ״ל האחרון. יש לפרסם זאת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 20,
+        "original_index": 9
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-021",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 10,
+      "text_he": "דוגמא למייל סירוב לאחר שליחת קו\"ח ניתן לראות פה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 21,
+        "original_index": 10
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-022",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 11,
+      "text_he": "אלה אירועי מוגנות, אך בגלל הרגישות שלהם פותחו נהלים וצעדים יותר ספציפיים שמתאימים לאירועים עצמם, ולכן לצורך נוהל זה אינם נחשבים לאירוע מוגנות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 22,
+        "original_index": 11
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-023",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 12,
+      "text_he": "חברי ההנהלה ימנו, בהתאם לחומרת האירוע, צוות טיפול באירוע. הצוות ימנה חבר הנהלה, חבר נוסף (דמות משאבי אנוש הבכירה בארגון, אם לא חברת הנהלה), וכל בעל עניין רלוונטי לרבות ייעוץ משפטי. לא ימונה מי שיש לו נגיעה אישית לאירוע. מרגע מינוי הצוות, מטרתו לפתור את האירוע הנקודתי ולכן יש לו הסמכות לעשות זאת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 23,
+        "original_index": 12
+      },
+      "module_hint": "hr_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-024",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 13,
+      "text_he": "פורום ההנהלה ידווח לעובד הנפגע על הצעדים אשר ננקטים, ויפעל לטיפול מיטבי באירוע המוגנות כך שמצוקת העובד תטופל במלואה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 24,
+        "original_index": 13
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-025",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 14,
+      "text_he": "פעם בחודש יש להקדיש זמן משמעותי מפגישת העבודה הקבועה לשיחה על החיים עצמם, איך המרגש, מקצועית ואישית.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 25,
+        "original_index": 14
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-026",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 15,
+      "text_he": "לאחר השיחה, יש להכניס סיכום קצר במאנדיי.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 26,
+        "original_index": 15
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-027",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 16,
+      "text_he": "היגיינה - אם השיחה היא פיזית יש לתאם חדר פרטי, שקט, ללא ויטרינות, מאוורר ונעים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 27,
+        "original_index": 16
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-028",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 17,
+      "text_he": "את הנוסח הסופי יש להעביר למנהל הבכיר ולמנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 28,
+        "original_index": 17
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-029",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 18,
+      "text_he": "איסוף מידע - המנהל הישיר יאסוף משוב מקולגות בצוות ונותני שירות חיצוניים במידה ויש. כמו כן, יש לעבור על תיעוד שיחות משוב שנעשו במהלך השנה לטובת זיקוק הנקודות החשובות והדברים שחזרו על עצמם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 29,
+        "original_index": 18
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-030",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 19,
+      "text_he": "לוגיסטיקה - הזימון ישלח לפחות שבוע לפני מועד השיחה. יש לזמן שעה לשיחה אך להשאיר זמן פנוי בלו״ז לפחות לעוד חצי שעה נוספת, למקרים ותגובות. השיחה תיקבע ל9:30-11:00, או ל- 15:30-17:00, כדי להנות משיא קוגנטיבי.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 30,
+        "original_index": 19
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-031",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 20,
+      "text_he": "היגיינה - אם השיחה היא פיזית יש לתאם חדר פרטי, שקט, ללא ויטרינות, מאוורר ונעים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 31,
+        "original_index": 20
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-032",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 21,
+      "text_he": "לכתוב - יש להצטייד במחברת וכלי כתיבה, ולא במחשב, כדי לשמור על הריכוז.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 32,
+        "original_index": 21
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [
+        "concentration"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-033",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 22,
+      "text_he": "את הנוסח הסופי יש להעביר למנהל הבכיר ולמנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 33,
+        "original_index": 22
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-034",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 23,
+      "text_he": "משום שמדיניות השכר אצלנו היא אחידה, אין התייחסות אישית, לוותק או לביצועים בתכנון או עדכון השכר.  כדי שפניות פרטיות ישקלו, עליהם להסביר למה יש לחרוג ממדיניות הארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 34,
+        "original_index": 23
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-035",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 24,
+      "text_he": "כל עובד.ת במשרה מלאה בארגון זכאים ל-21 ימי חופשה בשנה, מתוכם 11 ימים הינם חופשות מרוכזות של הארגון והיתר בניהול עצמי. את הימים האלו ניתן לקחת במרוכז או בבודדים (ניתן לחלק גם לחצאי ימים במידה ונדרש).",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 35,
+        "original_index": 24
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [
+        "procrastination",
+        "time_management"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-036",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 25,
+      "text_he": "בכל שנה ניתן להעביר עד כחצי מכמות הימים השנתית. סה״כ לא ניתן לצבור יותר מ-30 ימי חופשה ברגע נתון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 36,
+        "original_index": 25
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-037",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 26,
+      "text_he": "לאחר קבלת הודעה מהעובד.ת על הרצון לעזוב יש לקיים את השלבים הבאים:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 37,
+        "original_index": 26
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-038",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 27,
+      "text_he": "הודעה על התפטרות: העובד יודיע בדרכו על רצון לסיים את עבודתו. בשיחה הזו, מצופה ממנהל לשאול על סיבות העזיבה, והאם יש אפשרות לשנות את דעתו. המנהל לא ישכנע אותו ולא יענה לבקשותיו, לפני שיחה עם חבר הנהלה. בהינתן שההחלטה היא סופית יש להחליט על תאריך העבודה האחרון כדי שהארגון יוכל לתכנן משמעויות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 38,
+        "original_index": 27
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-039",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 28,
+      "text_he": "לפחות שלושה ימי עבודה לאחר מכן (החוק מתייחס למינימום של 24 שעות) - קיום שימוע בנוכחות המנהל.ת הישיר.ה, מנהל.ת מש״א והמנהל.ת הבכיר.ה. את השימוע יש לקיים על פי הנדרש בחוק.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 39,
+        "original_index": 28
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-040",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 29,
+      "text_he": "עד יום לאחר קיום השימוע יש לשלוח לעובד.ת את פרוטוקול השימוע בכתב לטובת אישור וחידודים מצידו.ה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 40,
+        "original_index": 29
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-041",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 30,
+      "text_he": "עובד.ת מעל ותק של שנה - יש לשלם הבראה, ותשלום יתרת פיצויים - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 41,
+        "original_index": 30
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-042",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 31,
+      "text_he": "פדיון ימי חופשה - במידה ויש יתרה יש לפדות לעובד.ת במשכורת האחרונה - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 42,
+        "original_index": 31
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-043",
+      "type": "implementation_action",
+      "subtype": "action",
+      "original_index": 32,
+      "text_he": "במקרה של מיילים שיש סבירות גבוהה שעוד ישלחו אליהם דברים, ניתן לשנות סיסמה ולהפעיל מנגנון העברה לתיבה של מישהו אחר (מנהל או מחליף) - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 43,
+        "original_index": 32
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-044",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 1,
+      "text_he": "המסמך שלפניכם נוצר עבורכם – מנהלים ואנשי HR. הוא לא נועד להיות ספר שתקראו מהתחלה עד הסוף, אלא מדריך פרקטי, ידידותי ובהיר, שאליו תוכלו לחזור בכל פעם שיתעורר אתגר, צורך או שאלה. הבסיס לספר הזה נולד מתוך ההבנה שאנשים הם הלב של כל ארגון, וארגון מוצלח הוא כזה שמצליח לראות את האנשים שלו באמת. הגישה שלנו, שאותה אנחנו מכנים \"נגישות רגשית\", התפתחה מתוך ניסיון אישי וחברתי של התמודדות עם פוסט-טראומה. מתוך ההכרה שלצדנו חיים ועובדים אנשים רבים שחוו טראומות שונות, הבנו כמה חשוב ליצור סביבה בטוחה, ברורה ומדויקת – סביבה שמייצרת תחושת ביטחון ושליטה, ומאפשרת לכולם, לא רק למתמודדי טראומה, לפרוח ולהצליח. נגישות רגשית היא לא רק כלי עבור מי שמתמודד עם פוסט-טראומה, היא מייצרת סביבת עבודה רגישה ומכילה התורמת באופן ברור לשיפור הרווחה והביצועים של כלל העובדים. מטרתנו במסמך זה היא לתת לכם בסיס ברור ופשוט ליצירת תהליכי עבודה איכותיים ומסודרים בארגון שלכם. אנחנו מאמינים שברגע שתתחילו להשתמש בו, תרגישו שאתם מסוגלים לנהל את האתגרים שיצוצו, לייצר בהירות בצוות, ולהוביל את הארגון שלכם להצלחה תוך שמירה על אנושיות, חמלה ורגישות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 44,
+        "original_index": 1
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "sensory_discomfort",
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-045",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 2,
+      "text_he": "נוהל גיוס עובדים\t9",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 45,
+        "original_index": 2
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-046",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 3,
+      "text_he": "נוהל אופרציה לקליטת עובד חדש\t15",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 46,
+        "original_index": 3
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-047",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 4,
+      "text_he": "נוהל ציוד לעובדים\t16",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 47,
+        "original_index": 4
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-048",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 5,
+      "text_he": "עזיבת חבר צוות\t34",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 48,
+        "original_index": 5
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-049",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 6,
+      "text_he": "נגישות רגשית היא גישה ניהולית שמטרתה לעזור לעובדים להתמודד טוב יותר עם חסמים רגשיים במקום העבודה, באמצעות יצירת תחושת ביטחון, טיפוח יחסי אמון ומתן תחושת ודאות ושליטה. בדומה למעלית בבניין, שמשפרת את איכות השימוש לכולם ולא רק למי שמתמודד עם מגבלה פיזית, כך גם נגישות רגשית. ארגונים הבוחרים להטמיע גישה זו צפויים לחוות שיפור ברווחה הרגשית של העובדים, שבא לידי ביטוי בדרך כלל ברוגע רב יותר, במוטיבציה גבוהה יותר ובתחושת מעורבות עמוקה במשימות ובארגון עצמו. עובדים שחשים ביטחון וודאות נוטים לשתף פעולה טוב יותר, עשויים להיות יצירתיים ופרואקטיביים יותר, ולהתמודד בצורה טובה יותר עם אתגרים ושינויים. גישה זו יכולה לסייע בשיפור היציבות הארגונית, איכות התפוקה והביצועים העסקיים לאורך זמן.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 49,
+        "original_index": 6
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "motivation"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-050",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 7,
+      "text_he": "נגישות רגשית מבוססת על שלושה עקרונות מרכזיים המייצגים שלוש רמות פעולה משלימות, ליצירת סביבה ארגונית המאפשרת לעובדים להיות פנויים, מצוידים ומחוברים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 50,
+        "original_index": 7
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-051",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 8,
+      "text_he": "יצירת סביבה מפחיתת עומסים - ברמה הראשונה, שהיא כמעט פיזיולוגית, אנו מתמקדים ביצירת תנאים בסיסיים שבהם העובד פנוי רגשית ומנטלית לעבודה. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 51,
+        "original_index": 8
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-052",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 9,
+      "text_he": "יצירת בהירות ושליטה באמצעות מידע - השלב השני מתמקד בהקניית כלים וידע שיאפשרו לעובדים תחושת שליטה ויכולת קבלת החלטות מושכלות. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 52,
+        "original_index": 9
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-053",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 10,
+      "text_he": "הנגשת מידע ויצירת שקיפות: חשיפת מידע רחב ככל האפשר לעובדים, הצגת הקשרים רחבים למשימות, והקפדה על זרימת מידע סדירה וברורה מההנהלה לעובדים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 53,
+        "original_index": 10
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-054",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 11,
+      "text_he": "ניהול תהליכי שינוי: תקשורת פתוחה ומידית של שינויים ארגוניים, קטנים וגדולים, כדי להפחית אי-ודאות, להקל על תחושת השליטה של העובד ולמנוע השפעות שליליות של רכילות ואי בהירות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 54,
+        "original_index": 11
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-055",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 12,
+      "text_he": "חיזוק חיבור רגשי וחברתי - השלב השלישי הוא הרגשי-חברתי, ומטרתו יצירת תחושת חיבור, שייכות והדדיות בין העובדים למנהלים ובין העובדים עצמם. עיקרון זה כולל:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 55,
+        "original_index": 12
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-056",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 13,
+      "text_he": "תיאום ציפיות דו-כיווני: קיום שיח פתוח ומתמשך, יצירת בהירות מלאה לגבי הציפיות המקצועיות והאישיות, ומתן הזדמנות לעובדים לשתף את צרכיהם, מחשבותיהם והעדפותיהם ללא חשש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 56,
+        "original_index": 13
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-057",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 14,
+      "text_he": "לגייס עובד זהו תהליך ארגוני יקר ומורכב. להחלטה לצאת לתהליך ולאופן הגדרת משרה יש השפעה מאוד חזקה על ההצלחה העתידית של העובד. האם היה צורך במשרה מלכתחילה? האם היו משאבים ייעודיים לגיוס החדש? האם המשרה ברורה מספיק לעובד ולמנהל? האם יש מספיק משימות ותחומי אחריות? האם יש מעט מדי? האם הבנו עד הסוף מי הפרופיל שאנחנו צריכים? אנחנו רוצים לוודא שעונים על השאלות הקריטיות האלה לפני שיוצאים לתהליך, כדי להחליט האם בכלל יוצאים לתהליך גיוס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 57,
+        "original_index": 14
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-058",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 15,
+      "text_he": "מנהל תהליך גיוס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 58,
+        "original_index": 15
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-059",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 16,
+      "text_he": "מנהל מגייס: הוא המנהל שינהל את העובד החדש, שמבקש לגייס את המשרה. הוא מקבל שירות ממנהל התהליך בזמן הגיוס.  תפקידו להגדיר את הצרכים מתהליך הגיוס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 59,
+        "original_index": 16
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-060",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 17,
+      "text_he": "מנהל תהליך: עוזר למנהל המגייס להגדיר את המשרה. אחראי על הבירוקרטיה והמתודולוגיה של פתיחת המשרה, על עמידה בכלל סעיפי הנוהל. בדרך כלל זה האדם האחראי על משאבי האנוש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 60,
+        "original_index": 17
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-061",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 18,
+      "text_he": "מנהל מאשר: מנהל בכיר בארגון עם סמכויות פיננסיות שיכול לאשר משפטית את התקשרויות ואת ההוצאות התקציביות. תפקידו לאשר את פתיחת המשרה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 61,
+        "original_index": 18
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-062",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 19,
+      "text_he": "כתיבת הגדרת המשרה תיעשה על ידי המנהל המגייס בשיתוף עם מנהלת מש״א. המסמך יכלול את הכותרות הבאות:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 62,
+        "original_index": 19
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-063",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 20,
+      "text_he": "תיאור קצר של התפקיד: במשפט וחצי לכל היותר - מה עושים, לאיזו מטרה ובאיזה צוות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 63,
+        "original_index": 20
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-064",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 21,
+      "text_he": "מידע על הצוות והמנהל הישיר - שם ותפקיד של כל אחד, עוזר למפות את האחריויות של הצוות, את אנשי המקצוע השותפים לעשייה הספציפית של המשרה ומאפשר ללמוד עליהם ואף לפנות אליהם אם מעוניינים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 64,
+        "original_index": 21
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-065",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 22,
+      "text_he": "צוות העובדים של הארגון מודע לגיוס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 65,
+        "original_index": 22
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-066",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 23,
+      "text_he": "שאלנו את הצוות והועד אם הם יכולים לעזור בהפצה כדי למקסם מעגלים הקרובים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 66,
+        "original_index": 23
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-067",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 24,
+      "text_he": "נוהל גיוס עובדים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 67,
+        "original_index": 24
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-068",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 25,
+      "text_he": "לוודא כי תהליך בחירת העובדים הוא נכון ותקין, גם מבחינה אופרטיבית ובמיוחד מבחינת מהותית. המטרה היא שהעובדים הנבחרים יהיו ראויים ומקצועיים, ושתהליך הגיוס יתבצע תוך צמצום סיכונים, ניהול משמעת תקציבית ויצירת חוויה חיובית למועמדים ולצוות הארגון, תוך הפחתת אי הוודאות הנובעת מהתהליך.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 68,
+        "original_index": 25
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-069",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 26,
+      "text_he": "מנהל מגייס: הוא המנהל שינהל את העובד החדש. הוא מקבל שירות ממנהל התהליך בזמן הגיוס.  תפקידו לגייס עובד חדש, להחליט מי העובד, אחראי על התאמה העובד שיגויס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 69,
+        "original_index": 26
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-070",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 27,
+      "text_he": "מנהל תהליך: תהליכי גיוס בארגון הם בדרך כלל באחריות מלאה של מנהלת מש״א. ריכוז כל שלבי התהליך, הגדרת לו״ז בהתאם לצורך, יצירת פול מועדמים, קשר עם מועמדים ותיאומים. במידה ואין מנהלת מש״א במשרה מלאה, יש להגדיר בצורה ברורה מנהל.ת יחיד לתהליך גיוס המשרה. אחראי על הבירוקרטיה של התהליך, ואחראי על ביצוע מלא של הנוהל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 70,
+        "original_index": 27
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "concentration",
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-071",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 28,
+      "text_he": "מנהל מאשר: מנהל בכיר בארגון עם סמכויות פיננסיות שיכול לאשר משפטית את התקשרויות ואת ההוצאות התקציביות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 71,
+        "original_index": 28
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-072",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 29,
+      "text_he": "תהליך המיון עצמו הוא באחריות מלאה של מנהלת מש״א בארגון.  ניסוח חומרים רלוונטיים, קשר עם מועמדים ותיאומים עם חברי הצוות יבוצעו על ידה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 72,
+        "original_index": 29
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-073",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 30,
+      "text_he": "סינון המועמדים ומעבר בין שלבים יתבצע על ידי הצוות המגייס - מנהלת מש\"א, מנהל.ת מגייס.ת וחבר.ת הנהלה. שני אנשים לא מספיקים, חייב מינימום של שלוש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 73,
+        "original_index": 30
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-074",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 31,
+      "text_he": "ראיון #2 - מנהל.ת מגייסת",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 74,
+        "original_index": 31
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-075",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 32,
+      "text_he": "ראיון #3 - מנהל.ת בכיר.ה ומנכ״ל",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 75,
+        "original_index": 32
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-076",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 33,
+      "text_he": "לאחר סגירת שלב קבלת המועמדים יתקיים דיון פנימי של הצוות המגייס ובסופו יוחלט מי מהמועמדים ממשיכים לשלב הראיונות על פי הקריטריונים שהוגדרו למשרה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 76,
+        "original_index": 33
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-077",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 34,
+      "text_he": "הראיון יבוצע ע״י מנהלת מש״א או/עם מנהל מגייס: תתבצע בדיקה בסיסית של כישורים והתאמה. (חצי שעה). סינון המועמדים יבוצע על ידי הצוות המגייס.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 77,
+        "original_index": 34
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-078",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 35,
+      "text_he": "ראיון #2 מנהל.ת מגייס.ת וסינון מועמדים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 78,
+        "original_index": 35
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-079",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 36,
+      "text_he": "תסריט השיחה יתייחס לחלקים הבאים: הצגה של המועמד, הצגה מפורטת של המשרה על ידי המנהל.ת המגייס.ת, שאלות מקצועיות ברזולוציה יותר מעמיקה וספציפית, היכרות אישית.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 79,
+        "original_index": 36
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-080",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 37,
+      "text_he": "יבוצע ע״י שני אנשים לפחות, 1 - מנהל מגייס ו-2 - חבר צוות או מתנדב רלוונטי מבחינה מקצועית: ראיון מקצועי שמטרתו לבחון אם למועמד.ת יש את הכישורים המקצועיים למלא את התפקיד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 80,
+        "original_index": 37
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-081",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 38,
+      "text_he": "ניתן להשתמש בוועד המנהל או וועדת ביקורת או שאר יועצים לקיום הראיונות. במקרה של גיוסים מקצועיים שאין לנו את הידע בתוך הצוות, השימוש במראיין חיצוני הוא חובה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 81,
+        "original_index": 38
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-082",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 39,
+      "text_he": "מיד לאחר סיום הראיון תתקיים שיחה קצרה של המנהל.ת המגייס.ת עם מנהלת מש״א ויוחלט על שליחת המשימה למועמד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 82,
+        "original_index": 39
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-083",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 40,
+      "text_he": "ראיון #3 הנהלה והחלטה סופית",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 83,
+        "original_index": 40
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-084",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 41,
+      "text_he": "הראיון יבוצע ע״י מנכ״ל הארגון עם חבר צוות נוסף הרלוונטי מבחינת ממשקי עבודה: תיבחן התאמה למרקם החברתי של הלם קלאב ולצוות הספציפי שהמועמד.ת נכנסים אליו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 84,
+        "original_index": 41
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-085",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 42,
+      "text_he": "בסיום תהליך הראיונות תתבצע שיחה עם מנהלת מש״א, בו תעבור עם המועמד.ת הסופיים (או שניים לכל היותר במידה ויש התלבטות) על התהליך כולו, הסבר נוסף על אופי העבודה בהלם קלאב ומתן אפשרות להעלות שאלות או התלבטויות לשני הצדדים. זהו אינו שלב ממיין אלא מטרתו לוודא שכל המידע הנדרש קיים אצל שני הצדדים, הציפיות מתואמות והכוונות ברורות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 85,
+        "original_index": 42
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-086",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 43,
+      "text_he": "בשלב ההחלטה, התהליך מתפצל בין המועמד המוביל לבין שאר המועמדים. אנחנו מעוניינים להחתים את המוביל, ובמידה ושלב החוזה לא עובר כמו שצריך, אז יש לנו עדיין מועמד חלופי לגייס. כדי לייצר את המצב הזה, נגדיר שבוע מראיון המנכ״ל ועד להודעה למועמדים שלא התקבלו. במהלך השבוע הזה, על הצוות לחתור להחתים את המועמד המוביל על חוזה. ובפירוט:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 86,
+        "original_index": 43
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-087",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 44,
+      "text_he": "ההחלטה הסופית על המועמד הנבחר תתקבל בפורום של הצוות המגייס ומנכ״ל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 87,
+        "original_index": 44
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-088",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 45,
+      "text_he": "מנהל.ת מש״א תצור קשר עם המועמד הנבחר, ואז המנהל.ת המגייס.ת לשלוח הודעת וולקאם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 88,
+        "original_index": 45
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-089",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 46,
+      "text_he": "רק אחרי חתימה על חוזה, מנהל.ת מש״א תיצור קשר עם המועמדים שלא התקבלו,",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 89,
+        "original_index": 46
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-090",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 47,
+      "text_he": "במהלך המיונים חשוב לנו לשמור על התנהלות מכובדת מול המועמדים שלנו. התקשורת עם המועמדים תתבצע ע״י מנהלת מש״א, בכתב או בע״פ על פי הנדרש. תשובה למועמד.ת תינתן, לכל המאוחר, תוך 3 ימי עסקים (על קבלת קו\"ח, ראיונות ומשימות). התשובות יינתנו תמיד בכתב, והחל מתחילת שלב הראיונות תתבצע גם שיחת טלפון. בתשובות שנספק, נשתדל לתת מענה עם ערך:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 90,
+        "original_index": 47
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-091",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 48,
+      "text_he": "בסיום תהליך המיון, לאחר שניתנה הודעה למועמד.ת הסופיים על קבלתם, תפנה מנהלת מש״א לסמנכ״לית אופרציה לקבלת חוזה ומסמכים נוספים אם נדרש. מנהלת מש״א אחראית לכך שהמועמד.ת ימלאו את כל המסמכים הנדרשים ועל קביעת תאריך תחילת עבודה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 91,
+        "original_index": 48
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-092",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 49,
+      "text_he": "לוודא קליטה נעימה ומקצועית לעובד חדש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 92,
+        "original_index": 49
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-093",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 50,
+      "text_he": "מנהל.ת מגייס יצירת קשר בהודעה להגיד welcome ולפתוח ערוץ ישיר לתקשורת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 93,
+        "original_index": 50
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-094",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 51,
+      "text_he": "מנהל.ת מש״א צ׳ק אין שבועי (לכל הפחות) לטובת שמירת קשר רציף ויצירת הזדמנות נוחה לשאלות וסגירת פינות לקראת תחילת העבודה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 94,
+        "original_index": 51
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-095",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 52,
+      "text_he": "מנהל.ת מש״א הזמנת סוואג (במידה וקיים).",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 95,
+        "original_index": 52
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-096",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 53,
+      "text_he": "מנכ״ל עם החתימה, עדכון כלל הצוות על הצטרפות העובד.ת החדש.ה, מועד תחילת העבודה ומשמעויות נוספות אם יש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 96,
+        "original_index": 53
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-097",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 54,
+      "text_he": "מנהל.ת מגייס הכנת מסמך אונבורדינג על פי התבנית הקבועה של הלם קלאב.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 97,
+        "original_index": 54
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-098",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 55,
+      "text_he": "מנהל.ת מש״א תיאום פגישות של העובד.ת החדש.ה עם ההנהלה לשבועיים הראשונים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 98,
+        "original_index": 55
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-099",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 56,
+      "text_he": "באחריות סמנכ״לית אופרציה בהתאם לנוהל אופרציה לקליטת עובד חדש",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 99,
+        "original_index": 56
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-100",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 57,
+      "text_he": "הכנסה לקבוצות וואטסאפ ופייסבוק רלוונטיות - באחריות סמנכ״לית אופרציה ומנהל.ת ישיר.ה לפי הקבוצות הספציפיות",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 100,
+        "original_index": 57
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-101",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 58,
+      "text_he": "נוהל אופרציה לקליטת עובד חדש",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 101,
+        "original_index": 58
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-102",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 59,
+      "text_he": "לוודא שקליטת עובד.ת חדשים נעשית בצורה יסודית ומסודרת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 102,
+        "original_index": 59
+      },
+      "module_hint": "onboarding",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-103",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 60,
+      "text_he": "העובד עבר את השלבים המפורטים בנוהל גיוס עובד, והוחלט שיצטרף לצוות הלם קלאב",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 103,
+        "original_index": 60
+      },
+      "module_hint": "recruitment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-104",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 61,
+      "text_he": "מעקב אחרי מנהלות טכניות יעשה בטבלה",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 104,
+        "original_index": 61
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-105",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 62,
+      "text_he": "הזמנת ציוד והחתמה על טופס השבה בהתאם לנוהל ציוד עובדים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 105,
+        "original_index": 62
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-106",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 63,
+      "text_he": "שליחת מסמך אונבורדינג מותאם לעובד",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 106,
+        "original_index": 63
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-107",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 64,
+      "text_he": "נוהל ציוד לעובדים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 107,
+        "original_index": 64
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-108",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 65,
+      "text_he": "לוודא כי לעובדי הארגון במשרה מלאה קיים ציוד פיסי, תוך קביעת מסגרת תקציבית, לשם יצירת תנאי עבודה חיוביים ומועילים לעובד וכתוצאה מכך לארגון כולו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 108,
+        "original_index": 65
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-109",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 66,
+      "text_he": "העובד גויס וחתם על הסכם העסקה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 109,
+        "original_index": 66
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-110",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 67,
+      "text_he": "לכל עובד תינתן מסגרת תקציבית של 7,000 ש\"ח לרכישת ציוד לשימושו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 110,
+        "original_index": 67
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-111",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 68,
+      "text_he": "הציוד יישאר בבעלות העמותה ויוחזר אליה במידה והעובד יסיים את עבודתו בארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 111,
+        "original_index": 68
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-112",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 69,
+      "text_he": "העובד רשאי לבחור ציוד אשר מתאים עבורו ויעביר את המוצרים המבוקשים לרכישה על ידי העמותה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 112,
+        "original_index": 69
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-113",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 70,
+      "text_he": "העמותה תרכוש את הציוד עבור העובד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 113,
+        "original_index": 70
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-114",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 71,
+      "text_he": "ציוד ייחודי אשר נדרש לעובד במסגרת תפקידו, ואשר משמש למטרות תפקידו בארגון, יסופק על ידי העמותה. הציוד יישאר בבעלות העמותה ויוחזר אליה במידה והעובד יסיים את עבודתו בארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 114,
+        "original_index": 71
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-115",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 72,
+      "text_he": "העובד יבחר את הציוד אשר היה מעוניין לקבל ויעביר את הפירוט לעמותה. העמותה תרכוש את הציוד המקצועי הייחודי עבור העובד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 115,
+        "original_index": 72
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-116",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 73,
+      "text_he": "העובד יחתום על טופס התחייבות להשבת ציוד מייד עם רכישת הציוד לשימושו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 116,
+        "original_index": 73
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-117",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 74,
+      "text_he": "נוהל זה בא להגדיר את ההליך הארגוני המטפל באירועי מוגנות בצוות. נוהל זה משקף מדיניות של עידוד חברי הצוות לדווח באופן אקטיבי על מצבם הרגשי ואירועים חריגים אשר נפגעו בהם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 117,
+        "original_index": 74
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-118",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 75,
+      "text_he": "בהנחה ואין נוהל אירוע ספציפי, אירוע מוגנות מוגדר כמצוקה חריגה של חבר.ת צוות בעקבות חיכוך הקשור בעבודה באופן ישיר או עקיף. מצוקה זו יכולה לנבוע מגורמים פנימיים בארגון וכן מגורמים חיצוניים. לדוגמה הטרדה מינית הינה מקרה פרטי של אירוע מוגנות וההתייחסות אליה תיעשה בהתאם לנוהל זה ולמחויבויות הקבועות בחוק ולתקנון ההטרדה המינית.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 118,
+        "original_index": 75
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-119",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 76,
+      "text_he": "עובד.ת בצוות חווה אירוע שעונה להגדרה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 119,
+        "original_index": 76
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-120",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 77,
+      "text_he": "דיווח העובד.ת",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 120,
+        "original_index": 77
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-121",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 78,
+      "text_he": "על חבר הצוות אשר חש במצוקה חריגה לדווח לאחד מחברי פורום ההנהלה, למנהל.ת ישיר.ה או למנהלת מש״א. אם עובד היה עד או היה מודע לאירוע מוגנות, אנו מצפים ממנו לדווח.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 121,
+        "original_index": 78
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-122",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 79,
+      "text_he": "כל חבר הנהלה רשאי להכריז על הפעלת נוהל אירוע מוגנות לאחר קבלת דיווח.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 122,
+        "original_index": 79
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-123",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 80,
+      "text_he": "מינוי צוות טיפול באירוע",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 123,
+        "original_index": 80
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-124",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 81,
+      "text_he": "חברי ההנהלה ימנו, בהתאם לחומרת האירוע, צוות טיפול באירוע. הצוות ימנה חבר הנהלה, חבר נוסף (דמות משאבי אנוש הבכירה בארגון, אם לא חברת הנהלה), וכל בעל עניין רלוונטי לרבות ייעוץ משפטי. לא ימונה מי שיש לו נגיעה אישית לאירוע. מרגע מינוי הצוות, מטרתו לפתור את האירוע הנקודתי ולכן יש לו הסמכות לעשות זאת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 124,
+        "original_index": 81
+      },
+      "module_hint": "hr_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-125",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 82,
+      "text_he": "צוות הטיפול יתכנס בצורה מיידית לבירור התלונה, לרבות שמיעת המעורבים, ובדיקת העובדות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 125,
+        "original_index": 82
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-126",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 83,
+      "text_he": "משך הזמן ממועד הדיווח ועד לסיום הבירור צריך להיות קצר ככל האפשר, בהתחשב בנסיבות הספציפיות, אך לא יותר מאשר שבוע ימים. צוות הטיפול יהפוך את הטיפול האירוע לראשון בסדר העדיפויות שלו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 126,
+        "original_index": 83
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-127",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 84,
+      "text_he": "בגמר אירוע, הצוות יכריז על סיומו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 127,
+        "original_index": 84
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-128",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 85,
+      "text_he": "מרגע שהוכרז הסיום, על הצוות לכתוב דו״ח סיכום.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 128,
+        "original_index": 85
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-129",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 86,
+      "text_he": "פורום ההנהלה ידווח לעובד הנפגע על הצעדים אשר ננקטים, ויפעל לטיפול מיטבי באירוע המוגנות כך שמצוקת העובד תטופל במלואה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 129,
+        "original_index": 86
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-130",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 87,
+      "text_he": "פורום הנהלה יתכנס לדון בפרטי האירוע במלואם ויגבש רשימת מסקנות ופעולות נדרשות להימנעות מהישנות האירוע.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 130,
+        "original_index": 87
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [
+        "avoidance"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-131",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 88,
+      "text_he": "לאחר סיום טיפול וסיכום ההנהלה, בישיבת הכנופיה הקרובה יוצגו עיקרי האירוע והמסקנות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 131,
+        "original_index": 88
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-132",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 89,
+      "text_he": "קיום רוטינה ארגונית מיטיבה ומקצועית למשוב והערכת ביצועי העובדים, לטובת קידום ההתפתחות המקצועית והאישית של העובדים בהתאמה למטרות וצרכי הארגון, ובמטרה להעלות את רמת הוודאות של העובד במקומו בארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 132,
+        "original_index": 89
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-133",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 90,
+      "text_he": "יצירת מרחב בטוח לשיח, ושגרה ארגונית בריאה של משוב והערכת ביצועים, אלו תנאים הכרחיים לחווית עבודה מיטיבה ומקדמת, אישית ומקצועית. משוב דו-כיווני רציף וכן מאפשר שיפור וצמיחה מקצועית, מחזק את מערכת היחסים בין חברי הצוות והמנהלים, ומעמיק את מחויבות העובדים לארגון ולמטרותיו. בתכנון משוב שנתי נבנה תשתית פרוצדורלית - תהליך סדור וברור, ובמקביל נדאג להכשרת המנהלים בתחומי העברת מסרים ותקשורת מקרבת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 133,
+        "original_index": 90
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [
+        "sensory_discomfort",
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-134",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 91,
+      "text_he": "התאמה אישית - לכל אחד מאיתנו יש מנגנון הפעלה שונה, דרך מסוימת של העברת מסרים תתאים לאחד אבל לא בהכרח גם לאחר. רצוי להבין ככל הניתן את סוג התגובה של העובד מולו אנחנו מתנהלים ולהתאים את השיח אליו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 134,
+        "original_index": 91
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-135",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 92,
+      "text_he": "פרקטיות ומיקוד בפתרונות - לדבר על הבעיות ועל איך פותרים אותן, לא להשאיר את העובד באוויר ללא הכוונה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 135,
+        "original_index": 92
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-136",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 93,
+      "text_he": "פוקוס ארגוני - להיצמד לתמונה הגדולה ואיך המשימות של העובד משתלבות בה. להזכיר את הערך היחסי כחלק מצוות ועשייה רחבה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 136,
+        "original_index": 93
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-137",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 94,
+      "text_he": "כנות והדדיות - להיות פתוחים לתת ולקבל משוב כנה, לדבר על אתגרים משני הצדדים להנכיח את ההדדיות של מערכת היחסים בתוך הצוות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 137,
+        "original_index": 94
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-138",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 95,
+      "text_he": "שיח מהותי על תפקיד העובד בארגון, תכנון לטווח ארוך, מתקיים באופן מובנה פעם בשנה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 138,
+        "original_index": 95
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-139",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 96,
+      "text_he": "מטרת השיחה היא בירור המצב הבין אישי בארגון, איך העובד מרגיש עם התפקיד שלוהן קורות במסגרת פגישת העבודה קבועה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 139,
+        "original_index": 96
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-140",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 97,
+      "text_he": "על המנהל לשאול את העובד לשלומו הכללי, אתגרים שכדאי להכיר, איך בתפקיד ובארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 140,
+        "original_index": 97
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-141",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 98,
+      "text_he": "מצופה מהמנהל גם לשתף חזרה על מצבו בארגון לעובד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 141,
+        "original_index": 98
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-142",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 99,
+      "text_he": "מטרת השיחה היא מעבר על הKPI של העובד ולראות איפה הוא עומד ביחס אליהם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 142,
+        "original_index": 99
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-143",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 100,
+      "text_he": "איסוף מידע - המנהל הישיר יאסוף נתונים ביחס לתוכנית העובדה ותפקוד העובד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 143,
+        "original_index": 100
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority",
+        "fatigue",
+        "concentration"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-144",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 101,
+      "text_he": "סיכום ת.ע. - המנהל הישיר יחד עם המנהל הבכיר יעברו על תכנית העבודה הרבעונית של העובד ועל מדדי הביצוע ויכינו סיכום של הרבעון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 144,
+        "original_index": 101
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-145",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 102,
+      "text_he": "משוב למנהל (ולארגון)",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 145,
+        "original_index": 102
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-146",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 103,
+      "text_he": "מתן זמן יעודי לקבלת משוב מהעובד על עבודת המנהל, איפה עזר, מתי היה חסר, מה צריך ממנו כדי להצליח.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 146,
+        "original_index": 103
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-147",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 104,
+      "text_he": "סיכום תוכן השיחה ע״י המנהל הישיר ושליחה לעובד לאישרור ותיעוד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 147,
+        "original_index": 104
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-148",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 105,
+      "text_he": "את הנוסח הסופי יש להעביר למנהל הבכיר ולמנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 148,
+        "original_index": 105
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-149",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 106,
+      "text_he": "בשיחה השנתית נתבונן על השנה החולפת, נבחן אתגרים והצלחות ונתכנן יעדים אישיים לשנה הקרובה. זוהי שיחה שמטרתה לחזק את הביטחון של העובד בתפקידו ומקומו בארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 149,
+        "original_index": 106
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-150",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 107,
+      "text_he": "איסוף מידע - המנהל הישיר יאסוף משוב מקולגות בצוות ונותני שירות חיצוניים במידה ויש. כמו כן, יש לעבור על תיעוד שיחות משוב שנעשו במהלך השנה לטובת זיקוק הנקודות החשובות והדברים שחזרו על עצמם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 150,
+        "original_index": 107
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-151",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 108,
+      "text_he": "סיכום ת.ע. - המנהל הישיר יחד עם המנהל הבכיר יעברו על תכנית העבודה השנתית של העובד ועל מדדי הביצוע ויכינו סיכום של השנה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 151,
+        "original_index": 108
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-152",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 109,
+      "text_he": "שליחת חומרים מקדימים - שאלון הכנה יישלח לעובד (להתבסס על שלושת הרגלים״ - אתגר, חיברות, תנאים) ומסמך פירוט הנושאים שיעלו בפגישה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 152,
+        "original_index": 109
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-153",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 110,
+      "text_he": "משוב למנהל (ולארגון)",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 153,
+        "original_index": 110
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-154",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 111,
+      "text_he": "מתן זמן יעודי לקבלת משוב מהעובד על עבודת המנהל, איפה עזר, מתי היה חסר, מה צריך ממנו כדי להצליח.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 154,
+        "original_index": 111
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-155",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 112,
+      "text_he": "סיכום תוכן השיחה ע״י המנהל הישיר ושליחה לעובד לאישרור ותיעוד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 155,
+        "original_index": 112
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-156",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 113,
+      "text_he": "את הנוסח הסופי יש להעביר למנהל הבכיר ולמנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 156,
+        "original_index": 113
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-157",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 114,
+      "text_he": "בסיום שלב השיחות האישיות יופץ סקר שביעות רצון ארגוני שיתייחס להתנהלות הכללית של הארגון, משאבים, רוטינות, דינמיקה צוותית ותחושות כלליות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 157,
+        "original_index": 114
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-158",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 115,
+      "text_he": "קיום דיון לסיכום התהליך ומעבר על כלל העובדים בארגון, על בסיס סיכומי השיחות ותוצאות הסקר.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 158,
+        "original_index": 115
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-159",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 116,
+      "text_he": "פורום - מנהלת מש״א, סמנכ״לית אופרציה, מנכ״ל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 159,
+        "original_index": 116
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-160",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 117,
+      "text_he": "הצגת תוצרי התהליך להנהלה",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 160,
+        "original_index": 117
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-161",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 118,
+      "text_he": "הצגת תוצרי התהליך לצוות יחד עם תובנות ההנהלה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 161,
+        "original_index": 118
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-162",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 119,
+      "text_he": "שכר זהו אחד הנושאים הרגישים במערכת היחסים בין הארגון לעובד. אנחנו בהלם קלאב רוצים להסיר רגישויות ולגרום לנושא השכר להיות ניטרלי ככל האפשר - מכבד ומספק מבחינתו של העובד ואפשרי תפעולית מבחינת תקציב הארגון. משום כך, מדיניות השכר שלנו נקבעת על פי כמה עקרונות:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 162,
+        "original_index": 119
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-163",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 120,
+      "text_he": "כבוד -  חשוב לנו לתת תגמול מכבד על ההשקעה והמאמצים שמשקיעים העובדים בארגון, באופן שיצור אצלם תחושת נוחות וביטחון כלכלי מספק. אנחנו שואפים שהשכר יהיה non-issue מבחינת מה שמעסיק את העובד, לא יצור דאגה או תחושת חוסר הוגנות, פנימי-צוותי או בהשוואה לשוק.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 163,
+        "original_index": 120
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-164",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 121,
+      "text_he": "אחידות - השכר בהלם קלאב נקבע ע״י השתייכות לדרג מסויים ולא על פי מקצוע או ותק. כלל העובדים מאותה קבוצה מקבלים את אותו השכר, כמפורט בהמשך הנוהל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 164,
+        "original_index": 121
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-165",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 122,
+      "text_he": "שקיפות - גובה השכר של כל תפקיד מפורסם במלואו כבר בתיאור המשרה. שינויים ועדכונים נעשים באופן אישי (או צוותי במידה ומדובר בשינוי קולקטיבי), פרואקטיבי מצידו של הארגון.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 165,
+        "original_index": 122
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-166",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 123,
+      "text_he": "כארגון חברתי, הכסף שהעובדים ״מכניסים״ אינו חוזר אליהם. אנחנו לא מעניקים בונוסים ועמלות על יצירת הכנסות, והן מושקעות כולן בפרויקטים נוספים לקידום המטרות של הלם קלאב.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 166,
+        "original_index": 123
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-167",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 124,
+      "text_he": "עובד בארגון במשרה משמעותית, לא מנהל תחום או אנשים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 167,
+        "original_index": 124
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-168",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 125,
+      "text_he": "מנהל",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 168,
+        "original_index": 125
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-169",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 126,
+      "text_he": "עובד בארגון במשרה משמעותית, מנהל עובדים ו/או תחום אוטונומי",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 169,
+        "original_index": 126
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-170",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 127,
+      "text_he": "הנהלה",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 170,
+        "original_index": 127
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-171",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 128,
+      "text_he": "מנהל בדרג ההנהלה, מנהל אנשים ותחום אחד או כמה, כפוף ישירות למנכ״ל",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 171,
+        "original_index": 128
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-172",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 129,
+      "text_he": "הגדרת המסגרת הארגונית להשקעה בפיתוח האישי והמקצועי של העובדים, ברמה האינדיבידואלית או הצוותית, על פי הצורך הארגוני.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 172,
+        "original_index": 129
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-173",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 130,
+      "text_he": "האחריות הארגונית לנושא פיתוח העובדים היא של מנהלת מש״א. התכנון ברמה הארגונית יהיה בהנחיית סמנכ״לית אופרציה והמנכ״ל, וברמה הפרטנית תיעשה יחד עם המנהלים. כל זאת בהתאמה לצרכי הארגון ולמשאבים המיועדים לנושא.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 173,
+        "original_index": 130
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-174",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 131,
+      "text_he": "העובדים בהלם קלאב נבחרים לתפקידם על בסיס מכלול מאפיינים וגורמים, מקצועיים ואישיותיים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 174,
+        "original_index": 131
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-175",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 132,
+      "text_he": "אנחנו מאמינים שמלבד הרקע המקצועי אותו מביאים העובדים, בכל תפקיד מתגלים אתגרים יחודיים וצרכים לא צפויים, והיכולת להתמודד איתם תלויה בהכשרות נוספות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 175,
+        "original_index": 132
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-176",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 133,
+      "text_he": "אנחנו מעוניינים ליצור לכל עובד בארגון מסלול התפתחות משמעותי, סל כלים וכישורים, הרלוונטיים לתפקידו הנוכחי ולתפקידים עתידיים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 176,
+        "original_index": 133
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-177",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 134,
+      "text_he": "הכשרת ופיתוח מנהלים",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 177,
+        "original_index": 134
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-178",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 135,
+      "text_he": "מלבד שני הנושאים האלו הארגון יבחר, על פי צורך ובהתאמה לפרויקטים ולאתגרים הספציפיים של השנה, את נושאי הפוקוס בהם ירצה להכשיר את כלל העובדים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 178,
+        "original_index": 135
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-179",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 136,
+      "text_he": "הכשרה יכולה להיות חד פעמית או מתמשכת, והיא רלוונטית לכל חברי הארגון במינונים המתאימים. כמו כן, יכולות להתקיים הכשרות ברמה צוותית או מחלקתית, במידה ויש צורך ייחודי.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 179,
+        "original_index": 136
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-180",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 137,
+      "text_he": "ההכשרות הארגוניות הן חלק מהותי בתפיסה המקצועית של הארגון ועל כן מחייבות לכל העובדים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 180,
+        "original_index": 137
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-181",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 138,
+      "text_he": "לכל עובד בארגון תיבנה תכנית הכשרה ופיתוח מקצועי, על בסיס הצורך הארגוני והתחומים בהם עוסק העובד. הארגון יתכנן, בשיתוף העובד ותוך התחשבות ברצונותיו, תכנית פרטנית לכל אחד ואחד. התכנית תכלול מטרות מוגדרות ומדידות אותן נרצה להשיג במהלך השנה ולו״ז.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 181,
+        "original_index": 138
+      },
+      "module_hint": "disclosure_handling",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-182",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 139,
+      "text_he": "במסגרת זו, נייצר גם תקציב לחוגים לבחירת העובד - הכשרה שאינה בהכרח קשורה ישירות לתפקיד. השקעת זמן של העובד בעצמו, המאפשרת לו לצמוח, להתפתח, להיות יצירתי, היא חשובה ונרצה לתמוך בה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 182,
+        "original_index": 139
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-183",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 140,
+      "text_he": "קביעת תקציב פיתוח שנתי לכל עובד - באחריות סמנכ״לית אופרציה ובשיתוף מנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 183,
+        "original_index": 140
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-184",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 141,
+      "text_he": "מיפוי שאיפות ורצונות העובדים - שאלון ושיחה עם המנהל.ת הישירה - יבוצע במסגרת שיח ההתבוננות של השנה הקודמת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 184,
+        "original_index": 141
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-185",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 142,
+      "text_he": "שיחה 1:1 של כל אחד ממנהלי העובדים עם מנהלת מש״א למיפוי הרצונות של העובדים, בשילוב חוות הדעת של המנהל.ת הישיר.ה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 185,
+        "original_index": 142
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-186",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 143,
+      "text_he": "בחירת נושאי פוקוס רוחביים ותמחור שלהם - שיחה בפורום ההנהלה ומנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 186,
+        "original_index": 143
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-187",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 144,
+      "text_he": "שיתוף כלל הצוות בהחלטה על הנושאים הארגוניים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 187,
+        "original_index": 144
+      },
+      "module_hint": "disclosure_handling",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-188",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 145,
+      "text_he": "שיחות 1:1 של המנהלים הישירים עם העובדים ושיתוף בתכנית האישית של כל אחד ואחד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 188,
+        "original_index": 145
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-189",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 146,
+      "text_he": "כתלות בתכנית שהוגדרה - מעקב לאורך השנה על התקדמות התהליך האישי, בדיקה רבעונית על עמידה במטרות ושביעות רצון העובד - באחריות מנהל.ת ישיר.ה ובמעקב של מנהלת מש״א.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 189,
+        "original_index": 146
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-190",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 147,
+      "text_he": "מנהלות",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 190,
+        "original_index": 147
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-191",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 148,
+      "text_he": "תקציב - 3,000 ש״ח בשנה - 67% - הכשרה (הכשרה מקצועית שהארגון מוביל ומגדיר) / 33% - חוג (העובד מחליט מה יעשה לו טוב).",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 191,
+        "original_index": 148
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-192",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 149,
+      "text_he": "עיתוי - ההכשרה המקצועית תתבצע במסגרת שעות העבודה והחוג על בסיס שעות הפנאי של העובד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 192,
+        "original_index": 149
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-193",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 150,
+      "text_he": "אנחנו מאמינים שכדי להיות פרודוקטיבים ולהנות מזמן העבודה שלנו, אנחנו צריכים לקחת חופש, בין אם של חצי יום ובין אם של חודש. על מנת לאפשר לנו כעובדים לתכנן את החופשים שלנו מראש, ולארגון להיות מוכן עם מילויי מקום ותכנון פרויקטים, חשוב לנו לפרט את הרוטינה הכללית של חופשים וחגים בהלם קלאב",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 193,
+        "original_index": 150
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-194",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 151,
+      "text_he": "האחריות על הגדרות ונהלים בהקשרי החופשות היא של מנהלת מש״א בתיאום עם סמנכ״לית אופרציה. בקשות ספציפיות נעשות אל מול המנהל.ת הישירה, עדיף כמה שיותר זמן מראש.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 194,
+        "original_index": 151
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-195",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 152,
+      "text_he": "כל עובד.ת במשרה מלאה בארגון זכאים ל-21 ימי חופשה בשנה, מתוכם 11 ימים הינם חופשות מרוכזות של הארגון והיתר בניהול עצמי. את הימים האלו ניתן לקחת במרוכז או בבודדים (ניתן לחלק גם לחצאי ימים במידה ונדרש).",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 195,
+        "original_index": 152
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [
+        "procrastination",
+        "time_management"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-196",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 153,
+      "text_he": "בשאיפה, כל עובד.ת יקחו לפחות חופשה שנתית אחת ארוכה של יותר מ-5 ימים (לא כולל סופ״ש). על חופשות אלו נבקש לעדכן כחודש מראש, במידת האפשר.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 196,
+        "original_index": 153
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-197",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 154,
+      "text_he": "בנוסף, בתיאום עם המנהל.ת, עובד.ת יכולים לבקש לצבור ימי חופש לטובת חופשה שנתית ארוכה (יותר משבוע). במידה ולא מתוכננת חופשה כזו אנו שואפים לקחת חופש כל חודשיים-שלושה. חשוב לא למשוך פרק זמן ארוך מידי ללא חופשה משמעותית.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 197,
+        "original_index": 154
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-198",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 155,
+      "text_he": "בימי שלישי בבוקר יהיה חופש ארגוני עד השעה 13:00. כלומר לא עובדים, אין פגישות, אין מיילים, חוץ מדברים דחופים באמת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 198,
+        "original_index": 155
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [
+        "morning_functioning"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-199",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 156,
+      "text_he": "בנוסף, הוחלט ליצור שגרת חופשים ארגוניים קבועה מדי שנה. ימי חופש אלו יורדים מהמכסה השנתית של כל עובד:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 199,
+        "original_index": 156
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-200",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 157,
+      "text_he": "עובד.ת המעוניינ.ת לצאת לחופש יתאם עם המנהל.ת הישיר.ה שלו את המועד והמשמעויות הארגוניות. ככלל - נשאף לאשר לעובדים כל חופש שיבקשו, אלא אם יש סיבה הגיונית לא לאשר במועד המסוים, ואז נתאם עם העובד.ת מועד קרוב אחר.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 200,
+        "original_index": 157
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-201",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 158,
+      "text_he": "העובד.ת ת.ימלא את הטופס המצורף. הבקשה מגיעה אל מנהלת מש״א והיא מוודאת שאין בעיה עם ימי החופש, מוסיפה למעקב ומאשרת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 201,
+        "original_index": 158
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-202",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 159,
+      "text_he": "לאחר השלמת שני השלבים האלו באחריות העובד.ת לסמן ביומן שנמצאים בחופש ולדחות פגישות שכבר נקבעו.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 202,
+        "original_index": 159
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-203",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 160,
+      "text_he": "ע״ח ימי החופש של העובד.ת",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 203,
+        "original_index": 160
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-204",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 161,
+      "text_he": "ע״ח ימי החופש של העובד.ת",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 204,
+        "original_index": 161
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-205",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 162,
+      "text_he": "ע״ח ימי החופש של העובד.ת",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 205,
+        "original_index": 162
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-206",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 163,
+      "text_he": "לפרט את התנהלות הארגון בשוטף ובאירועים מיוחדים, על פי התפיסות המובילות אותנו בתחומי הפרט ורווחת העובדים,  תוך התייחסות לדינמיקות צוותיות ומערכות יחסים בתוך הארגון וכלפי חוץ.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 206,
+        "original_index": 163
+      },
+      "module_hint": "crisis_response",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-207",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 164,
+      "text_he": "באחריות מנהלת מש״א לתכנן ולהוציא לפועל את כל תוכניות הרווחה והחגים, החברתיות והפרטיות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 207,
+        "original_index": 164
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-208",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 165,
+      "text_he": "חגים - כל עובד.ת במשרה מלאה יקבלו שי לחג פעמיים בשנה - בראש השנה ובפסח, ללא תלות במיקום הפיזי (ישראל, ארה״ב ועוד), בשווי 400 ש״ח.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 208,
+        "original_index": 165
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-209",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 166,
+      "text_he": "מפגשי צוות פיזיים וסוציאליזציה - מטרתם גיבוש הצוות והעמקת החיבורים הבינאישיים בארגון:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 209,
+        "original_index": 166
+      },
+      "module_hint": "physical_environment",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-210",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 167,
+      "text_he": "אבלות - משלוח אוכל בעלות של 250 ש״ח + זר לטקס הלוויה (במידה ומדובר בקרבה ראשונה ויש נוכחות של חברי הצוות)",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 210,
+        "original_index": 167
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-211",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 168,
+      "text_he": "עזיבת חבר צוות",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 211,
+        "original_index": 168
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-212",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 169,
+      "text_he": "לייצר לחבר.ת הצוות שעוזב.ת חווית עזיבה נעימה ומיטיבה ככל האפשר.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 212,
+        "original_index": 169
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-213",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 170,
+      "text_he": "לאפשר לחברי הצוות הנותרים להיפרד אישית ומקצועית באופן מיטיב ומכבד.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 213,
+        "original_index": 170
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-214",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 171,
+      "text_he": "לשמור על חברי הצוות הנותרים ומנהל.ת הצוות מבחינה רגשית, לוודא שמבינים את הסיבות למהלך העזיבה ומבינים משמעויות (או חוסר משמעויות) לגביהם.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 214,
+        "original_index": 171
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-215",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 172,
+      "text_he": "להימנע מטעויות חוקיות, בירוקרטיות או טכניות, לוודא סגירת קצוות אופרטיביים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 215,
+        "original_index": 172
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-216",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 173,
+      "text_he": "ניהול וליווי כל היבטי אירוע העזיבה הוא באחריות מנהל.ת מש״א, בתיאום עם סמנכ״לית אופרציה והמנהל.ת הישיר.ה של העובד.ת שעוזב.ת. אלא אם צוין אחרת בסעיף ספציפי, היא זו שמבצעת ומוציאה לפועל את המשימות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 216,
+        "original_index": 173
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-217",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 174,
+      "text_he": "לאחר קבלת הודעה מהעובד.ת על הרצון לעזוב יש לקיים את השלבים הבאים:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 217,
+        "original_index": 174
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-218",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 175,
+      "text_he": "הודעה על התפטרות: העובד יודיע בדרכו על רצון לסיים את עבודתו. בשיחה הזו, מצופה ממנהל לשאול על סיבות העזיבה, והאם יש אפשרות לשנות את דעתו. המנהל לא ישכנע אותו ולא יענה לבקשותיו, לפני שיחה עם חבר הנהלה. בהינתן שההחלטה היא סופית יש להחליט על תאריך העבודה האחרון כדי שהארגון יוכל לתכנן משמעויות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 218,
+        "original_index": 175
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-219",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 176,
+      "text_he": "דיון משאבי אנוש: יכונס פורום בו יהיה חברים המנהל הישיר, המנהל הבכיר, מנכ״ל ומנהלת מש״א. ידונו על אפשרויות ומשמעויות ארגוניות. החלטה על חלוקת המשימות של העובד.ת העוזב.ת ולוחות זמנים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 219,
+        "original_index": 176
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-220",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 177,
+      "text_he": "הודעה להנהלה: יכתב סיכום וישלח לפורום ההנהלה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 220,
+        "original_index": 177
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-221",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 178,
+      "text_he": "תכנון עזיבה עם העובד.ת: קביעת פגישת מיפוי משימות על השולחן וחשיבה על העברתן הלאה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 221,
+        "original_index": 178
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-222",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 179,
+      "text_he": "הודעה לחברי הצוות הקרובים: ע״י המנהל.ת הישיר.ה בשיתוף העובד.ת שעוזב.ת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 222,
+        "original_index": 179
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-223",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 180,
+      "text_he": "הודעה לכלל הארגון והספקים הרלוונטים: ע״י המנכ״ל בשיתוף העובד.ת שעוזב.ת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 223,
+        "original_index": 180
+      },
+      "module_hint": "disclosure_handling",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-224",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 181,
+      "text_he": "קליטת משימות: שיחות 1:1 עם העובדים שמקבלים תחומי אחריות ומשימות לטובת משמעויות ותעדוף - יבוצע ע״י המנהלים הישירים של כל עובד ועובד. ליווי תהליכי העברת משימות ע״י המנהל.ת הישיר.ה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 224,
+        "original_index": 181
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-225",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 182,
+      "text_he": "החלטה על פיטורי עובד.ת יכולה להתבצע או במקרה של צמצומים או ביטול תקן, או אחרי שהושלם מהלך של שיפור ביצועים ושימוע. לשם הבהירות, לארגון עומדת הזכות לסיים העסקה בכל מקרה שהוא רואה לנכון ועומד במגבלות החוק (אסור לפטר אישה בהריון, עובד.ת במילואים, חושף שחיתות בארגון ועוד כמה מקרים שהחוק מפרט). חשוב לזכור - ההחלטה על הפסקת ההתקשרות מתקבלת רק בסיום תהליך שימוע. עד שלב זה לא התקבלה החלטה אלא נבחנות האפשרויות. להלן פירוט השלבים בתהליך פיטורין בהלם קלאב:",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 225,
+        "original_index": 182
+      },
+      "module_hint": "communication_protocols",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-226",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 183,
+      "text_he": "העובד.ת לא עמד.ה במטרות המשותפות שהוצבו בתהליך ההשתפרות.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 226,
+        "original_index": 183
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-227",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 184,
+      "text_he": "את הבקשה לקיום תהליך שיפור ביצועים ת.יעלה המנהל.ת הישיר.ה של העובד אל חבר.ת הנהלה, ורק לו.ה הסמכות להחליט על המהלך.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 227,
+        "original_index": 184
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-228",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 185,
+      "text_he": "הזמנה לשימוע -  המנהל.ת הישיר.ה יזמנו את העובד.ת לשיחה 1:1 בה מפורטות הסיבות לבחינת המשך העסקה והאפשרויות על הפרק.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 228,
+        "original_index": 185
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-229",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 186,
+      "text_he": "בסמיכות לסיום הפגישה ית.ישלח המנהל.ת הישיר.ה לעובד.ת במייל זימון לשימוע ופירוט בכתב של הדברים שעלו בשיחה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 229,
+        "original_index": 186
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-230",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 187,
+      "text_he": "לפחות שלושה ימי עבודה לאחר מכן (החוק מתייחס למינימום של 24 שעות) - קיום שימוע בנוכחות המנהל.ת הישיר.ה, מנהל.ת מש״א והמנהל.ת הבכיר.ה. את השימוע יש לקיים על פי הנדרש בחוק.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 230,
+        "original_index": 187
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-231",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 188,
+      "text_he": "עד יום לאחר קיום השימוע יש לשלוח לעובד.ת את פרוטוקול השימוע בכתב לטובת אישור וחידודים מצידו.ה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 231,
+        "original_index": 188
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-232",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 189,
+      "text_he": "עד יומיים לאחר השימוע ת.יתאם המנהל.ת הישירה שיחה עם העובד.ת להודיע בע״פ על ההחלטה שהתקבלה. בשלב זה, במידה והוחלט על סיום העסקה יקבע תאריך העבודה האחרון, בתיאום עם העובד ורצונותיו ובהתאמה לחוזה העסקה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 232,
+        "original_index": 189
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-233",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 190,
+      "text_he": "עד יום לאחר קיום שיחת ההודעה ת.ישלח המנהל.ת הישיר.ה לעובד.ת מייל עם כל הפרטים, תאריכים ומשמעותם, שיהיה לו.ה את הכל מסודר, ומתוך הבנה שאחרי הודעה על סיום העסקה או שינוי תפקיד, הקשב של העובד.ת בטח נפגע ולא היה במצב לזכור פרטים טכניים.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 233,
+        "original_index": 190
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-234",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 191,
+      "text_he": "הודעה לחברי הצוות הקרובים והקולגות - ע״י המנהל.ת הישיר.ה ובמידה וזה מתאים גם בשיתוף העובד.ת שעוזב.ת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 234,
+        "original_index": 191
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-235",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 192,
+      "text_he": "הודעה לכלל הארגון - ע״י המנכ״ל ובמידה ומתאים גם בשיתוף העובד.ת שעוזב.ת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 235,
+        "original_index": 192
+      },
+      "module_hint": "disclosure_handling",
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-236",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 193,
+      "text_he": "שיחות 1:1 עם העובדים שמקבלים אחריויות ומשימות לטובת משמעויות ותעדוף.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 236,
+        "original_index": 193
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-237",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 194,
+      "text_he": "ליווי תהליכי העברת משימות ע״י המנהל.ת הישיר.ה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 237,
+        "original_index": 194
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-238",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 195,
+      "text_he": "עובד.ת מעל ותק של שנה - יש לשלם הבראה, ותשלום יתרת פיצויים - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 238,
+        "original_index": 195
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-239",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 196,
+      "text_he": "פדיון ימי חופשה - במידה ויש יתרה יש לפדות לעובד.ת במשכורת האחרונה - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 239,
+        "original_index": 196
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-240",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 197,
+      "text_he": "לוודא שהעובד.ת שלח.ה מייל או הודעה בכתב על הרצון לעזוב בסמיכות להודעה בע״פ, לטובת חישוב ימי ההודעה המוקדמת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 240,
+        "original_index": 197
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-241",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 198,
+      "text_he": "תיעוד כל מסמכי השימוע והשיח הכתוב עם העובד.ת.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 241,
+        "original_index": 198
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-242",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 199,
+      "text_he": "להזכיר לעובד.ת שעוזב.ת להוציא מידע ומסמכים שהם אולי רוצים (אדמיניסטרציה למשל) ולהגדיר איתם באיזה תאריך ייסגר המייל.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 242,
+        "original_index": 199
+      },
+      "module_hint": null,
+      "barrier_ids_inferred": [],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-PROC-243",
+      "type": "implementation_action",
+      "subtype": "role_assignment",
+      "original_index": 200,
+      "text_he": "במקרה של מיילים שיש סבירות גבוהה שעוד ישלחו אליהם דברים, ניתן לשנות סיסמה ולהפעיל מנגנון העברה לתיבה של מישהו אחר (מנהל או מחליף) - באחריות סמנכ״לית אופרציה.",
+      "source_ref": {
+        "file": "ספר נהלים ארגוני לדוגמה - נגישות רגשית.docx",
+        "role": "implementation_authority",
+        "unit_index": 243,
+        "original_index": 200
+      },
+      "module_hint": "manager_training",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    }
+  ]
+}
