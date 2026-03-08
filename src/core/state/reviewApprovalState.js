@@ -17,6 +17,9 @@
  *   - 'escalated'  = flagged for senior review (system_owner or clinical authority)
  */
 
+import { createAuditLog } from '../models/auditLog.js';
+import { appendAuditLog } from '../../admin/store.js';
+
 export const REVIEW_STATES = {
   PENDING:    'pending',
   IN_REVIEW:  'in_review',
@@ -58,5 +61,19 @@ export function transitionReview(reviewItem, toState, opts = {}) {
   if (!isValidReviewTransition(reviewItem.state, toState)) {
     throw new Error(`Invalid review transition: ${reviewItem.state} → ${toState}`);
   }
+
+  // FPP §9.6: every review state transition must be logged
+  const log = createAuditLog({
+    entityType: 'approval',
+    entityId: reviewItem.id ?? 'unknown',
+    action: `review_transition:${reviewItem.state}→${toState}`,
+    changedBy: opts.assignedTo ?? opts.resolvedBy ?? 'system',
+    diff: { from: reviewItem.state, to: toState },
+    meaningChanged: false,
+    scope: 'local',
+    reason: opts.reason ?? `Review state transition: ${reviewItem.state} → ${toState}`,
+  });
+  appendAuditLog(log);
+
   return { ...reviewItem, state: toState, ...opts };
 }

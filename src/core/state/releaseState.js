@@ -17,6 +17,9 @@
  * Every report must reach either 'archived' or 'withheld' — no silent drops.
  */
 
+import { createAuditLog } from '../models/auditLog.js';
+import { appendAuditLog } from '../../admin/store.js';
+
 export const RELEASE_STATES = {
   DRAFT_GENERATED:              'draft_generated',
   ADMIN_REVIEW_REQUIRED:        'admin_review_required',
@@ -89,6 +92,19 @@ export function transitionRelease(report, toState, opts = {}) {
   if (opts.deliveredAt || toState === 'delivered_to_user' || toState === 'sent_to_employer') {
     updated.deliveredAt = opts.deliveredAt ?? now;
   }
+
+  // FPP §9.6: every release state transition must be logged
+  const log = createAuditLog({
+    entityType: 'report',
+    entityId: report.id ?? 'unknown',
+    action: `release_transition:${report.state}→${toState}`,
+    changedBy: opts.changedBy ?? 'system',
+    diff: { from: report.state, to: toState },
+    meaningChanged: false,
+    scope: 'local',
+    reason: opts.reason ?? `Release state transition: ${report.state} → ${toState}`,
+  });
+  appendAuditLog(log);
 
   return updated;
 }

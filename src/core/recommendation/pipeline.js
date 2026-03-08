@@ -17,6 +17,8 @@
 import { SCENARIO_DATABASE } from '../../engines/translation/workplace_scenarios.js';
 import { createRenderedRecommendation } from '../models/recommendation.js';
 import { meetsDisclosureLevel } from './disclosureFilter.js';
+import { createAuditLog } from '../models/auditLog.js';
+import { appendAuditLog } from '../../admin/store.js';
 
 // ─── Type definitions ─────────────────────────────────────────────────────────
 
@@ -144,6 +146,7 @@ export function retrieveCandidates(barrierIds, templateOverrides = null) {
       for (const acc of (scenario.accommodations ?? [])) {
         candidates.push({
           id: `TPL-${barrierId.toUpperCase().slice(0, 8)}-${String(seqId).padStart(3, '0')}`,
+          version: '1.0',
           familyId: `FAM-${barrierId}`,
           barrierTags: [barrierId],
           stageTags: ['active_employment', 'onboarding', 'job_seeking'],
@@ -329,6 +332,8 @@ export function packageRecommendations(selected, caseProfile) {
     createRenderedRecommendation({
       templateId: template.id,
       caseId,
+      barrierIds: template.barrierTags ?? [],
+      sourceIds: template.knowledgeSourceIds ?? [],
       audience: 'user',
       disclosureLevel: 'full_voluntary',
       renderedText: {
@@ -350,6 +355,8 @@ export function packageRecommendations(selected, caseProfile) {
           createRenderedRecommendation({
             templateId: template.id,
             caseId,
+            barrierIds: template.barrierTags ?? [],
+            sourceIds: template.knowledgeSourceIds ?? [],
             audience: 'employer',
             disclosureLevel: caseProfile.disclosureLevel,
             renderedText: {
@@ -434,6 +441,27 @@ export function runRecommendationPipeline(pipelineResult, profile, opts = {}) {
 
   // Step 7: Filter out rejected items from top-level packages
   const filterApproved = recs => recs.filter(r => r.reviewStatus !== 'rejected');
+
+  // Audit: persist gate log and pipeline summary for full traceability
+  const pipelineAuditLog = createAuditLog({
+    entityType: 'recommendation_pipeline',
+    entityId: caseProfile.caseId ?? 'unknown',
+    action: 'pipeline_run',
+    changedBy: 'system',
+    diff: {
+      candidates: candidates.length,
+      eligible: eligible.length,
+      selected: deduped.length,
+      gateLog,
+      barrierIds: caseProfile.barrierIds,
+      disclosureLevel: caseProfile.disclosureLevel,
+      employmentStage: caseProfile.employmentStage,
+    },
+    meaningChanged: false,
+    scope: 'local',
+    reason: 'Recommendation pipeline run',
+  });
+  appendAuditLog(pipelineAuditLog);
 
   return {
     caseProfile,

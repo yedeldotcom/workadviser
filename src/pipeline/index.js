@@ -13,6 +13,8 @@ import { interpretProfile } from '../engines/interpretation/index.js';
 import { translateToWorkplace } from '../engines/translation/index.js';
 import { generateImplementationPlan } from '../engines/implementation/index.js';
 import { generateFraming } from '../engines/framing/index.js';
+import { createAuditLog } from '../core/models/auditLog.js';
+import { appendAuditLog } from '../admin/store.js';
 
 /**
  * Run the full pipeline.
@@ -21,9 +23,11 @@ import { generateFraming } from '../engines/framing/index.js';
  * @param {string} [input.phase='pre_employment'] - coaching phase
  * @param {string} [input.orgReadiness='basic'] - organization readiness level
  * @param {string} [input.audience='hr'] - target audience for framing
+ * @param {string} [input.sessionId] - Optional session ID for audit traceability
+ * @param {string} [input.userId] - Optional user ID for audit traceability
  * @returns {PipelineResult}
  */
-export function runPipeline({ responses, phase = 'pre_employment', orgReadiness = 'basic', audience = 'hr' }) {
+export function runPipeline({ responses, phase = 'pre_employment', orgReadiness = 'basic', audience = 'hr', sessionId = null, userId = null }) {
   // Engine 1: Intake — score and profile
   const intakeProfile = scoreResponses(responses);
 
@@ -39,7 +43,7 @@ export function runPipeline({ responses, phase = 'pre_employment', orgReadiness 
   // Engine 5: Framing — employer communication
   const framing = generateFraming(implementation, audience);
 
-  return {
+  const result = {
     engines: {
       intake: intakeProfile,
       interpretation,
@@ -59,6 +63,29 @@ export function runPipeline({ responses, phase = 'pre_employment', orgReadiness 
     },
     timestamp: new Date().toISOString(),
   };
+
+  // FPP §9.6: all important outputs must be traceable
+  const log = createAuditLog({
+    entityType: 'pipeline',
+    entityId: sessionId ?? userId ?? 'anonymous',
+    action: 'pipeline_run',
+    changedBy: 'system',
+    diff: {
+      phase,
+      orgReadiness,
+      audience,
+      overallSeverity: result.summary.overallSeverity,
+      criticalBarriersCount: result.summary.criticalBarriersCount,
+      patternsDetected: result.summary.patternsDetected,
+      riskFlagIds: result.summary.riskFlags.map(f => f.id),
+    },
+    meaningChanged: false,
+    scope: 'local',
+    reason: 'Full 5-engine pipeline run',
+  });
+  appendAuditLog(log);
+
+  return result;
 }
 
 /**

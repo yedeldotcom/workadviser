@@ -45,13 +45,17 @@
  * @property {string} text_en
  *
  * @typedef {Object} RenderedRecommendation
+ * @property {string} id
+ * @property {string} version
  * @property {string} templateId
  * @property {string} caseId
- * @property {string} audience      - 'user' | 'employer' | 'hr' | 'direct_manager'
+ * @property {string[]} barrierIds   - Barrier IDs addressed by this recommendation
+ * @property {string[]} sourceIds    - Knowledge source IDs backing this recommendation
+ * @property {string} audience       - 'user' | 'employer' | 'hr' | 'direct_manager'
  * @property {DisclosureSuitability} disclosureLevel
  * @property {{ he: string, en: string }} renderedText
  * @property {TimeHorizon} timeHorizon
- * @property {string} actor         - Who should implement this
+ * @property {string} actor          - Who should implement this
  * @property {ReviewStatus} reviewStatus
  */
 
@@ -102,8 +106,12 @@ export function createRecommendationTemplate(fields = {}) {
 
 export function createRenderedRecommendation(fields = {}) {
   return {
+    id: fields.id ?? crypto.randomUUID(),
+    version: fields.version ?? '1.0',
     templateId: fields.templateId ?? null,
     caseId: fields.caseId ?? null,
+    barrierIds: fields.barrierIds ?? [],
+    sourceIds: fields.sourceIds ?? [],
     audience: fields.audience ?? 'hr',
     disclosureLevel: fields.disclosureLevel ?? 'functional_only',
     renderedText: fields.renderedText ?? { he: '', en: '' },

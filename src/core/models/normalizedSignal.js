@@ -26,6 +26,7 @@
 export function createNormalizedSignal(fields = {}) {
   return {
     id: fields.id ?? crypto.randomUUID(),
+    version: fields.version ?? '1.0',
     sourceMessageId: fields.sourceMessageId ?? null,
     sessionId: fields.sessionId ?? null,
     signalType: fields.signalType ?? 'barrier_score',
