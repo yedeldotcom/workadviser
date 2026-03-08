@@ -22,15 +22,20 @@ const _auditLog          = new Map(); // logId → AuditLog
 const _pipelineResults       = new Map(); // sessionId → pipelineResult
 const _changeEvents          = new Map(); // eventId → ChangeEvent
 const _followUpCheckins      = new Map(); // checkinId → FollowUpCheckin
-const _knowledgeItems        = new Map(); // itemId → KnowledgeItem
+const _knowledgeItems          = new Map(); // itemId → KnowledgeItem
 const _recommendationTemplates = new Map(); // templateId → RecommendationTemplate
-const _feedback              = new Map(); // feedbackId → RecommendationFeedback
+const _feedback                = new Map(); // feedbackId → RecommendationFeedback
+const _phoneIndex              = new Map(); // phoneNumber → userId (lookup index)
 
 // ─── Write ────────────────────────────────────────────────────────────────────
 // Each save* function upserts by primary key and returns the saved object.
 // appendAuditLog uses entry.id as key (audit entries are immutable once written).
 
-export function saveUser(user)               { _users.set(user.id, user); return user; }
+export function saveUser(user) {
+  _users.set(user.id, user);
+  if (user.phoneNumber) _phoneIndex.set(user.phoneNumber, user.id);
+  return user;
+}
 export function saveProfile(profile)         { _profiles.set(profile.userId, profile); return profile; }
 export function saveSession(session)         { _sessions.set(session.id, session); return session; }
 export function saveMessage(message)         { _messages.set(message.id, message); return message; }
@@ -51,6 +56,8 @@ export function saveFeedback(fb)                   { _feedback.set(fb.id, fb); r
 // Each get* function returns the entity or null (never throws for missing IDs).
 
 export function getUser(userId)              { return _users.get(userId) ?? null; }
+/** Lookup user by WhatsApp phone number (E.164 format). Returns null if not found. */
+export function getUserByPhone(phoneNumber)  { const id = _phoneIndex.get(phoneNumber); return id ? (_users.get(id) ?? null) : null; }
 export function getProfile(userId)           { return _profiles.get(userId) ?? null; }
 export function getSession(sessionId)        { return _sessions.get(sessionId) ?? null; }
 export function getMessage(messageId)        { return _messages.get(messageId) ?? null; }
@@ -130,6 +137,7 @@ export function resetStore() {
   _knowledgeItems.clear();
   _recommendationTemplates.clear();
   _feedback.clear();
+  _phoneIndex.clear();
 }
 
 /** Store statistics — useful for health check endpoint */

@@ -544,7 +544,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0–3, 5–10 are complete.
+Steps 0–10 + Step 4 are complete. All planned implementation steps are done.
 
 ---
 
@@ -555,7 +555,7 @@ Steps 0–3, 5–10 are complete.
 - [x] Step 1: Core data model (18 objects) ✅
 - [x] Step 2: State machines (5 machines) ✅
 - [x] Step 3: Interview / session handling + LLM integration ✅ (formerly Step 4)
-- [ ] Step 4: Landing page + WhatsApp entry (deferred)
+- [x] Step 4: Landing page + WhatsApp entry ✅
 - [x] Step 5: Admin queues + main case page ✅
 - [x] Step 6: Logic map + recommendation workbench (disclosure filter) ✅
 - [x] Step 7: Report objects + release states (4 output types) ✅
