@@ -28,7 +28,7 @@
 import { Router } from 'express';
 import { findOrCreateUser, findOrCreateSession, routeMessage } from './userRouter.js';
 import { sendMessages } from './sender.js';
-import { saveSession } from '../admin/base44Store.js';
+import { saveSession } from '../admin/store.js';
 
 const router = Router();
 const PROVIDER = process.env.WHATSAPP_PROVIDER ?? 'stub';

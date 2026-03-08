@@ -24,7 +24,7 @@ import { createUserProfile } from '../core/models/userProfile.js';
 import {
   saveUser, saveProfile, saveSession, saveMessage, getSessionsForUser,
   getUserByPhone,
-} from '../admin/base44Store.js';
+} from '../admin/store.js';
 import {
   createSession,
   resumeSession,
