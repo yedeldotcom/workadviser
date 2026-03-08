@@ -15,7 +15,7 @@
  */
 
 import { SCENARIO_DATABASE } from '../../engines/translation/workplace_scenarios.js';
-import { createRenderedRecommendation } from '../models/recommendation.js';
+import { createRenderedRecommendation, createTracingChain } from '../models/recommendation.js';
 import { meetsDisclosureLevel } from './disclosureFilter.js';
 import { createAuditLog } from '../models/auditLog.js';
 import { appendAuditLog } from '../../admin/store.js';
@@ -72,6 +72,7 @@ import { appendAuditLog } from '../../admin/store.js';
  * @property {Array<{ templateId: string, failedGate: string }>} gateLog
  * @property {Array<{ template: CandidateTemplate, score: number }>} selected - After dedup
  * @property {{ user: object[], employer: object[], hr: object[] }} packages
+ * @property {import('../models/recommendation.js').TracingChain[]} chains - Full signal→barrier→pattern→recommendation tracing chains (FPP §9.6)
  * @property {{ totalSelected: number, autoApproved: number, pendingReview: number, needsHumanReview: boolean }} summary
  */
 
@@ -442,6 +443,31 @@ export function runRecommendationPipeline(pipelineResult, profile, opts = {}) {
   // Step 7: Filter out rejected items from top-level packages
   const filterApproved = recs => recs.filter(r => r.reviewStatus !== 'rejected');
 
+  // Step 7b: Build TracingChains — FPP §9.6 Non-Negotiable 2
+  // Each chain consolidates the full reasoning path for one selected recommendation:
+  //   detected signal IDs → barrier IDs → intake patterns → template → rendered recommendation
+  const intakePatterns = pipelineResult?.engines?.intake?.patterns ?? [];
+  const caseId = caseProfile.caseId ?? 'unknown';
+  const chains = deduped.map(({ template, score }) => {
+    // Find the rendered recommendation for this template (user audience)
+    const rendered = packages.user.find(r => r.templateId === template.id);
+    // Find intake patterns that implicate any of this template's barrier tags
+    const relatedPatternIds = intakePatterns
+      .filter(p => (p.barriers ?? []).some(b => template.barrierTags.includes(b)))
+      .map(p => p.id);
+    return createTracingChain({
+      recommendationId: rendered?.id ?? null,
+      templateId: template.id,
+      templateVersion: template.version ?? '1.0',
+      barrierIds: template.barrierTags,
+      patternIds: relatedPatternIds,
+      detectedSignalIds: [], // populated by sessionManager when NormalizedSignals are attached
+      knowledgeSourceIds: template.knowledgeSourceIds,
+      score,
+      caseId,
+    });
+  });
+
   // Audit: persist gate log and pipeline summary for full traceability
   const pipelineAuditLog = createAuditLog({
     entityType: 'recommendation_pipeline',
@@ -468,6 +494,7 @@ export function runRecommendationPipeline(pipelineResult, profile, opts = {}) {
     candidates: candidates.length,
     eligible: eligible.length,
     gateLog,
+    chains,
     selected: deduped,
     packages: {
       user:     filterApproved(packages.user),

@@ -459,3 +459,131 @@ describe('runRecommendationPipeline — integration', () => {
     assert.ok(result.summary.totalSelected >= 0);
   });
 });
+
+// ─── TracingChain (FPP §9.6 Non-Negotiable 2) ─────────────────────────────────
+
+import { createTracingChain } from '../../src/core/models/recommendation.js';
+import { resetStore } from '../../src/admin/store.js';
+
+beforeEach(() => resetStore());
+
+describe('createTracingChain', () => {
+  test('creates chain with stable id and default fields', () => {
+    const chain = createTracingChain({ templateId: 'TPL-001', score: 72 });
+    assert.ok(chain.id);
+    assert.equal(chain.templateId, 'TPL-001');
+    assert.equal(chain.score, 72);
+    assert.deepEqual(chain.detectedSignalIds, []);
+    assert.ok(chain.gatesPassed.length === 7);
+    assert.ok(chain.createdAt);
+  });
+
+  test('patternIds and barrierIds are stored', () => {
+    const chain = createTracingChain({
+      barrierIds: ['sensory_discomfort'],
+      patternIds: ['hypervigilance'],
+      knowledgeSourceIds: ['src-1'],
+    });
+    assert.deepEqual(chain.barrierIds, ['sensory_discomfort']);
+    assert.deepEqual(chain.patternIds, ['hypervigilance']);
+    assert.deepEqual(chain.knowledgeSourceIds, ['src-1']);
+  });
+
+  test('two chains have distinct ids', () => {
+    const c1 = createTracingChain({});
+    const c2 = createTracingChain({});
+    assert.notEqual(c1.id, c2.id);
+  });
+});
+
+describe('runRecommendationPipeline — TracingChain output', () => {
+  const pr = makePipelineResult({
+    engines: {
+      intake: {
+        barrierScores: { sensory_discomfort: 4, irritability: 4 },
+        meanScore: 4.0,
+        overallSeverity: 'high',
+        criticalBarriers: [
+          { id: 'sensory_discomfort', he: 'חושי', en: 'Sensory', score: 4, cluster: 'physiological' },
+          { id: 'irritability', he: 'רגזנות', en: 'Irritability', score: 4, cluster: 'emotional' },
+        ],
+        clusterScores: { physiological: 4, emotional: 4 },
+        patterns: [
+          { id: 'hypervigilance', barriers: ['sensory_discomfort', 'irritability'], he: '', en: 'Hypervigilance' },
+        ],
+      },
+      interpretation: {
+        riskFlags: [],
+        investmentPriorities: ['physical_env'],
+        trajectory: null,
+      },
+      translation: { recommendations: [], summary: { totalAccommodations: 0, zeroCostPercentage: 0 } },
+      implementation: { applicableModules: [] },
+      framing: {},
+    },
+    summary: { overallSeverity: 'high' },
+  });
+  const profile = makeProfile({ disclosurePreference: 'partial_contextual' });
+
+  test('result includes chains array', () => {
+    const result = runRecommendationPipeline(pr, profile);
+    assert.ok(Array.isArray(result.chains));
+  });
+
+  test('one chain per selected recommendation', () => {
+    const result = runRecommendationPipeline(pr, profile);
+    assert.equal(result.chains.length, result.selected.length);
+  });
+
+  test('each chain has id, templateId, barrierIds, score', () => {
+    const result = runRecommendationPipeline(pr, profile);
+    for (const chain of result.chains) {
+      assert.ok(chain.id, 'chain.id missing');
+      assert.ok(chain.templateId, 'chain.templateId missing');
+      assert.ok(Array.isArray(chain.barrierIds), 'chain.barrierIds not array');
+      assert.ok(typeof chain.score === 'number', 'chain.score not number');
+    }
+  });
+
+  test('chains with pattern-matching barriers include patternId', () => {
+    const tpl = makeTemplate({
+      id: 'TPL-SENSORY-001',
+      version: '1.0',
+      barrierTags: ['sensory_discomfort'],
+    });
+    const prWithPatterns = { ...pr };
+    const result = runRecommendationPipeline(prWithPatterns, profile, { templateOverrides: [tpl] });
+    const chain = result.chains[0];
+    if (chain) {
+      // hypervigilance pattern includes sensory_discomfort
+      assert.ok(chain.patternIds.includes('hypervigilance'),
+        `expected hypervigilance in ${JSON.stringify(chain.patternIds)}`);
+    }
+  });
+
+  test('chain recommendationId matches rendered recommendation id', () => {
+    const result = runRecommendationPipeline(pr, profile);
+    for (const chain of result.chains) {
+      if (chain.recommendationId) {
+        const match = result.packages.user.find(r => r.id === chain.recommendationId);
+        assert.ok(match, `no user rec found for chain.recommendationId=${chain.recommendationId}`);
+      }
+    }
+  });
+
+  test('chain caseId matches profile userId', () => {
+    const result = runRecommendationPipeline(pr, profile);
+    for (const chain of result.chains) {
+      assert.equal(chain.caseId, profile.userId);
+    }
+  });
+
+  test('chains with injected template carry correct barrierIds', () => {
+    const tpl = makeTemplate({ barrierTags: ['sensory_discomfort', 'authority'] });
+    const result = runRecommendationPipeline(pr, profile, { templateOverrides: [tpl] });
+    const chain = result.chains[0];
+    if (chain) {
+      assert.ok(chain.barrierIds.includes('sensory_discomfort'));
+    }
+  });
+});

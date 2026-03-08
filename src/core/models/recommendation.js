@@ -5,6 +5,7 @@
  *   RecommendationFamily   — broad category (e.g. "Schedule flexibility")
  *   RecommendationTemplate — specific actionable template with tags and lifecycle
  *   RenderedRecommendation — audience-specific rendered output for one case
+ *   TracingChain           — explicit signal→barrier→pattern→recommendation chain (FPP §9.6)
  */
 
 /**
@@ -57,6 +58,22 @@
  * @property {TimeHorizon} timeHorizon
  * @property {string} actor          - Who should implement this
  * @property {ReviewStatus} reviewStatus
+ *
+ * @typedef {Object} TracingChain
+ * Consolidates the full reasoning chain for one selected recommendation (FPP §9.6 Non-Negotiable 2).
+ * Enables any output to be traced back through: output → pattern → interpretation → signal → input.
+ * @property {string} id                    - Unique chain ID (stable for the pipeline run)
+ * @property {string | null} recommendationId - ID of the RenderedRecommendation (user audience)
+ * @property {string} templateId            - The template that produced this recommendation
+ * @property {string} templateVersion       - Version of the template
+ * @property {string[]} barrierIds          - Barriers this recommendation addresses
+ * @property {string[]} patternIds          - Intake patterns that implicate these barriers
+ * @property {string[]} detectedSignalIds   - NormalizedSignal IDs (populated by sessionManager)
+ * @property {string[]} knowledgeSourceIds  - Knowledge sources backing the template
+ * @property {number} score                 - Computed selection score (0–100)
+ * @property {string[]} gatesPassed         - Eligibility gates this template cleared
+ * @property {string} caseId               - Case this chain belongs to
+ * @property {string} createdAt            - ISO timestamp of chain creation
  */
 
 export function createRecommendationFamily(fields = {}) {
@@ -118,5 +135,27 @@ export function createRenderedRecommendation(fields = {}) {
     timeHorizon: fields.timeHorizon ?? 'near_term',
     actor: fields.actor ?? 'hr',
     reviewStatus: fields.reviewStatus ?? 'pending',
+  };
+}
+
+const ALL_GATES = [
+  'barrier_fit', 'stage_fit', 'workplace_type_fit',
+  'disclosure_fit', 'feasibility_fit', 'safety_fit', 'freshness_fit',
+];
+
+export function createTracingChain(fields = {}) {
+  return {
+    id: fields.id ?? crypto.randomUUID(),
+    recommendationId: fields.recommendationId ?? null,
+    templateId: fields.templateId ?? null,
+    templateVersion: fields.templateVersion ?? '1.0',
+    barrierIds: fields.barrierIds ?? [],
+    patternIds: fields.patternIds ?? [],
+    detectedSignalIds: fields.detectedSignalIds ?? [],
+    knowledgeSourceIds: fields.knowledgeSourceIds ?? [],
+    score: fields.score ?? 0,
+    gatesPassed: fields.gatesPassed ?? ALL_GATES,
+    caseId: fields.caseId ?? null,
+    createdAt: fields.createdAt ?? new Date().toISOString(),
   };
 }
