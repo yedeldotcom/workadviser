@@ -22,14 +22,15 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - Knowledge enrichment pass (289 structured units with stable IDs, English translations, source refs)
 - Core data model: 14 model files in `src/core/models/` — User, UserProfile, InterviewSession, Message, NormalizedSignal, Barrier, Trigger, WorkplaceAmplifier, ChangeEvent, Recommendation (Family/Template/Rendered), Report, Lead, ApprovalObject, AuditLog, RuleObject, KnowledgeItem/Source
 - State machines: 5 machines in `src/core/state/` — Interview, Release, RecommendationLifecycle, LeadHandoff, ReviewApproval
-- 43 new tests covering all models and state machines
+- Conversation engine: onboarding, interviewer, sessionManager, voiceHandler, LLM client (FPP §8 operating prompt)
+- Admin command center: store, queues, caseView, actions, permissions, Express router + server — 37 tests
+- 81 new tests covering all models, state machines, conversation, and admin
 
 **What is still missing (FPP scope not yet built):**
-- WhatsApp conversation engine + session handling
 - Structured report objects with disclosure filtering (rendering layer)
-- Admin command center
+- Logic Map + Recommendation Workbench (formal 7-step pipeline)
 - Lead/lecture opportunity detection (logic layer)
-- Recommendation workbench (formal 7-step pipeline)
+- Landing Page + WhatsApp Entry (deferred)
 
 ---
 
@@ -363,31 +364,17 @@ Transitions: assign, approve, reject, escalate
 ---
 
 ### Step 5 — Admin Queues + Main Case Page (FPP §6.1)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-- [ ] Create `src/admin/` — backend API for admin web app
-- [ ] Admin queue endpoints:
-  - `GET /admin/queues/new-users`
-  - `GET /admin/queues/active-cases`
-  - `GET /admin/queues/review-required`
-  - `GET /admin/queues/leads-ready`
-- [ ] Main case page endpoint: `GET /admin/cases/:caseId` — returns full case workspace:
-  - User info
-  - InterviewSession history + messages
-  - NormalizedSignals
-  - Logic map (Engine 1-5 outputs)
-  - RecommendationWorkbench (see Step 6)
-  - ReportObjects with states
-  - ApprovalObjects
-  - AuditLog
-- [ ] Inline case actions:
-  - `POST /admin/cases/:caseId/approve-report`
-  - `POST /admin/cases/:caseId/reject-report`
-  - `POST /admin/cases/:caseId/edit-recommendation`
-  - `POST /admin/cases/:caseId/add-note`
-  - `POST /admin/cases/:caseId/mark-followup`
-- [ ] Role/permission middleware (5 roles from FPP §6.4)
-- [ ] Admin web frontend (minimal — React or plain HTML+JS)
+- [x] Create `src/admin/store.js` — in-memory Map registry (10 entity types), full CRUD + specialized queries, `resetStore()` for tests
+- [x] Create `src/admin/permissions.js` — 5-role model, `can()`, `canAccessCase()`, Express middleware (`attachAdminIdentity`, `requireCapability`, `requireCaseAccess`)
+- [x] Create `src/admin/queues.js` — 5 queue functions + `getQueueSummary()`
+- [x] Create `src/admin/caseView.js` — `buildCaseWorkspace()`, `buildLogicMap()` (FPP §4.1 chain), `buildCaseSummary()`
+- [x] Create `src/admin/actions.js` — `approveReport`, `rejectReport`, `editRecommendation`, `addCaseNote`, `markFollowUp`, `markReportReadyForDelivery` — all with mandatory AuditLog
+- [x] Create `src/admin/router.js` — all queue + case endpoints with role/capability middleware
+- [x] Create `src/admin/server.js` — `createAdminApp()` Express factory
+- [x] Write + pass `tests/admin/admin.test.js` — 37 tests, 18 suites, all passing
+- Admin web frontend (minimal UI) — deferred to later step
 
 ---
 
@@ -523,14 +510,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0 and 0.5 are complete. **Next: Step 1 — Core Data Model.**
-
-Key inputs from Step 0.5 for Step 1:
-- Trigger taxonomy: derive from `knowledge/extracted/04_interview_challenges.json` friction types + implicit triggers in quotes
-- Workplace amplifier taxonomy: derive from friction type labels in `workplace_scenarios.js`
-- Recommendation templates: promote accommodation actions from `workplace_scenarios.js` and procedure modules from `procedures.js` to formal objects with IDs, versions, lifecycle
-- Disclosure suitability tags: manually assign per template (no source data available)
-- Employment stage tags: map procedure modules to 7 FPP stages
+Steps 0, 0.5, 1, 2, 3 (conversation engine), and 5 (admin) are complete. **Next: Step 6 — Logic Map + Recommendation Workbench.**
 
 ---
 
@@ -538,11 +518,11 @@ Key inputs from Step 0.5 for Step 1:
 
 - [x] Step 0: Repo reorganization ✅
 - [x] Step 0.5: Raw files analysis + knowledge extraction ✅
-- [ ] Step 1: Core data model (18 objects)
-- [ ] Step 2: State machines (5 machines)
-- [ ] Step 3: Landing page + WhatsApp entry
-- [ ] Step 4: Interview / session handling + LLM integration
-- [ ] Step 5: Admin queues + main case page
+- [x] Step 1: Core data model (18 objects) ✅
+- [x] Step 2: State machines (5 machines) ✅
+- [x] Step 3: Interview / session handling + LLM integration ✅ (formerly Step 4)
+- [ ] Step 4: Landing page + WhatsApp entry (deferred)
+- [x] Step 5: Admin queues + main case page ✅
 - [ ] Step 6: Logic map + recommendation workbench (disclosure filter)
 - [ ] Step 7: Report objects + release states (4 output types)
 - [ ] Step 8: Lead export / API handoff
