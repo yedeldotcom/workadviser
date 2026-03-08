@@ -2,7 +2,7 @@
  * Demo: Run the full WorkAdviser pipeline with a sample case.
  */
 
-import { BARRIER_IDS } from '../engine1_intake/index.js';
+import { BARRIER_IDS } from '../engines/intake/index.js';
 import { runPipeline, runPipelineHebrew } from './index.js';
 
 // Sample case: IDF veteran with hypervigilance + authority issues

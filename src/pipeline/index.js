@@ -8,11 +8,11 @@
  * Output: complete employer-facing implementation plan with framing
  */
 
-import { scoreResponses } from '../engine1_intake/index.js';
-import { interpretProfile } from '../engine2_interpretation/index.js';
-import { translateToWorkplace } from '../engine3_translation/index.js';
-import { generateImplementationPlan } from '../engine4_implementation/index.js';
-import { generateFraming } from '../engine5_framing/index.js';
+import { scoreResponses } from '../engines/intake/index.js';
+import { interpretProfile } from '../engines/interpretation/index.js';
+import { translateToWorkplace } from '../engines/translation/index.js';
+import { generateImplementationPlan } from '../engines/implementation/index.js';
+import { generateFraming } from '../engines/framing/index.js';
 
 /**
  * Run the full pipeline.
