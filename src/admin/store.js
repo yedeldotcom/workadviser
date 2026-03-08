@@ -10,16 +10,18 @@
 
 // ─── Store ────────────────────────────────────────────────────────────────────
 
-const _users           = new Map(); // userId → User
-const _profiles        = new Map(); // userId → UserProfile
-const _sessions        = new Map(); // sessionId → InterviewSession
-const _messages        = new Map(); // messageId → Message
-const _signals         = new Map(); // signalId → NormalizedSignal
-const _reports         = new Map(); // reportId → ReportObject
-const _leads           = new Map(); // leadId → LeadObject
-const _approvals       = new Map(); // approvalId → ApprovalObject
-const _auditLog        = new Map(); // logId → AuditLog
-const _pipelineResults = new Map(); // sessionId → pipelineResult
+const _users             = new Map(); // userId → User
+const _profiles          = new Map(); // userId → UserProfile
+const _sessions          = new Map(); // sessionId → InterviewSession
+const _messages          = new Map(); // messageId → Message
+const _signals           = new Map(); // signalId → NormalizedSignal
+const _reports           = new Map(); // reportId → ReportObject
+const _leads             = new Map(); // leadId → LeadObject
+const _approvals         = new Map(); // approvalId → ApprovalObject
+const _auditLog          = new Map(); // logId → AuditLog
+const _pipelineResults   = new Map(); // sessionId → pipelineResult
+const _changeEvents      = new Map(); // eventId → ChangeEvent
+const _followUpCheckins  = new Map(); // checkinId → FollowUpCheckin
 
 // ─── Write ────────────────────────────────────────────────────────────────────
 // Each save* function upserts by primary key and returns the saved object.
@@ -36,6 +38,8 @@ export function saveApproval(approval)       { _approvals.set(approval.id, appro
 export function appendAuditLog(entry)        { _auditLog.set(entry.id, entry); return entry; }
 /** @param {string} sessionId @param {object} result */
 export function savePipelineResult(sessionId, result) { _pipelineResults.set(sessionId, result); return result; }
+export function saveChangeEvent(event)    { _changeEvents.set(event.id, event); return event; }
+export function saveFollowUpCheckin(c)    { _followUpCheckins.set(c.id, c); return c; }
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
 // Each get* function returns the entity or null (never throws for missing IDs).
@@ -50,16 +54,20 @@ export function getLead(leadId)              { return _leads.get(leadId) ?? null
 export function getApproval(approvalId)      { return _approvals.get(approvalId) ?? null; }
 /** @param {string} sessionId @returns {object | null} */
 export function getPipelineResult(sessionId) { return _pipelineResults.get(sessionId) ?? null; }
+export function getChangeEvent(eventId)       { return _changeEvents.get(eventId) ?? null; }
+export function getFollowUpCheckin(id)        { return _followUpCheckins.get(id) ?? null; }
 
 // ─── List ─────────────────────────────────────────────────────────────────────
 // Each getAll* function returns a snapshot array (safe to mutate).
 
-export function getAllUsers()     { return [..._users.values()]; }
-export function getAllProfiles()  { return [..._profiles.values()]; }
-export function getAllSessions()  { return [..._sessions.values()]; }
-export function getAllReports()   { return [..._reports.values()]; }
-export function getAllLeads()     { return [..._leads.values()]; }
-export function getAllAuditLogs() { return [..._auditLog.values()]; }
+export function getAllUsers()          { return [..._users.values()]; }
+export function getAllProfiles()       { return [..._profiles.values()]; }
+export function getAllSessions()       { return [..._sessions.values()]; }
+export function getAllReports()        { return [..._reports.values()]; }
+export function getAllLeads()          { return [..._leads.values()]; }
+export function getAllAuditLogs()      { return [..._auditLog.values()]; }
+export function getAllChangeEvents()   { return [..._changeEvents.values()]; }
+export function getAllFollowUpCheckins() { return [..._followUpCheckins.values()]; }
 
 /** Sessions for a specific user */
 export function getSessionsForUser(userId) {
@@ -81,6 +89,16 @@ export function getAuditLogForEntity(entityType, entityId) {
   return getAllAuditLogs().filter(l => l.entityType === entityType && l.entityId === entityId);
 }
 
+/** All change events for a specific user */
+export function getChangeEventsForUser(userId) {
+  return getAllChangeEvents().filter(e => e.userId === userId);
+}
+
+/** All check-ins for a specific user */
+export function getCheckinsForUser(userId) {
+  return getAllFollowUpCheckins().filter(c => c.userId === userId);
+}
+
 // ─── Test helpers ─────────────────────────────────────────────────────────────
 
 /** Reset all stores — use in tests only */
@@ -95,6 +113,8 @@ export function resetStore() {
   _approvals.clear();
   _auditLog.clear();
   _pipelineResults.clear();
+  _changeEvents.clear();
+  _followUpCheckins.clear();
 }
 
 /** Store statistics — useful for health check endpoint */

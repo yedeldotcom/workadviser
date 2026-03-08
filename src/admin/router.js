@@ -28,6 +28,13 @@
  *   POST /admin/leads/:leadId/archive
  *   GET  /admin/leads/:leadId
  *
+ * Follow-up endpoints (FPP §5.7):
+ *   POST /admin/cases/:caseId/change-event
+ *   POST /admin/cases/:caseId/change-event/:eventId/resolve
+ *   GET  /admin/cases/:caseId/staleness
+ *   POST /admin/cases/:caseId/schedule-followup
+ *   GET  /admin/cases/:caseId/due-checkins
+ *
  * System:
  *   GET  /admin/health
  */
@@ -57,7 +64,7 @@ import {
 } from './actions.js';
 import {
   getAllUsers, getAllSessions, getAllReports, getAllLeads,
-  getUser, getLead, getStoreCounts,
+  getUser, getLead, getProfile, getStoreCounts, getChangeEventsForUser,
 } from './store.js';
 import {
   confirmLead,
@@ -65,6 +72,16 @@ import {
   exportLead,
   archiveLead,
 } from '../export/leadExporter.js';
+import {
+  recordChangeEvent,
+  assessStaleness,
+  resolveChangeEvent,
+  scheduleInitialFollowUp,
+  schedulePeriodicCheckin,
+  scheduleEventTriggeredCheckin,
+  getDueCheckins,
+  runScheduler,
+} from '../followup/index.js';
 
 const router = Router();
 
@@ -289,6 +306,80 @@ router.post('/leads/:leadId/archive',
     } catch (err) {
       res.status(422).json({ error: err.message });
     }
+  }
+);
+
+// ─── Follow-up endpoints (FPP §5.7) ──────────────────────────────────────────
+
+router.post('/cases/:caseId/change-event',
+  requireCaseAccess(getUser),
+  requireCapability('add_note'),
+  (req, res) => {
+    const { eventType, occurredAt, notes } = req.body ?? {};
+    if (!eventType) return res.status(400).json({ error: 'eventType is required' });
+    try {
+      const result = recordChangeEvent(req.params.caseId, eventType, {
+        occurredAt,
+        notes,
+        recordedBy: req.adminRole,
+      });
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.post('/cases/:caseId/change-event/:eventId/resolve',
+  requireCaseAccess(getUser),
+  requireCapability('add_note'),
+  (req, res) => {
+    try {
+      const result = resolveChangeEvent(req.params.eventId, req.adminRole);
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.get('/cases/:caseId/staleness',
+  requireCaseAccess(getUser),
+  (req, res) => {
+    const { lastAssessedAt, previousDisclosure } = req.query;
+    const profile = getProfile(req.params.caseId);
+    if (!profile) return res.status(404).json({ error: 'Profile not found' });
+    const changeEvents = getChangeEventsForUser(req.params.caseId);
+    const staleness = assessStaleness(profile, changeEvents, { lastAssessedAt, previousDisclosure });
+    res.json({ userId: req.params.caseId, changeEventCount: changeEvents.length, staleness });
+  }
+);
+
+router.post('/cases/:caseId/schedule-followup',
+  requireCaseAccess(getUser),
+  requireCapability('mark_followup'),
+  (req, res) => {
+    const { type, eventType, eventId, fromDate } = req.body ?? {};
+    try {
+      let result;
+      if (type === 'initial') {
+        result = scheduleInitialFollowUp(req.params.caseId, { scheduledBy: req.adminRole });
+      } else if (type === 'event' && eventType && eventId) {
+        result = scheduleEventTriggeredCheckin(req.params.caseId, eventType, eventId, { scheduledBy: req.adminRole });
+      } else {
+        result = schedulePeriodicCheckin(req.params.caseId, { fromDate, scheduledBy: req.adminRole });
+      }
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.get('/cases/:caseId/due-checkins',
+  requireCaseAccess(getUser),
+  (req, res) => {
+    res.json(getDueCheckins(req.params.caseId));
   }
 );
 

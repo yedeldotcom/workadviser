@@ -29,7 +29,7 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - 162 new tests covering all modules
 
 **What is still missing (FPP scope not yet built):**
-- Follow-up / change-event layer (Step 9 — next)
+- Gap visibility + recommendation analytics (Step 10 — next)
 - Follow-up / change-event layer (Step 9)
 - Gap visibility + recommendation analytics (Step 10)
 - Landing Page + WhatsApp Entry (deferred)
@@ -464,14 +464,26 @@ Deferred to later (when KnowledgeBase is live):
 ---
 
 ### Step 9 — Follow-Up / Change-Event Layer (FPP §5.7)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-- [ ] Create `src/followup/scheduler.js` — cadence-based check-in scheduling
-- [ ] Create `src/followup/changeEventDetector.js` — event-based triggers
-  - 15 event types: hired, new_role, promotion, new_boss, team_change, schedule_change, hybrid_change, leave, return, fired, resigned, relocated, commute_change
-- [ ] Revalidation levels: light_refresh | partial_revalidation | full_reassessment
-- [ ] Staleness detection: when recommendations become stale (major context change, disclosure change, manager change, time elapsed)
-- [ ] WhatsApp follow-up message templates (Hebrew)
+- [x] `src/followup/changeEventDetector.js` — change event recording and staleness assessment
+  - `recordChangeEvent()` — 13 event types, auto-derives revalidation level, saves to store + profile
+  - `assessStaleness()` — 5-rule priority check: full_reassessment → partial → light_refresh → disclosure change → time-based (180 days)
+  - `resolveChangeEvent()` — marks event resolved when revalidation is complete
+  - Staleness thresholds: full_reassessment=0d, partial=30d, light=90d, time-based=180d
+- [x] `src/followup/scheduler.js` — WhatsApp check-in scheduling
+  - `scheduleInitialFollowUp()` — 14 days after first report delivery
+  - `schedulePeriodicCheckin()` — cadence per employment stage (job_seeking=14d, active=30d, leave=60d, etc.)
+  - `scheduleEventTriggeredCheckin()` — 3 days after a ChangeEvent is recorded
+  - `scheduleRevalidation()` — immediate, asks user to refresh their assessment
+  - `markCheckinSent()` / `markCheckinResponded()` / `expirePendingCheckins()` — check-in state lifecycle
+  - `getDueCheckins()` — returns pending check-ins whose scheduledFor ≤ now
+  - `runScheduler()` — smart entry point: assesses staleness, picks the right check-in type
+  - 4 Hebrew WhatsApp message templates (initial, periodic, event-triggered, revalidation)
+- [x] `src/followup/index.js` — public API
+- [x] Admin router — 5 new endpoints: record-change-event, resolve, staleness, schedule-followup, due-checkins
+- [x] Store extended with `_changeEvents` and `_followUpCheckins` maps + CRUD functions
+- [x] 44 tests in `tests/followup/followup.test.js` — 319 tests total, all passing
 
 ---
 
@@ -521,7 +533,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0–3, 5–8 are complete. **Next: Step 9 — Follow-Up / Change-Event Layer.**
+Steps 0–3, 5–9 are complete. **Next: Step 10 — Gap Visibility + Recommendation Analytics.**
 
 ---
 
@@ -537,7 +549,7 @@ Steps 0–3, 5–8 are complete. **Next: Step 9 — Follow-Up / Change-Event Lay
 - [x] Step 6: Logic map + recommendation workbench (disclosure filter) ✅
 - [x] Step 7: Report objects + release states (4 output types) ✅
 - [x] Step 8: Lead export / API handoff ✅
-- [ ] Step 9: Follow-up / change-event layer
+- [x] Step 9: Follow-up / change-event layer ✅
 - [ ] Step 10: Gap visibility + recommendation analytics
 
 ---
