@@ -307,8 +307,40 @@ Transitions: assign, approve, reject, escalate
 
 ---
 
-### Step 3 — Landing Page + WhatsApp Entry (FPP §2.3A, §2.3B)
-**Status: ⬜ Not Started**
+### Step 3 — Interview / Session Handling + LLM Integration (FPP §2.3B, §2.5, §8)
+**Status: ✅ Done**
+
+> *Note: The original Step 3 (Landing Page + WhatsApp Entry) is deferred to Step 4 below — the conversation engine is the higher-value dependency. WhatsApp webhook layer wraps this module; it can be added later without changing conversation logic.*
+
+- [x] Create `src/conversation/llmClient.js` — Anthropic SDK client + FPP §8 operating prompt
+  - `buildSystemPrompt()` — verbatim FPP §8 prompt
+  - `runInterviewTurn(messages, context)` → `{ nextMessage, detectedSignals[], confidenceLevel, shouldEscalate }`
+  - `generateUserReport(signals, profile)` → Hebrew structured report
+  - `generateEmployerReport(signals, profile, disclosureLevel)` → filtered employer report
+- [x] Create `src/conversation/onboarding.js` — structured onboarding flow (FPP §7.3)
+  - `ONBOARDING_MESSAGES[]` — full onboarding sequence in Hebrew
+  - `getOnboardingScript()` — structured consent + context explanation steps
+  - `shouldShowOnboarding(session)` — whether to show onboarding
+- [x] Create `src/conversation/interviewer.js` — adaptive question flow
+  - Question bank per barrier cluster (low → high intensity ordering)
+  - `getNextQuestion(session, answeredBarriers)` — adaptive selection
+  - Distress check-in logic after high-intensity questions
+  - `isDistressSignal(message)` — heuristic distress detection
+  - `getDistressResponse()` — containment protocol
+- [x] Create `src/conversation/sessionManager.js`
+  - `createSession(userId, phase)` — InterviewSession + state machine
+  - `resumeSession(session)` — re-entry flow with context reminder
+  - `recordInboundMessage(session, text, questionId)` — message + signal
+  - `normalizeBarrierSignal(text, questionId, barrierIds)` → NormalizedSignal
+  - `handleDistress(session)` → transitions to distress_hold state
+  - `completeSession(session, responses)` → runs Engine 1–5 pipeline
+- [x] Create `src/conversation/voiceHandler.js` — transcription stub
+- [x] Tests in `tests/conversation/conversation.test.js`
+
+---
+
+### Step 4 — Landing Page + WhatsApp Entry (FPP §2.3A, §2.3B)
+**Status: ⬜ Deferred** (was Step 3; moved after conversation engine)
 
 **Landing Page:**
 - [ ] Create `src/web/landing/` — static HTML/JS served page
@@ -327,34 +359,6 @@ Transitions: assign, approve, reject, escalate
 - [ ] Write integration smoke test
 
 **Dependencies to add:** express or fastify (webhook server), node-fetch or axios (API calls)
-
----
-
-### Step 4 — Interview / Session Handling (FPP §2.3B, §2.5)
-**Status: ⬜ Not Started**
-
-- [ ] Create `src/conversation/onboarding.js` — structured onboarding flow (FPP §7.3)
-  - Explain what this stage is
-  - Why questions are asked
-  - What the user gets
-  - What is optional
-  - What may be shared
-  - Whether human review may occur
-  - Pause/skip/stop instructions
-- [ ] Create `src/conversation/interviewer.js` — adaptive question flow
-  - Start with low-intensity questions
-  - Adaptive branching based on responses
-  - Pause/skip/resume handling (save state to UserProfile)
-  - Distress check-in logic (after high-intensity questions)
-  - Distress interruption protocol (stop escalation, shift to containment)
-- [ ] Create `src/conversation/sessionManager.js`
-  - Create/resume InterviewSession
-  - Write messages to InterviewSession.messages[]
-  - Normalize signals from responses (text → NormalizedSignal)
-  - Handle dropout types (intentional | silent | distress | trust)
-  - Re-entry flow: show where process stopped, what was saved, what's next
-- [ ] Create `src/conversation/voiceHandler.js` — voice note transcription stub (Whisper API or similar)
-- [ ] LLM integration: connect operating prompt from FPP §8 as system prompt for interview turn generation
 
 ---
 
