@@ -192,22 +192,39 @@ function guessScoreFromText(text) {
 
 /**
  * Merge LLM-detected signals into the session's signal list.
+ * Creates proper NormalizedSignal objects so their IDs can be attached to TracingChains.
+ *
  * @param {import('../core/models/interviewSession.js').InterviewSession} session
  * @param {Array} llmSignals - detectedSignals from runInterviewTurn
- * @returns {object} Updated session
+ * @param {string | null} [sourceMessageId] - ID of the inbound message that generated these signals
+ * @returns {{ session: object, signals: import('../core/models/normalizedSignal.js').NormalizedSignal[] }}
  */
-export function mergeSignals(session, llmSignals) {
-  if (!llmSignals?.length) return session;
+export function mergeSignals(session, llmSignals, sourceMessageId = null) {
+  if (!llmSignals?.length) return { session, signals: [] };
 
-  const newBarrierIds = llmSignals
-    .flatMap(s => s.barrierIds ?? [])
+  const signals = llmSignals.map(s => createNormalizedSignal({
+    sessionId: session.id,
+    sourceMessageId,
+    signalType: s.signalType ?? 'barrier_score',
+    value: s.value ?? null,
+    confidence: s.confidence ?? 0.7,
+    barrierIds: s.barrierIds ?? [],
+    triggerIds: s.triggerIds ?? [],
+    amplifierIds: s.amplifierIds ?? [],
+    questionId: s.questionId ?? null,
+  }));
+
+  const newBarrierIds = signals
+    .flatMap(s => s.barrierIds)
     .filter(id => !session.detectedBarrierIds.includes(id));
 
-  return {
+  const updatedSession = {
     ...session,
     detectedBarrierIds: [...session.detectedBarrierIds, ...newBarrierIds],
-    normalizedSignalIds: [...session.normalizedSignalIds, ...llmSignals.map((_, i) => `sig-${Date.now()}-${i}`)],
+    normalizedSignalIds: [...session.normalizedSignalIds, ...signals.map(s => s.id)],
   };
+
+  return { session: updatedSession, signals };
 }
 
 // ─── Distress handling ────────────────────────────────────────────────────────
@@ -286,9 +303,34 @@ export function completeSession(session, responses, pipelineOptions = {}) {
     phase: session.phase,
     orgReadiness: pipelineOptions.orgReadiness ?? 'basic',
     audience: pipelineOptions.audience ?? 'hr',
+    sessionId: session.id,
+    userId: session.userId,
   });
 
   return { session: completed, pipelineResult };
+}
+
+/**
+ * Attach session NormalizedSignal IDs to TracingChains after runRecommendationPipeline().
+ * For each chain, finds signals whose barrierIds overlap the chain's barrierIds.
+ *
+ * Call this after runRecommendationPipeline() to close the signal→chain traceability gap.
+ *
+ * @param {import('../core/recommendation/pipeline.js').RecommendationResult} recResult
+ * @param {import('../core/models/normalizedSignal.js').NormalizedSignal[]} normalizedSignals
+ * @returns {import('../core/recommendation/pipeline.js').RecommendationResult} Updated result
+ */
+export function attachSignalIds(recResult, normalizedSignals) {
+  if (!normalizedSignals?.length || !recResult.chains?.length) return recResult;
+
+  const updatedChains = recResult.chains.map(chain => {
+    const relatedIds = normalizedSignals
+      .filter(sig => sig.barrierIds.some(b => chain.barrierIds.includes(b)))
+      .map(sig => sig.id);
+    return { ...chain, detectedSignalIds: relatedIds };
+  });
+
+  return { ...recResult, chains: updatedChains };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

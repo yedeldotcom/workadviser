@@ -1,30 +1,54 @@
 /**
  * VoiceHandler — FPP §2.3B
  *
- * Voice note transcription stub.
- * Production implementation: OpenAI Whisper API or similar Hebrew-capable STT service.
+ * Voice note transcription via OpenAI Whisper API (Hebrew-capable).
  *
  * The FPP specifies that users may respond via voice note (common in WhatsApp).
  * This module accepts audio and returns transcribed text for the interview pipeline.
+ *
+ * Environment variables:
+ *   VOICE_TRANSCRIPTION_ENABLED = 'true'   — activates real transcription
+ *   WHISPER_API_KEY                         — OpenAI API key for Whisper
+ *   WHISPER_MODEL                           — model name (default: 'whisper-1')
  */
+
+import OpenAI from 'openai';
+import { toFile } from 'openai';
+
+// Lazy-initialised client — only created when first needed
+let _whisperClient = null;
+function getWhisperClient() {
+  if (!_whisperClient) {
+    _whisperClient = new OpenAI({ apiKey: process.env.WHISPER_API_KEY });
+  }
+  return _whisperClient;
+}
 
 /**
  * @typedef {'audio/ogg' | 'audio/mp4' | 'audio/mpeg' | 'audio/webm'} AudioMimeType
  *
  * @typedef {Object} TranscriptionResult
  * @property {string} text                - Transcribed text in Hebrew
- * @property {'stub' | 'whisper' | 'other'} provider
+ * @property {'stub' | 'whisper'} provider
  * @property {number} confidence          - 0.0–1.0
  * @property {string | null} languageDetected
  * @property {string} transcribedAt       - ISO timestamp
  */
 
+// MIME type → file extension map for Whisper upload
+const MIME_TO_EXT = {
+  'audio/ogg':  'ogg',
+  'audio/mp4':  'mp4',
+  'audio/mpeg': 'mp3',
+  'audio/webm': 'webm',
+};
+
 /**
  * Transcribe a voice note audio buffer to text.
  *
- * STUB: Returns a placeholder until a real STT provider is wired in.
- * Set `VOICE_TRANSCRIPTION_ENABLED=true` and provide `WHISPER_API_KEY`
- * (or configure an alternative provider) to enable live transcription.
+ * When `VOICE_TRANSCRIPTION_ENABLED=true` and `WHISPER_API_KEY` is set,
+ * sends the audio to OpenAI Whisper for transcription.
+ * Otherwise returns a stub response asking the user to type instead.
  *
  * @param {Buffer | Uint8Array} audioBuffer - Raw audio data
  * @param {AudioMimeType} [mimeType='audio/ogg']
@@ -32,7 +56,7 @@
  * @returns {Promise<TranscriptionResult>}
  */
 export async function transcribeVoiceNote(audioBuffer, mimeType = 'audio/ogg', languageHint = 'he') {
-  if (process.env.VOICE_TRANSCRIPTION_ENABLED !== 'true') {
+  if (process.env.VOICE_TRANSCRIPTION_ENABLED !== 'true' || !process.env.WHISPER_API_KEY) {
     return {
       text: '[הודעה קולית — תמלול לא זמין כרגע. אנא ענה/י בטקסט.]',
       provider: 'stub',
@@ -42,36 +66,33 @@ export async function transcribeVoiceNote(audioBuffer, mimeType = 'audio/ogg', l
     };
   }
 
-  // ─── Real implementation (Whisper) ────────────────────────────────────────
-  // Uncomment when WHISPER_API_KEY is available:
-  //
-  // const { default: OpenAI } = await import('openai');
-  // const openai = new OpenAI({ apiKey: process.env.WHISPER_API_KEY });
-  //
-  // const file = new File([audioBuffer], 'audio.ogg', { type: mimeType });
-  // const transcription = await openai.audio.transcriptions.create({
-  //   model: 'whisper-1',
-  //   file,
-  //   language: languageHint,
-  // });
-  //
-  // return {
-  //   text: transcription.text,
-  //   provider: 'whisper',
-  //   confidence: 0.9,
-  //   languageDetected: languageHint,
-  //   transcribedAt: new Date().toISOString(),
-  // };
+  const ext = MIME_TO_EXT[mimeType] ?? 'ogg';
+  const filename = `voice.${ext}`;
+  const model = process.env.WHISPER_MODEL ?? 'whisper-1';
 
-  throw new Error('Voice transcription is enabled but no provider is configured. Implement transcribeVoiceNote() in voiceHandler.js.');
+  const file = await toFile(audioBuffer, filename, { type: mimeType });
+  const transcription = await getWhisperClient().audio.transcriptions.create({
+    model,
+    file,
+    language: languageHint,
+  });
+
+  return {
+    text: transcription.text,
+    provider: 'whisper',
+    confidence: 0.9,
+    languageDetected: languageHint,
+    transcribedAt: new Date().toISOString(),
+  };
 }
 
 /**
  * Check if voice transcription is available in the current environment.
+ * Requires both VOICE_TRANSCRIPTION_ENABLED=true and WHISPER_API_KEY to be set.
  * @returns {boolean}
  */
 export function isVoiceTranscriptionAvailable() {
-  return process.env.VOICE_TRANSCRIPTION_ENABLED === 'true';
+  return process.env.VOICE_TRANSCRIPTION_ENABLED === 'true' && !!process.env.WHISPER_API_KEY;
 }
 
 /**

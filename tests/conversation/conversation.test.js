@@ -46,6 +46,7 @@ import {
   mergeSignals,
   buildLLMHistory,
   hasMinimumData,
+  attachSignalIds,
 } from '../../src/conversation/sessionManager.js';
 
 import {
@@ -434,15 +435,19 @@ describe('mergeSignals', () => {
   it('adds new barrier IDs from LLM signals', () => {
     const session = { ...createSession('u-1'), state: 'active', detectedBarrierIds: ['fatigue'], normalizedSignalIds: [] };
     const llmSignals = [{ barrierIds: ['concentration', 'fatigue'], signalType: 'barrier_score' }];
-    const updated = mergeSignals(session, llmSignals);
+    const { session: updated, signals } = mergeSignals(session, llmSignals);
     assert.ok(updated.detectedBarrierIds.includes('concentration'));
     assert.equal(updated.detectedBarrierIds.filter(id => id === 'fatigue').length, 1); // no duplicates
+    assert.equal(signals.length, 1);
+    assert.ok(signals[0].id); // real UUID
+    assert.ok(updated.normalizedSignalIds.includes(signals[0].id));
   });
 
   it('returns session unchanged when no signals', () => {
     const session = { ...createSession('u-1'), state: 'active', detectedBarrierIds: [], normalizedSignalIds: [] };
-    const updated = mergeSignals(session, []);
+    const { session: updated, signals } = mergeSignals(session, []);
     assert.deepEqual(updated.detectedBarrierIds, []);
+    assert.deepEqual(signals, []);
   });
 });
 
@@ -525,5 +530,101 @@ describe('OPERATING_PROMPT', () => {
     assert.ok(OPERATING_PROMPT.includes('nextMessage'));
     assert.ok(OPERATING_PROMPT.includes('detectedSignals'));
     assert.ok(OPERATING_PROMPT.includes('shouldEscalate'));
+  });
+});
+
+// ─── attachSignalIds ──────────────────────────────────────────────────────────
+
+import { createNormalizedSignal } from '../../src/core/models/normalizedSignal.js';
+import { createTracingChain } from '../../src/core/models/recommendation.js';
+
+describe('attachSignalIds', () => {
+  it('attaches matching signal IDs to chains by barrier overlap', () => {
+    const sig1 = createNormalizedSignal({ barrierIds: ['sensory_discomfort'], signalType: 'barrier_score' });
+    const sig2 = createNormalizedSignal({ barrierIds: ['authority'], signalType: 'barrier_score' });
+    const chain1 = createTracingChain({ barrierIds: ['sensory_discomfort'], templateId: 'TPL-1' });
+    const chain2 = createTracingChain({ barrierIds: ['authority'], templateId: 'TPL-2' });
+
+    const recResult = {
+      chains: [chain1, chain2],
+      packages: { user: [], employer: [], hr: [] },
+      selected: [],
+    };
+
+    const updated = attachSignalIds(recResult, [sig1, sig2]);
+
+    assert.deepEqual(updated.chains[0].detectedSignalIds, [sig1.id]);
+    assert.deepEqual(updated.chains[1].detectedSignalIds, [sig2.id]);
+  });
+
+  it('attaches signal to multiple chains when barrier overlaps', () => {
+    const sig = createNormalizedSignal({ barrierIds: ['fatigue'], signalType: 'barrier_score' });
+    const chain1 = createTracingChain({ barrierIds: ['fatigue', 'concentration'], templateId: 'TPL-A' });
+    const chain2 = createTracingChain({ barrierIds: ['fatigue'], templateId: 'TPL-B' });
+
+    const recResult = { chains: [chain1, chain2], packages: { user: [], employer: [], hr: [] }, selected: [] };
+    const updated = attachSignalIds(recResult, [sig]);
+
+    assert.ok(updated.chains[0].detectedSignalIds.includes(sig.id));
+    assert.ok(updated.chains[1].detectedSignalIds.includes(sig.id));
+  });
+
+  it('returns result unchanged when no signals', () => {
+    const chain = createTracingChain({ barrierIds: ['fatigue'], templateId: 'TPL-X' });
+    const recResult = { chains: [chain], packages: { user: [], employer: [], hr: [] }, selected: [] };
+    const updated = attachSignalIds(recResult, []);
+    assert.deepEqual(updated.chains[0].detectedSignalIds, []);
+  });
+
+  it('returns result unchanged when no chains', () => {
+    const sig = createNormalizedSignal({ barrierIds: ['fatigue'] });
+    const recResult = { chains: [], packages: { user: [], employer: [], hr: [] }, selected: [] };
+    const updated = attachSignalIds(recResult, [sig]);
+    assert.deepEqual(updated.chains, []);
+  });
+
+  it('non-overlapping signals leave chain detectedSignalIds empty', () => {
+    const sig = createNormalizedSignal({ barrierIds: ['authority'] });
+    const chain = createTracingChain({ barrierIds: ['sensory_discomfort'], templateId: 'TPL-Z' });
+    const recResult = { chains: [chain], packages: { user: [], employer: [], hr: [] }, selected: [] };
+    const updated = attachSignalIds(recResult, [sig]);
+    assert.deepEqual(updated.chains[0].detectedSignalIds, []);
+  });
+});
+
+// ─── isVoiceTranscriptionAvailable ───────────────────────────────────────────
+
+describe('isVoiceTranscriptionAvailable', () => {
+  it('returns false when env vars not set', () => {
+    const orig1 = process.env.VOICE_TRANSCRIPTION_ENABLED;
+    const orig2 = process.env.WHISPER_API_KEY;
+    delete process.env.VOICE_TRANSCRIPTION_ENABLED;
+    delete process.env.WHISPER_API_KEY;
+    assert.equal(isVoiceTranscriptionAvailable(), false);
+    if (orig1 !== undefined) process.env.VOICE_TRANSCRIPTION_ENABLED = orig1;
+    if (orig2 !== undefined) process.env.WHISPER_API_KEY = orig2;
+  });
+
+  it('returns false when enabled but no API key', () => {
+    const orig1 = process.env.VOICE_TRANSCRIPTION_ENABLED;
+    const orig2 = process.env.WHISPER_API_KEY;
+    process.env.VOICE_TRANSCRIPTION_ENABLED = 'true';
+    delete process.env.WHISPER_API_KEY;
+    assert.equal(isVoiceTranscriptionAvailable(), false);
+    if (orig1 !== undefined) process.env.VOICE_TRANSCRIPTION_ENABLED = orig1;
+    else delete process.env.VOICE_TRANSCRIPTION_ENABLED;
+    if (orig2 !== undefined) process.env.WHISPER_API_KEY = orig2;
+  });
+});
+
+describe('transcribeVoiceNote (stub path)', () => {
+  it('returns stub result when transcription disabled', async () => {
+    const orig = process.env.VOICE_TRANSCRIPTION_ENABLED;
+    delete process.env.VOICE_TRANSCRIPTION_ENABLED;
+    const result = await transcribeVoiceNote(Buffer.from('audio'));
+    assert.equal(result.provider, 'stub');
+    assert.equal(result.confidence, 0.0);
+    assert.ok(result.text.includes('תמלול'));
+    if (orig !== undefined) process.env.VOICE_TRANSCRIPTION_ENABLED = orig;
   });
 });

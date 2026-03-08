@@ -1,6 +1,6 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-08 | Branch: `claude/review-fpp-pilot-FGQv2`
+Last updated: 2026-03-08 | Branch: `claude/review-fpp-pilot-FGQv2` | **414 tests, all passing**
 
 ---
 
@@ -19,20 +19,24 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 | Tests | `tests/pipeline.test.js` | ✅ Done — 15 tests covering all engines + integration |
 
 **What is done beyond the 5-engine pipeline:**
-- Knowledge enrichment pass (289 structured units with stable IDs, English translations, source refs)
-- Core data model: 14 model files in `src/core/models/` — User, UserProfile, InterviewSession, Message, NormalizedSignal, Barrier, Trigger, WorkplaceAmplifier, ChangeEvent, Recommendation (Family/Template/Rendered), Report, Lead, ApprovalObject, AuditLog, RuleObject, KnowledgeItem/Source
-- State machines: 5 machines in `src/core/state/` — Interview, Release, RecommendationLifecycle, LeadHandoff, ReviewApproval
-- Conversation engine: onboarding, interviewer, sessionManager, voiceHandler, LLM client (FPP §8 operating prompt)
-- Admin command center: store, queues, caseView, actions, permissions, Express router + server — 37 tests
-- Recommendation workbench: 7-step selection pipeline + disclosure filter (45 tests)
-- Report renderers: user (8-section), employer (disclosure-filtered), anonymous org, lead detection (36 tests)
-- 162 new tests covering all modules
+- Knowledge extraction (Step 0.5): 7 Hebrew source docs → `knowledge/extracted/*.json` (barriers, background, interview patterns, procedures, employer framing, feelings at work) + enriched pass
+- Core data model: 15 model files in `src/core/models/` — User, UserProfile, InterviewSession, Message, NormalizedSignal (versioned), Barrier, Trigger, WorkplaceAmplifier, ChangeEvent, Recommendation (Family/Template/Rendered+TracingChain), Report, Lead, ApprovalObject, AuditLog, RuleObject, KnowledgeItem/Source
+- State machines: 5 machines in `src/core/state/` — Interview, Release (audit-logged), RecommendationLifecycle, LeadHandoff, ReviewApproval (audit-logged)
+- Conversation engine: onboarding, interviewer, sessionManager (mergeSignals + attachSignalIds), voiceHandler (Whisper via openai SDK), LLM client (FPP §8 operating prompt)
+- Admin command center: store, queues, caseView, actions, permissions, Express router + server
+- Recommendation workbench: 7-step selection pipeline + disclosure filter + TracingChain (FPP §9.6 full traceability)
+- Report renderers: user (8-section), employer (disclosure-filtered), anonymous org, lead detection
+- Follow-up / change-event layer (Step 9): scheduler, changeEventDetector, staleness assessment
+- Gap visibility + recommendation analytics (Step 10): weakZones, corrections, conflicts, knowledge promotion
+- Landing Page + WhatsApp entry (Step 4): webhook (Twilio/Meta/stub), sender, landingPage
+- Lead export + CRM handoff (Step 8): leadExporter with audit trail
+- FPP §9.6 Non-Negotiables: all 7 PASS — stable IDs, full traceability, release state audit, admin edit audit, disclosure isolation, employer≠user report, human-review enforced
+- 414 tests, all passing
 
-**What is still missing (FPP scope not yet built):**
-- Gap visibility + recommendation analytics ✅
-- Follow-up / change-event layer (Step 9)
-- Gap visibility + recommendation analytics (Step 10)
-- Landing Page + WhatsApp Entry (deferred)
+**What is still missing:**
+- Database persistence (currently in-memory — swap `src/admin/store.js` maps for Postgres/Redis)
+- E2E integration tests with a live WhatsApp provider (Twilio or Meta)
+- Production deployment config (env vars, process manager, TLS)
 
 ---
 
