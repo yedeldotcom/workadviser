@@ -66,7 +66,7 @@ import {
   getAllUsers, getAllSessions, getAllReports, getAllLeads,
   getUser, getLead, getProfile, getStoreCounts, getChangeEventsForUser,
   getAllRecommendationTemplates, getAllKnowledgeItems, getAllAuditLogs,
-} from './store.js';
+} from './base44Store.js';
 import {
   confirmLead,
   markLeadReadyForExport,
@@ -91,57 +91,88 @@ import {
   retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
-import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './store.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './base44Store.js';
 
 const router = Router();
 
-// Apply identity middleware to all admin routes
+// ─── Login (public — no auth required) ───────────────────────────────────────
+
+/**
+ * POST /admin/login
+ * Authenticates with Base44 and returns a Bearer token.
+ * In dev mode (no BASE44_APP_ID), returns a stub token based on provided role.
+ */
+router.post('/login', async (req, res) => {
+  const { email, password, role } = req.body ?? {};
+
+  // Dev mode: no Base44 configured — return stub token from role header
+  if (!process.env.BASE44_APP_ID) {
+    if (!role) return res.status(400).json({ error: 'role is required in dev mode' });
+    return res.json({ token: `dev-stub:${role}`, role, dev: true });
+  }
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'email and password are required' });
+  }
+
+  try {
+    const { base44 } = await import('./base44Client.js');
+    await base44.auth.loginViaEmailPassword(email, password);
+    const token = base44.auth.getToken?.() ?? base44.auth.token;
+    const me = await base44.auth.me();
+    res.json({ token, role: me?.adminRole ?? me?.role ?? null });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+});
+
+// Apply identity middleware to all admin routes below this point
 router.use(attachAdminIdentity);
 
 // ─── Health ───────────────────────────────────────────────────────────────────
 
-router.get('/health', (req, res) => {
-  res.json({ status: 'ok', role: req.adminRole, store: getStoreCounts() });
+router.get('/health', async (req, res) => {
+  res.json({ status: 'ok', role: req.adminRole, store: await getStoreCounts() });
 });
 
 // ─── Queue endpoints ──────────────────────────────────────────────────────────
 
-router.get('/queues/summary', requireCapability('view_all_cases'), (req, res) => {
-  const snapshot = {
-    users: getAllUsers(),
-    sessions: getAllSessions(),
-    reports: getAllReports(),
-    leads: getAllLeads(),
-  };
-  res.json(getQueueSummary(snapshot));
+router.get('/queues/summary', requireCapability('view_all_cases'), async (req, res) => {
+  const [users, sessions, reports, leads] = await Promise.all([
+    getAllUsers(), getAllSessions(), getAllReports(), getAllLeads(),
+  ]);
+  res.json(getQueueSummary({ users, sessions, reports, leads }));
 });
 
-router.get('/queues/new-users', requireCapability('view_all_cases'), (req, res) => {
-  res.json(getNewUsersQueue(getAllUsers(), getAllSessions()));
+router.get('/queues/new-users', requireCapability('view_all_cases'), async (req, res) => {
+  const [users, sessions] = await Promise.all([getAllUsers(), getAllSessions()]);
+  res.json(getNewUsersQueue(users, sessions));
 });
 
-router.get('/queues/active-cases', requireCapability('view_all_cases'), (req, res) => {
-  res.json(getActiveCasesQueue(getAllSessions(), getAllUsers()));
+router.get('/queues/active-cases', requireCapability('view_all_cases'), async (req, res) => {
+  const [sessions, users] = await Promise.all([getAllSessions(), getAllUsers()]);
+  res.json(getActiveCasesQueue(sessions, users));
 });
 
-router.get('/queues/review-required', requireCapability('view_all_cases'), (req, res) => {
-  res.json(getReviewRequiredQueue(getAllReports(), getAllUsers()));
+router.get('/queues/review-required', requireCapability('view_all_cases'), async (req, res) => {
+  const [reports, users] = await Promise.all([getAllReports(), getAllUsers()]);
+  res.json(getReviewRequiredQueue(reports, users));
 });
 
-router.get('/queues/leads-ready', requireCapability('export_lead'), (req, res) => {
-  res.json(getLeadsReadyQueue(getAllLeads()));
+router.get('/queues/leads-ready', requireCapability('export_lead'), async (req, res) => {
+  res.json(getLeadsReadyQueue(await getAllLeads()));
 });
 
 // ─── Case view ────────────────────────────────────────────────────────────────
 
 router.get('/cases/:caseId',
   requireCaseAccess(getUser),
-  (req, res) => {
+  async (req, res) => {
     const opts = {
       includeRawMessages: can(req.adminRole, 'view_raw_messages'),
       includeVoiceNotes:  can(req.adminRole, 'view_voice_notes'),
     };
-    const workspace = buildCaseWorkspace(req.params.caseId, opts);
+    const workspace = await buildCaseWorkspace(req.params.caseId, opts);
     if (!workspace) return res.status(404).json({ error: 'Case not found' });
     res.json(workspace);
   }
@@ -152,12 +183,12 @@ router.get('/cases/:caseId',
 router.post('/cases/:caseId/approve-report',
   requireCaseAccess(getUser),
   requireCapability('approve_report'),
-  (req, res) => {
+  async (req, res) => {
     const { reportId, notes, editSummary } = req.body ?? {};
     if (!reportId) return res.status(400).json({ error: 'reportId is required' });
 
     try {
-      const result = approveReport(reportId, req.adminRole, notes ?? null, editSummary ?? null);
+      const result = await approveReport(reportId, req.adminRole, notes ?? null, editSummary ?? null);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -168,13 +199,13 @@ router.post('/cases/:caseId/approve-report',
 router.post('/cases/:caseId/reject-report',
   requireCaseAccess(getUser),
   requireCapability('approve_report'),
-  (req, res) => {
+  async (req, res) => {
     const { reportId, reason } = req.body ?? {};
     if (!reportId) return res.status(400).json({ error: 'reportId is required' });
     if (!reason)   return res.status(400).json({ error: 'reason is required for rejection' });
 
     try {
-      const result = rejectReport(reportId, req.adminRole, reason);
+      const result = await rejectReport(reportId, req.adminRole, reason);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -185,14 +216,14 @@ router.post('/cases/:caseId/reject-report',
 router.post('/cases/:caseId/edit-recommendation',
   requireCaseAccess(getUser),
   requireCapability('edit_recommendation'),
-  (req, res) => {
+  async (req, res) => {
     const { reportId, recommendationId, newText_he, meaningChanged, reason, scope } = req.body ?? {};
     if (!reportId || !recommendationId || !newText_he) {
       return res.status(400).json({ error: 'reportId, recommendationId, and newText_he are required' });
     }
 
     try {
-      const result = editRecommendation(
+      const result = await editRecommendation(
         reportId, recommendationId, newText_he,
         req.adminRole,
         { meaningChanged: Boolean(meaningChanged), reason, scope: scope ?? 'local' }
@@ -207,12 +238,12 @@ router.post('/cases/:caseId/edit-recommendation',
 router.post('/cases/:caseId/add-note',
   requireCaseAccess(getUser),
   requireCapability('add_note'),
-  (req, res) => {
+  async (req, res) => {
     const { note } = req.body ?? {};
     if (!note) return res.status(400).json({ error: 'note is required' });
 
     try {
-      const result = addCaseNote(req.params.caseId, note, req.adminRole);
+      const result = await addCaseNote(req.params.caseId, note, req.adminRole);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -223,12 +254,12 @@ router.post('/cases/:caseId/add-note',
 router.post('/cases/:caseId/mark-followup',
   requireCaseAccess(getUser),
   requireCapability('mark_followup'),
-  (req, res) => {
+  async (req, res) => {
     const { reason, dueAt } = req.body ?? {};
     if (!reason) return res.status(400).json({ error: 'reason is required' });
 
     try {
-      const result = markFollowUp(req.params.caseId, { reason, dueAt }, req.adminRole);
+      const result = await markFollowUp(req.params.caseId, { reason, dueAt }, req.adminRole);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -239,12 +270,12 @@ router.post('/cases/:caseId/mark-followup',
 router.post('/cases/:caseId/mark-delivery-ready',
   requireCaseAccess(getUser),
   requireCapability('approve_report'),
-  (req, res) => {
+  async (req, res) => {
     const { reportId } = req.body ?? {};
     if (!reportId) return res.status(400).json({ error: 'reportId is required' });
 
     try {
-      const result = markReportReadyForDelivery(reportId, req.adminRole);
+      const result = await markReportReadyForDelivery(reportId, req.adminRole);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -256,8 +287,8 @@ router.post('/cases/:caseId/mark-delivery-ready',
 
 router.get('/leads/:leadId',
   requireCapability('export_lead'),
-  (req, res) => {
-    const lead = getLead(req.params.leadId);
+  async (req, res) => {
+    const lead = await getLead(req.params.leadId);
     if (!lead) return res.status(404).json({ error: 'Lead not found' });
     res.json(lead);
   }
@@ -265,9 +296,9 @@ router.get('/leads/:leadId',
 
 router.post('/leads/:leadId/confirm',
   requireCapability('export_lead'),
-  (req, res) => {
+  async (req, res) => {
     try {
-      const result = confirmLead(req.params.leadId, req.adminRole);
+      const result = await confirmLead(req.params.leadId, req.adminRole);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -277,10 +308,10 @@ router.post('/leads/:leadId/confirm',
 
 router.post('/leads/:leadId/ready-for-export',
   requireCapability('export_lead'),
-  (req, res) => {
+  async (req, res) => {
     const { consentBasis } = req.body ?? {};
     try {
-      const result = markLeadReadyForExport(req.params.leadId, req.adminRole, { consentBasis });
+      const result = await markLeadReadyForExport(req.params.leadId, req.adminRole, { consentBasis });
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -307,11 +338,11 @@ router.post('/leads/:leadId/export',
 
 router.post('/leads/:leadId/archive',
   requireCapability('export_lead'),
-  (req, res) => {
+  async (req, res) => {
     const { reason } = req.body ?? {};
     if (!reason) return res.status(400).json({ error: 'reason is required' });
     try {
-      const result = archiveLead(req.params.leadId, req.adminRole, reason);
+      const result = await archiveLead(req.params.leadId, req.adminRole, reason);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -324,11 +355,11 @@ router.post('/leads/:leadId/archive',
 router.post('/cases/:caseId/change-event',
   requireCaseAccess(getUser),
   requireCapability('add_note'),
-  (req, res) => {
+  async (req, res) => {
     const { eventType, occurredAt, notes } = req.body ?? {};
     if (!eventType) return res.status(400).json({ error: 'eventType is required' });
     try {
-      const result = recordChangeEvent(req.params.caseId, eventType, {
+      const result = await recordChangeEvent(req.params.caseId, eventType, {
         occurredAt,
         notes,
         recordedBy: req.adminRole,
@@ -343,9 +374,9 @@ router.post('/cases/:caseId/change-event',
 router.post('/cases/:caseId/change-event/:eventId/resolve',
   requireCaseAccess(getUser),
   requireCapability('add_note'),
-  (req, res) => {
+  async (req, res) => {
     try {
-      const result = resolveChangeEvent(req.params.eventId, req.adminRole);
+      const result = await resolveChangeEvent(req.params.eventId, req.adminRole);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });
@@ -355,11 +386,13 @@ router.post('/cases/:caseId/change-event/:eventId/resolve',
 
 router.get('/cases/:caseId/staleness',
   requireCaseAccess(getUser),
-  (req, res) => {
+  async (req, res) => {
     const { lastAssessedAt, previousDisclosure } = req.query;
-    const profile = getProfile(req.params.caseId);
+    const [profile, changeEvents] = await Promise.all([
+      getProfile(req.params.caseId),
+      getChangeEventsForUser(req.params.caseId),
+    ]);
     if (!profile) return res.status(404).json({ error: 'Profile not found' });
-    const changeEvents = getChangeEventsForUser(req.params.caseId);
     const staleness = assessStaleness(profile, changeEvents, { lastAssessedAt, previousDisclosure });
     res.json({ userId: req.params.caseId, changeEventCount: changeEvents.length, staleness });
   }
@@ -368,16 +401,16 @@ router.get('/cases/:caseId/staleness',
 router.post('/cases/:caseId/schedule-followup',
   requireCaseAccess(getUser),
   requireCapability('mark_followup'),
-  (req, res) => {
+  async (req, res) => {
     const { type, eventType, eventId, fromDate } = req.body ?? {};
     try {
       let result;
       if (type === 'initial') {
-        result = scheduleInitialFollowUp(req.params.caseId, { scheduledBy: req.adminRole });
+        result = await scheduleInitialFollowUp(req.params.caseId, { scheduledBy: req.adminRole });
       } else if (type === 'event' && eventType && eventId) {
-        result = scheduleEventTriggeredCheckin(req.params.caseId, eventType, eventId, { scheduledBy: req.adminRole });
+        result = await scheduleEventTriggeredCheckin(req.params.caseId, eventType, eventId, { scheduledBy: req.adminRole });
       } else {
-        result = schedulePeriodicCheckin(req.params.caseId, { fromDate, scheduledBy: req.adminRole });
+        result = await schedulePeriodicCheckin(req.params.caseId, { fromDate, scheduledBy: req.adminRole });
       }
       res.json(result);
     } catch (err) {
@@ -388,8 +421,8 @@ router.post('/cases/:caseId/schedule-followup',
 
 router.get('/cases/:caseId/due-checkins',
   requireCaseAccess(getUser),
-  (req, res) => {
-    res.json(getDueCheckins(req.params.caseId));
+  async (req, res) => {
+    res.json(await getDueCheckins(req.params.caseId));
   }
 );
 
@@ -397,9 +430,8 @@ router.get('/cases/:caseId/due-checkins',
 
 router.get('/analytics/gaps',
   requireCapability('view_queue'),
-  (req, res) => {
-    const templates = getAllRecommendationTemplates();
-    const items     = getAllKnowledgeItems();
+  async (req, res) => {
+    const [templates, items] = await Promise.all([getAllRecommendationTemplates(), getAllKnowledgeItems()]);
     const zones     = weakZones(templates, items);
     const summary   = coverageSummary(zones);
     const suggestions = suggestNewSourceTypes(zones);
@@ -409,12 +441,12 @@ router.get('/analytics/gaps',
 
 router.get('/analytics/gaps/corrections',
   requireCapability('view_queue'),
-  (req, res) => {
-    const templates = getAllRecommendationTemplates();
+  async (req, res) => {
+    const [templates, auditLogs] = await Promise.all([getAllRecommendationTemplates(), getAllAuditLogs()]);
     res.json({
       highOutputLowEvidence: highOutputLowEvidence(templates),
       repeatedAdminCorrections: repeatedAdminCorrections(templates),
-      highConflictAreas: highConflictAreas(templates, getAllAuditLogs()),
+      highConflictAreas: highConflictAreas(templates, auditLogs),
     });
   }
 );
@@ -423,9 +455,9 @@ router.get('/analytics/gaps/corrections',
 
 router.get('/analytics/recommendations',
   requireCapability('view_queue'),
-  (req, res) => {
-    const templates  = getAllRecommendationTemplates();
-    const totalCases = getAllSessions().length;
+  async (req, res) => {
+    const [templates, sessions] = await Promise.all([getAllRecommendationTemplates(), getAllSessions()]);
+    const totalCases = sessions.length;
     res.json({
       retrievalFrequency: retrievalFrequency(templates, totalCases),
       inclusionFrequency: inclusionFrequency(templates, totalCases),
@@ -437,16 +469,15 @@ router.get('/analytics/recommendations',
 
 router.get('/analytics/recommendations/summary',
   requireCapability('view_queue'),
-  (req, res) => {
-    const templates  = getAllRecommendationTemplates();
-    const totalCases = getAllSessions().length;
-    res.json(templateSummary(templates, totalCases));
+  async (req, res) => {
+    const [templates, sessions] = await Promise.all([getAllRecommendationTemplates(), getAllSessions()]);
+    res.json(templateSummary(templates, sessions.length));
   }
 );
 
 router.post('/analytics/recommendations/:templateId/feedback',
   requireCapability('view_queue'),
-  (req, res) => {
+  async (req, res) => {
     const { feedbackType, polarity, notes, caseId } = req.body ?? {};
     if (!feedbackType || !polarity) {
       return res.status(400).json({ error: 'feedbackType and polarity are required' });
@@ -459,7 +490,7 @@ router.post('/analytics/recommendations/:templateId/feedback',
       notes: notes ?? null,
       recordedBy: req.adminRole,
     });
-    saveFeedback(fb);
+    await saveFeedback(fb);
     res.json(fb);
   }
 );
@@ -468,12 +499,12 @@ router.post('/analytics/recommendations/:templateId/feedback',
 
 router.post('/knowledge/:itemId/promote',
   requireCapability('promote_knowledge'),
-  (req, res) => {
+  async (req, res) => {
     const { scope, sourceCaseIds, notes } = req.body ?? {};
     if (!scope || !Array.isArray(sourceCaseIds) || sourceCaseIds.length === 0) {
       return res.status(400).json({ error: 'scope and sourceCaseIds[] are required' });
     }
-    const item = getKnowledgeItem(req.params.itemId);
+    const item = await getKnowledgeItem(req.params.itemId);
     if (!item) return res.status(404).json({ error: 'Knowledge item not found' });
     try {
       const result = promoteKnowledgeItem(item, {

@@ -23,7 +23,7 @@
 
 import { transitionLead } from '../core/state/leadHandoffState.js';
 import { createAuditLog } from '../core/models/auditLog.js';
-import { getLead, saveLead, appendAuditLog } from '../admin/store.js';
+import { getLead, saveLead, appendAuditLog } from '../admin/base44Store.js';
 
 // ─── Safe export field list ───────────────────────────────────────────────────
 
@@ -127,7 +127,7 @@ export async function sendToWebhook(payload, webhookUrl) {
  */
 export async function exportLead(leadId, exportedBy, opts = {}) {
   const target = opts.target ?? 'internal';
-  const lead = getLead(leadId);
+  const lead = await getLead(leadId);
 
   if (!lead) throw new Error(`Lead not found: ${leadId}`);
 
@@ -163,7 +163,7 @@ export async function exportLead(leadId, exportedBy, opts = {}) {
   if (!deliveryOk) {
     // Transition to failed and log
     const failedLead = transitionLead(lead, 'failed');
-    saveLead(failedLead);
+    await saveLead(failedLead);
 
     const failLog = createAuditLog({
       entityType: 'lead',
@@ -175,7 +175,7 @@ export async function exportLead(leadId, exportedBy, opts = {}) {
       scope: 'local',
       reason: `Export attempt failed: ${deliveryError}`,
     });
-    appendAuditLog(failLog);
+    await appendAuditLog(failLog);
 
     throw new Error(`Lead export failed: ${deliveryError}`);
   }
@@ -185,7 +185,7 @@ export async function exportLead(leadId, exportedBy, opts = {}) {
     exportTimestamp: new Date().toISOString(),
     exportTarget,
   });
-  saveLead(exportedLead);
+  await saveLead(exportedLead);
 
   const log = createAuditLog({
     entityType: 'lead',
@@ -202,7 +202,7 @@ export async function exportLead(leadId, exportedBy, opts = {}) {
     scope: 'local',
     reason: opts.consentBasis ?? 'Admin confirmed consent and exported lead',
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { lead: exportedLead, payload, log };
 }
@@ -217,12 +217,12 @@ export async function exportLead(leadId, exportedBy, opts = {}) {
  * @param {string} by - Admin ID
  * @returns {{ lead: object, log: object }}
  */
-export function confirmLead(leadId, by) {
-  const lead = getLead(leadId);
+export async function confirmLead(leadId, by) {
+  const lead = await getLead(leadId);
   if (!lead) throw new Error(`Lead not found: ${leadId}`);
 
   const updated = transitionLead(lead, 'lead_created');
-  saveLead(updated);
+  await saveLead(updated);
 
   const log = createAuditLog({
     entityType: 'lead',
@@ -233,7 +233,7 @@ export function confirmLead(leadId, by) {
     scope: 'local',
     reason: 'Admin confirmed lead for follow-up',
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { lead: updated, log };
 }
@@ -247,12 +247,12 @@ export function confirmLead(leadId, by) {
  * @param {{ consentBasis?: string }} [opts]
  * @returns {{ lead: object, log: object }}
  */
-export function markLeadReadyForExport(leadId, by, opts = {}) {
-  const lead = getLead(leadId);
+export async function markLeadReadyForExport(leadId, by, opts = {}) {
+  const lead = await getLead(leadId);
   if (!lead) throw new Error(`Lead not found: ${leadId}`);
 
   const updated = transitionLead(lead, 'ready_for_export');
-  saveLead(updated);
+  await saveLead(updated);
 
   const log = createAuditLog({
     entityType: 'lead',
@@ -263,7 +263,7 @@ export function markLeadReadyForExport(leadId, by, opts = {}) {
     scope: 'local',
     reason: opts.consentBasis ?? 'Consent obtained — lead ready for export',
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { lead: updated, log };
 }
@@ -276,12 +276,12 @@ export function markLeadReadyForExport(leadId, by, opts = {}) {
  * @param {string} reason
  * @returns {{ lead: object, log: object }}
  */
-export function archiveLead(leadId, by, reason) {
-  const lead = getLead(leadId);
+export async function archiveLead(leadId, by, reason) {
+  const lead = await getLead(leadId);
   if (!lead) throw new Error(`Lead not found: ${leadId}`);
 
   const updated = transitionLead(lead, 'archived');
-  saveLead(updated);
+  await saveLead(updated);
 
   const log = createAuditLog({
     entityType: 'lead',
@@ -292,7 +292,7 @@ export function archiveLead(leadId, by, reason) {
     scope: 'local',
     reason,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { lead: updated, log };
 }

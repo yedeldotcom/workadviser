@@ -20,7 +20,7 @@ import { transitionRelease } from '../core/state/releaseState.js';
 import {
   saveReport, saveApproval, appendAuditLog,
   getReport, getProfile, saveProfile,
-} from './store.js';
+} from './base44Store.js';
 
 // ─── Report approval ──────────────────────────────────────────────────────────
 
@@ -32,8 +32,8 @@ import {
  * @param {string | null} editSummary
  * @returns {{ report: object, approval: object, log: object }}
  */
-export function approveReport(reportId, approvedBy, notes = null, editSummary = null) {
-  const report = getReport(reportId);
+export async function approveReport(reportId, approvedBy, notes = null, editSummary = null) {
+  const report = await getReport(reportId);
   if (!report) throw new Error(`Report not found: ${reportId}`);
 
   const updatedReport = transitionRelease(report, 'admin_approved', {
@@ -59,9 +59,9 @@ export function approveReport(reportId, approvedBy, notes = null, editSummary = 
     reason: notes ?? 'Admin approval',
   });
 
-  saveReport(updatedReport);
-  saveApproval(approval);
-  appendAuditLog(log);
+  await saveReport(updatedReport);
+  await saveApproval(approval);
+  await appendAuditLog(log);
 
   return { report: updatedReport, approval, log };
 }
@@ -73,10 +73,10 @@ export function approveReport(reportId, approvedBy, notes = null, editSummary = 
  * @param {string} reason - Required for rejection
  * @returns {{ report: object, approval: object, log: object }}
  */
-export function rejectReport(reportId, rejectedBy, reason) {
+export async function rejectReport(reportId, rejectedBy, reason) {
   if (!reason) throw new Error('Rejection reason is required');
 
-  const report = getReport(reportId);
+  const report = await getReport(reportId);
   if (!report) throw new Error(`Report not found: ${reportId}`);
 
   const updatedReport = transitionRelease(report, 'withheld');
@@ -99,9 +99,9 @@ export function rejectReport(reportId, rejectedBy, reason) {
     reason,
   });
 
-  saveReport(updatedReport);
-  saveApproval(approval);
-  appendAuditLog(log);
+  await saveReport(updatedReport);
+  await saveApproval(approval);
+  await appendAuditLog(log);
 
   return { report: updatedReport, approval, log };
 }
@@ -119,8 +119,8 @@ export function rejectReport(reportId, rejectedBy, reason) {
  * @param {{ meaningChanged?: boolean, reason?: string, scope?: 'local' | 'reusable' }} opts
  * @returns {{ report: object, log: object }}
  */
-export function editRecommendation(reportId, recommendationId, newText_he, changedBy, opts = {}) {
-  const report = getReport(reportId);
+export async function editRecommendation(reportId, recommendationId, newText_he, changedBy, opts = {}) {
+  const report = await getReport(reportId);
   if (!report) throw new Error(`Report not found: ${reportId}`);
 
   // Apply edit to report sections (shallow patch on the recommendation text)
@@ -138,8 +138,8 @@ export function editRecommendation(reportId, recommendationId, newText_he, chang
     reason: opts.reason ?? null,
   });
 
-  saveReport(updatedReport);
-  appendAuditLog(log);
+  await saveReport(updatedReport);
+  await appendAuditLog(log);
 
   return { report: updatedReport, log };
 }
@@ -177,8 +177,8 @@ function applyRecommendationEdit(sections, recommendationId, newText_he) {
  * @param {string} addedBy
  * @returns {{ profile: object, log: object }}
  */
-export function addCaseNote(userId, noteText, addedBy) {
-  const profile = getProfile(userId);
+export async function addCaseNote(userId, noteText, addedBy) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const note = {
@@ -205,8 +205,8 @@ export function addCaseNote(userId, noteText, addedBy) {
     reason: noteText.slice(0, 100),
   });
 
-  saveProfile(updatedProfile);
-  appendAuditLog(log);
+  await saveProfile(updatedProfile);
+  await appendAuditLog(log);
 
   return { profile: updatedProfile, log };
 }
@@ -220,8 +220,8 @@ export function addCaseNote(userId, noteText, addedBy) {
  * @param {string} markedBy
  * @returns {{ profile: object, log: object }}
  */
-export function markFollowUp(userId, opts, markedBy) {
-  const profile = getProfile(userId);
+export async function markFollowUp(userId, opts, markedBy) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const followUp = {
@@ -251,8 +251,8 @@ export function markFollowUp(userId, opts, markedBy) {
     reason: opts.reason,
   });
 
-  saveProfile(updatedProfile);
-  appendAuditLog(log);
+  await saveProfile(updatedProfile);
+  await appendAuditLog(log);
 
   return { profile: updatedProfile, log };
 }
@@ -265,8 +265,8 @@ export function markFollowUp(userId, opts, markedBy) {
  * @param {string} by
  * @returns {{ report: object, log: object }}
  */
-export function markReportReadyForDelivery(reportId, by) {
-  const report = getReport(reportId);
+export async function markReportReadyForDelivery(reportId, by) {
+  const report = await getReport(reportId);
   if (!report) throw new Error(`Report not found: ${reportId}`);
 
   const updatedReport = transitionRelease(report, 'user_delivery_ready');
@@ -280,8 +280,8 @@ export function markReportReadyForDelivery(reportId, by) {
     scope: 'local',
   });
 
-  saveReport(updatedReport);
-  appendAuditLog(log);
+  await saveReport(updatedReport);
+  await appendAuditLog(log);
 
   return { report: updatedReport, log };
 }

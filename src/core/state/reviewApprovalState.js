@@ -18,7 +18,7 @@
  */
 
 import { createAuditLog } from '../models/auditLog.js';
-import { appendAuditLog } from '../../admin/store.js';
+import { appendAuditLog } from '../../admin/base44Store.js';
 
 export const REVIEW_STATES = {
   PENDING:    'pending',
@@ -73,7 +73,7 @@ export function transitionReview(reviewItem, toState, opts = {}) {
     scope: 'local',
     reason: opts.reason ?? `Review state transition: ${reviewItem.state} → ${toState}`,
   });
-  appendAuditLog(log);
+  appendAuditLog(log).catch(console.error);
 
   return { ...reviewItem, state: toState, ...opts };
 }

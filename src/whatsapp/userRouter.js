@@ -24,7 +24,7 @@ import { createUserProfile } from '../core/models/userProfile.js';
 import {
   saveUser, saveProfile, saveSession, saveMessage, getSessionsForUser,
   getUserByPhone,
-} from '../admin/store.js';
+} from '../admin/base44Store.js';
 import {
   createSession,
   resumeSession,
@@ -53,8 +53,8 @@ import { runInterviewTurn } from '../conversation/llmClient.js';
  * @param {string} [opts.partnerSource]  - Referring partner org ID
  * @returns {{ user: import('../core/models/user.js').User, isNew: boolean }}
  */
-export function findOrCreateUser(phoneNumber, opts = {}) {
-  const existing = getUserByPhone(phoneNumber);
+export async function findOrCreateUser(phoneNumber, opts = {}) {
+  const existing = await getUserByPhone(phoneNumber);
   if (existing) return { user: existing, isNew: false };
 
   const user = createUser({
@@ -62,10 +62,10 @@ export function findOrCreateUser(phoneNumber, opts = {}) {
     phoneNumber,
     partnerSource: opts.partnerSource ?? null,
   });
-  saveUser(user);
+  await saveUser(user);
 
   const profile = createUserProfile({ userId: user.id });
-  saveProfile(profile);
+  await saveProfile(profile);
 
   return { user, isNew: true };
 }
@@ -77,8 +77,8 @@ export function findOrCreateUser(phoneNumber, opts = {}) {
  * @param {string} userId
  * @returns {{ session: object, isNew: boolean }}
  */
-export function findOrCreateSession(userId) {
-  const sessions = getSessionsForUser(userId);
+export async function findOrCreateSession(userId) {
+  const sessions = await getSessionsForUser(userId);
 
   // Prefer sessions that are still in-progress
   const IN_PROGRESS = ['onboarding', 'active', 'paused', 'distress_hold'];
@@ -90,7 +90,7 @@ export function findOrCreateSession(userId) {
 
   // Create a fresh session
   const session = createSession(userId);
-  saveSession(session);
+  await saveSession(session);
   return { session, isNew: true };
 }
 
@@ -122,21 +122,21 @@ export async function routeMessage(session, text, context = {}) {
     const { session: s2, message: outMsg } = recordOutboundMessage(
       dropped, 'בסדר, עצרנו. אם תרצה/י לחזור בעתיד, פשוט שלח/י הודעה.'
     );
-    saveSession(s2);
+    await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'stop' };
   }
 
   if (action === 'pause') {
     const { session: paused, message: pauseMsg } = pauseSession(s1);
     const { session: s2, message: outMsg } = recordOutboundMessage(paused, pauseMsg);
-    saveSession(s2);
+    await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'pause' };
   }
 
   if (action === 'distress') {
     const { session: held, message: distressMsg } = handleDistress(s1);
     const { session: s2, message: outMsg } = recordOutboundMessage(held, distressMsg);
-    saveSession(s2);
+    await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'distress' };
   }
 
@@ -177,7 +177,7 @@ async function _handleOnboarding(session, action, context) {
     const msg = script[step - 1].text;
     const updatedSession = { ...session, onboardingStep: step };
     const { session: s2, message: outMsg } = recordOutboundMessage(updatedSession, msg);
-    saveSession(s2);
+    await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
   }
 
@@ -185,7 +185,7 @@ async function _handleOnboarding(session, action, context) {
   if (action === 'consent_needed') {
     const nudge = 'אשמח לקבל "כן" כדי להתחיל. או "עצור" אם שינית את דעתך.';
     const { session: s2, message: outMsg } = recordOutboundMessage(session, nudge);
-    saveSession(s2);
+    await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
   }
 

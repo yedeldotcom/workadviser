@@ -19,6 +19,7 @@
   "private": true,
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
+    "@base44/sdk": "^0.8.20",
     "express": "^5.2.1",
     "mammoth": "^1.8.0",
     "officeparser": "^4.1.3",

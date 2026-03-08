@@ -23,7 +23,7 @@ import { createAuditLog } from '../core/models/auditLog.js';
 import {
   getProfile, saveProfile, appendAuditLog,
   saveChangeEvent, getChangeEvent,
-} from '../admin/store.js';
+} from '../admin/base44Store.js';
 
 // ─── Staleness thresholds (days) ──────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ const STALENESS_DAYS = {
  * @returns {{ event: import('../core/models/changeEvent.js').ChangeEvent, log: object }}
  * @throws {Error} If userId is missing, profile not found, or eventType is invalid
  */
-export function recordChangeEvent(userId, eventType, opts = {}) {
+export async function recordChangeEvent(userId, eventType, opts = {}) {
   if (!userId) throw new Error('userId is required');
   if (!REVALIDATION_LEVELS[eventType]) {
     throw new Error(
@@ -62,7 +62,7 @@ export function recordChangeEvent(userId, eventType, opts = {}) {
     );
   }
 
-  const profile = getProfile(userId);
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const event = createChangeEvent({
@@ -72,7 +72,7 @@ export function recordChangeEvent(userId, eventType, opts = {}) {
     notes: opts.notes ?? null,
   });
 
-  saveChangeEvent(event);
+  await saveChangeEvent(event);
 
   // Link event ID into profile
   const updatedProfile = {
@@ -80,7 +80,7 @@ export function recordChangeEvent(userId, eventType, opts = {}) {
     changeEventIds: [...(profile.changeEventIds ?? []), event.id],
     updatedAt: new Date().toISOString(),
   };
-  saveProfile(updatedProfile);
+  await saveProfile(updatedProfile);
 
   const log = createAuditLog({
     entityType: 'user',
@@ -92,7 +92,7 @@ export function recordChangeEvent(userId, eventType, opts = {}) {
     scope: 'local',
     reason: `${eventType}${opts.notes ? ': ' + opts.notes : ''}`,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { event, log };
 }
@@ -217,8 +217,8 @@ export function assessStaleness(profile, changeEvents, opts = {}) {
  * @returns {{ event: object, log: object }}
  * @throws {Error} If event not found
  */
-export function resolveChangeEvent(eventId, resolvedBy) {
-  const event = getChangeEvent(eventId);
+export async function resolveChangeEvent(eventId, resolvedBy) {
+  const event = await getChangeEvent(eventId);
   if (!event) throw new Error(`Change event not found: ${eventId}`);
 
   const resolved = {
@@ -226,7 +226,7 @@ export function resolveChangeEvent(eventId, resolvedBy) {
     revalidationRequired: false,
     resolvedAt: new Date().toISOString(),
   };
-  saveChangeEvent(resolved);
+  await saveChangeEvent(resolved);
 
   const log = createAuditLog({
     entityType: 'change_event',
@@ -238,7 +238,7 @@ export function resolveChangeEvent(eventId, resolvedBy) {
     scope: 'local',
     reason: 'Revalidation completed',
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { event: resolved, log };
 }

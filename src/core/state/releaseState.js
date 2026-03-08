@@ -18,7 +18,7 @@
  */
 
 import { createAuditLog } from '../models/auditLog.js';
-import { appendAuditLog } from '../../admin/store.js';
+import { appendAuditLog } from '../../admin/base44Store.js';
 
 export const RELEASE_STATES = {
   DRAFT_GENERATED:              'draft_generated',
@@ -104,7 +104,7 @@ export function transitionRelease(report, toState, opts = {}) {
     scope: 'local',
     reason: opts.reason ?? `Release state transition: ${report.state} → ${toState}`,
   });
-  appendAuditLog(log);
+  appendAuditLog(log).catch(console.error);
 
   return updated;
 }

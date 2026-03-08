@@ -18,7 +18,7 @@ import { SCENARIO_DATABASE } from '../../engines/translation/workplace_scenarios
 import { createRenderedRecommendation, createTracingChain } from '../models/recommendation.js';
 import { meetsDisclosureLevel } from './disclosureFilter.js';
 import { createAuditLog } from '../models/auditLog.js';
-import { appendAuditLog } from '../../admin/store.js';
+import { appendAuditLog } from '../../admin/base44Store.js';
 
 // ─── Type definitions ─────────────────────────────────────────────────────────
 

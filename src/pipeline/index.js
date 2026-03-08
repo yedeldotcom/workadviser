@@ -14,7 +14,7 @@ import { translateToWorkplace } from '../engines/translation/index.js';
 import { generateImplementationPlan } from '../engines/implementation/index.js';
 import { generateFraming } from '../engines/framing/index.js';
 import { createAuditLog } from '../core/models/auditLog.js';
-import { appendAuditLog } from '../admin/store.js';
+import { appendAuditLog } from '../admin/base44Store.js';
 
 /**
  * Run the full pipeline.
@@ -83,7 +83,7 @@ export function runPipeline({ responses, phase = 'pre_employment', orgReadiness 
     scope: 'local',
     reason: 'Full 5-engine pipeline run',
   });
-  appendAuditLog(log);
+  appendAuditLog(log).catch(console.error);
 
   return result;
 }

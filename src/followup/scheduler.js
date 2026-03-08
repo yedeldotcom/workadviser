@@ -24,7 +24,7 @@ import { createAuditLog } from '../core/models/auditLog.js';
 import {
   getProfile, saveProfile, appendAuditLog,
   saveFollowUpCheckin, getFollowUpCheckin, getCheckinsForUser,
-} from '../admin/store.js';
+} from '../admin/base44Store.js';
 import { assessStaleness } from './changeEventDetector.js';
 
 // ─── Cadence configuration ────────────────────────────────────────────────────
@@ -165,8 +165,8 @@ function createCheckin(fields = {}) {
  * @param {string} [opts.scheduledBy]
  * @returns {{ checkin: FollowUpCheckin, log: object }}
  */
-export function scheduleInitialFollowUp(userId, opts = {}) {
-  const profile = getProfile(userId);
+export async function scheduleInitialFollowUp(userId, opts = {}) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const deliveredAt = new Date(opts.deliveredAt ?? new Date());
@@ -183,7 +183,7 @@ export function scheduleInitialFollowUp(userId, opts = {}) {
     message,
   });
 
-  saveFollowUpCheckin(checkin);
+  await saveFollowUpCheckin(checkin);
 
   const log = createAuditLog({
     entityType: 'user',
@@ -195,7 +195,7 @@ export function scheduleInitialFollowUp(userId, opts = {}) {
     scope: 'local',
     reason: `Initial follow-up scheduled ${INITIAL_FOLLOWUP_DAYS} days after delivery`,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log).catch(console.error);
 
   return { checkin, log };
 }
@@ -209,8 +209,8 @@ export function scheduleInitialFollowUp(userId, opts = {}) {
  * @param {string} [opts.scheduledBy]
  * @returns {{ checkin: FollowUpCheckin, log: object }}
  */
-export function schedulePeriodicCheckin(userId, opts = {}) {
-  const profile = getProfile(userId);
+export async function schedulePeriodicCheckin(userId, opts = {}) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const stage = profile.employmentContext?.employmentStage ?? 'default';
@@ -230,7 +230,7 @@ export function schedulePeriodicCheckin(userId, opts = {}) {
     message,
   });
 
-  saveFollowUpCheckin(checkin);
+  await saveFollowUpCheckin(checkin);
 
   const log = createAuditLog({
     entityType: 'user',
@@ -242,7 +242,7 @@ export function schedulePeriodicCheckin(userId, opts = {}) {
     scope: 'local',
     reason: `Periodic check-in scheduled (stage: ${stage}, cadence: ${cadenceDays} days)`,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log).catch(console.error);
 
   return { checkin, log };
 }
@@ -258,8 +258,8 @@ export function schedulePeriodicCheckin(userId, opts = {}) {
  * @param {string} [opts.scheduledBy]
  * @returns {{ checkin: FollowUpCheckin, log: object }}
  */
-export function scheduleEventTriggeredCheckin(userId, eventType, eventId, opts = {}) {
-  const profile = getProfile(userId);
+export async function scheduleEventTriggeredCheckin(userId, eventType, eventId, opts = {}) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const scheduledFor = new Date();
@@ -277,7 +277,7 @@ export function scheduleEventTriggeredCheckin(userId, eventType, eventId, opts =
     triggerEventId: eventId,
   });
 
-  saveFollowUpCheckin(checkin);
+  await saveFollowUpCheckin(checkin);
 
   const log = createAuditLog({
     entityType: 'user',
@@ -289,7 +289,7 @@ export function scheduleEventTriggeredCheckin(userId, eventType, eventId, opts =
     scope: 'local',
     reason: `Event-triggered check-in scheduled for: ${eventType}`,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log).catch(console.error);
 
   return { checkin, log };
 }
@@ -303,8 +303,8 @@ export function scheduleEventTriggeredCheckin(userId, eventType, eventId, opts =
  * @param {string} [opts.scheduledBy]
  * @returns {{ checkin: FollowUpCheckin, log: object }}
  */
-export function scheduleRevalidation(userId, opts = {}) {
-  const profile = getProfile(userId);
+export async function scheduleRevalidation(userId, opts = {}) {
+  const profile = await getProfile(userId);
   if (!profile) throw new Error(`Profile not found for user: ${userId}`);
 
   const firstName = profile.identityBasics?.firstName ?? null;
@@ -317,7 +317,7 @@ export function scheduleRevalidation(userId, opts = {}) {
     message,
   });
 
-  saveFollowUpCheckin(checkin);
+  await saveFollowUpCheckin(checkin);
 
   const log = createAuditLog({
     entityType: 'user',
@@ -329,7 +329,7 @@ export function scheduleRevalidation(userId, opts = {}) {
     scope: 'local',
     reason: 'Revalidation check-in scheduled due to staleness',
   });
-  appendAuditLog(log);
+  await appendAuditLog(log).catch(console.error);
 
   return { checkin, log };
 }
@@ -341,11 +341,11 @@ export function scheduleRevalidation(userId, opts = {}) {
  * @param {string} checkinId
  * @returns {FollowUpCheckin}
  */
-export function markCheckinSent(checkinId) {
-  const checkin = getFollowUpCheckin(checkinId);
+export async function markCheckinSent(checkinId) {
+  const checkin = await getFollowUpCheckin(checkinId);
   if (!checkin) throw new Error(`Check-in not found: ${checkinId}`);
   const updated = { ...checkin, state: 'sent', sentAt: new Date().toISOString() };
-  saveFollowUpCheckin(updated);
+  await saveFollowUpCheckin(updated);
   return updated;
 }
 
@@ -354,11 +354,11 @@ export function markCheckinSent(checkinId) {
  * @param {string} checkinId
  * @returns {FollowUpCheckin}
  */
-export function markCheckinResponded(checkinId) {
-  const checkin = getFollowUpCheckin(checkinId);
+export async function markCheckinResponded(checkinId) {
+  const checkin = await getFollowUpCheckin(checkinId);
   if (!checkin) throw new Error(`Check-in not found: ${checkinId}`);
   const updated = { ...checkin, state: 'responded', respondedAt: new Date().toISOString() };
-  saveFollowUpCheckin(updated);
+  await saveFollowUpCheckin(updated);
   return updated;
 }
 
@@ -369,17 +369,16 @@ export function markCheckinResponded(checkinId) {
  * @param {string} userId
  * @returns {string[]} Expired check-in IDs
  */
-export function expirePendingCheckins(userId) {
+export async function expirePendingCheckins(userId) {
   const now = new Date();
-  const checkins = getCheckinsForUser(userId).filter(
-    c => c.state === 'pending' && new Date(c.scheduledFor) < now
-  );
+  const all = await getCheckinsForUser(userId);
+  const checkins = all.filter(c => c.state === 'pending' && new Date(c.scheduledFor) < now);
 
-  return checkins.map(c => {
+  return Promise.all(checkins.map(async c => {
     const expired = { ...c, state: 'expired' };
-    saveFollowUpCheckin(expired);
+    await saveFollowUpCheckin(expired);
     return c.id;
-  });
+  }));
 }
 
 // ─── Due check-ins query ──────────────────────────────────────────────────────
@@ -390,11 +389,10 @@ export function expirePendingCheckins(userId) {
  * @param {string} userId
  * @returns {FollowUpCheckin[]}
  */
-export function getDueCheckins(userId) {
+export async function getDueCheckins(userId) {
   const now = new Date();
-  return getCheckinsForUser(userId).filter(
-    c => c.state === 'pending' && new Date(c.scheduledFor) <= now
-  );
+  const all = await getCheckinsForUser(userId);
+  return all.filter(c => c.state === 'pending' && new Date(c.scheduledFor) <= now);
 }
 
 // ─── Smart scheduling — detect staleness and schedule appropriately ────────────
@@ -412,12 +410,13 @@ export function getDueCheckins(userId) {
  * @param {string} [opts.previousDisclosure]
  * @returns {{ checkin: FollowUpCheckin, log: object } | null}
  */
-export function runScheduler(userId, changeEvents, opts = {}) {
-  const profile = getProfile(userId);
+export async function runScheduler(userId, changeEvents, opts = {}) {
+  const profile = await getProfile(userId);
   if (!profile) return null;
 
   // Check if there's already a pending check-in
-  const pendingCheckins = getCheckinsForUser(userId).filter(c => c.state === 'pending');
+  const allCheckins = await getCheckinsForUser(userId);
+  const pendingCheckins = allCheckins.filter(c => c.state === 'pending');
   if (pendingCheckins.length > 0) return null; // Already scheduled
 
   const staleness = assessStaleness(profile, changeEvents, opts);
@@ -430,10 +429,10 @@ export function runScheduler(userId, changeEvents, opts = {}) {
       e => e.eventType === staleness.triggerEventType && e.revalidationRequired
     );
     if (pendingEvent) {
-      return scheduleEventTriggeredCheckin(userId, staleness.triggerEventType, pendingEvent.id);
+      return await scheduleEventTriggeredCheckin(userId, staleness.triggerEventType, pendingEvent.id);
     }
   }
 
-  return scheduleRevalidation(userId);
+  return await scheduleRevalidation(userId);
 }
 

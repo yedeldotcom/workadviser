@@ -24,7 +24,7 @@ import {
   getApprovalsForReport,
   getAuditLogForEntity,
   getPipelineResult,
-} from './store.js';
+} from './base44Store.js';
 
 // ─── Workspace builder ────────────────────────────────────────────────────────
 
@@ -36,28 +36,30 @@ import {
  *   Role-gated: pass opts based on the admin's capabilities.
  * @returns {CaseWorkspace | null}
  */
-export function buildCaseWorkspace(userId, opts = {}) {
-  const user = getUser(userId);
+export async function buildCaseWorkspace(userId, opts = {}) {
+  const user = await getUser(userId);
   if (!user) return null;
 
-  const profile   = getProfile(userId);
-  const sessions  = getSessionsForUser(userId);
-  const reports   = getReportsForCase(userId);
+  const [profile, sessions, reports] = await Promise.all([
+    getProfile(userId),
+    getSessionsForUser(userId),
+    getReportsForCase(userId),
+  ]);
 
   // Enrich sessions with messages and signals
-  const enrichedSessions = sessions.map(session => {
+  const enrichedSessions = await Promise.all(sessions.map(async session => {
+    const messageObjects = await Promise.all(session.messageIds.map(id => getMessage(id)));
     const messages = opts.includeRawMessages
-      ? session.messageIds.map(id => getMessage(id)).filter(Boolean)
-      : session.messageIds.map(id => {
-          const m = getMessage(id);
-          return m ? { id: m.id, direction: m.direction, inputType: m.inputType, timestamp: m.timestamp, questionId: m.questionId } : null;
-        }).filter(Boolean);
+      ? messageObjects.filter(Boolean)
+      : messageObjects.filter(Boolean).map(m => ({
+          id: m.id, direction: m.direction, inputType: m.inputType,
+          timestamp: m.timestamp, questionId: m.questionId,
+        }));
 
-    const signals = session.normalizedSignalIds
-      .map(id => getSignal(id))
-      .filter(Boolean);
+    const signalObjects = await Promise.all(session.normalizedSignalIds.map(id => getSignal(id)));
+    const signals = signalObjects.filter(Boolean);
 
-    const pipelineResult = getPipelineResult(session.id);
+    const pipelineResult = await getPipelineResult(session.id);
 
     return {
       sessionId:   session.id,
@@ -75,21 +77,23 @@ export function buildCaseWorkspace(userId, opts = {}) {
       signals,
       pipelineResult: pipelineResult ? buildLogicMap(pipelineResult) : null,
     };
-  });
-
-  // Enrich reports with approvals
-  const enrichedReports = reports.map(report => ({
-    ...report,
-    approvals: getApprovalsForReport(report.id),
-    auditTrail: getAuditLogForEntity('report', report.id),
   }));
 
+  // Enrich reports with approvals
+  const enrichedReports = await Promise.all(reports.map(async report => ({
+    ...report,
+    approvals: await getApprovalsForReport(report.id),
+    auditTrail: await getAuditLogForEntity('report', report.id),
+  })));
+
   // Case-level audit trail
-  const caseAuditTrail = [
-    ...getAuditLogForEntity('user', userId),
-    ...sessions.flatMap(s => getAuditLogForEntity('session', s.id)),
-    ...reports.flatMap(r => getAuditLogForEntity('report', r.id)),
-  ].sort((a, b) => new Date(a.changedAt) - new Date(b.changedAt));
+  const [userLogs, ...restLogs] = await Promise.all([
+    getAuditLogForEntity('user', userId),
+    ...sessions.map(s => getAuditLogForEntity('session', s.id)),
+    ...reports.map(r => getAuditLogForEntity('report', r.id)),
+  ]);
+  const caseAuditTrail = [userLogs, ...restLogs].flat()
+    .sort((a, b) => new Date(a.changedAt) - new Date(b.changedAt));
 
   return {
     caseId:   userId,

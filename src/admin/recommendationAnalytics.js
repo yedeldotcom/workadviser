@@ -25,7 +25,7 @@
  */
 
 import { createAuditLog } from '../core/models/auditLog.js';
-import { appendAuditLog, saveKnowledgeItem, getKnowledgeItem } from './store.js';
+import { appendAuditLog, saveKnowledgeItem, getKnowledgeItem } from './base44Store.js';
 
 // ─── Feedback recording ───────────────────────────────────────────────────────
 
@@ -262,7 +262,7 @@ const PROMOTION_ORDER = ['case_only', 'candidate_pattern', 'validated', 'rule_up
  * @returns {{ item: object, record: PromotionRecord, log: object }}
  * @throws {Error} If item is already at the top of the chain
  */
-export function promoteKnowledgeItem(item, opts) {
+export async function promoteKnowledgeItem(item, opts) {
   const currentIndex = PROMOTION_ORDER.indexOf(item.promotionState);
   if (currentIndex === -1) throw new Error(`Unknown promotionState: '${item.promotionState}'`);
   if (currentIndex === PROMOTION_ORDER.length - 1) {
@@ -276,7 +276,7 @@ export function promoteKnowledgeItem(item, opts) {
     ...item,
     promotionState: toState,
   };
-  saveKnowledgeItem(promoted);
+  await saveKnowledgeItem(promoted);
 
   const record = {
     itemId: item.id,
@@ -299,7 +299,7 @@ export function promoteKnowledgeItem(item, opts) {
     scope: opts.scope === 'global' ? 'global' : 'local',
     reason: `Promoted from ${fromState} → ${toState}${opts.notes ? ': ' + opts.notes : ''}`,
   });
-  appendAuditLog(log);
+  await appendAuditLog(log);
 
   return { item: promoted, record, log };
 }

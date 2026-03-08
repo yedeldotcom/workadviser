@@ -118,23 +118,50 @@ export function canAccessCase(role, partnerOrgId, user) {
 // ─── Express middleware ───────────────────────────────────────────────────────
 
 /**
- * Attach admin identity to request.
- * Production: replace header-based auth with JWT/session validation.
+ * Attach admin identity to request via Base44 token validation.
  *
- * Expects: `X-Admin-Role` and optional `X-Partner-Org` request headers.
- * In production, these would come from a verified token, not raw headers.
+ * Expects: `Authorization: Bearer <token>` header.
+ * The token is validated with Base44. The user's role is read from
+ * their Base44 profile field `adminRole`.
+ *
+ * Dev fallback: if BASE44_APP_ID is not set, falls back to X-Admin-Role header.
  */
-export function attachAdminIdentity(req, res, next) {
-  const role = req.headers['x-admin-role'];
-  const partnerOrgId = req.headers['x-partner-org'] ?? null;
-
-  if (!role || !ROLE_CAPABILITIES[role]) {
-    return res.status(401).json({ error: 'Missing or invalid admin role', code: 'UNAUTHORIZED' });
+export async function attachAdminIdentity(req, res, next) {
+  // Dev fallback: allow header-based auth when Base44 is not configured
+  if (!process.env.BASE44_APP_ID) {
+    const role = req.headers['x-admin-role'];
+    const partnerOrgId = req.headers['x-partner-org'] ?? null;
+    if (!role || !ROLE_CAPABILITIES[role]) {
+      return res.status(401).json({ error: 'Missing or invalid admin role', code: 'UNAUTHORIZED' });
+    }
+    req.adminRole = role;
+    req.adminPartnerOrgId = partnerOrgId;
+    return next();
   }
 
-  req.adminRole = role;
-  req.adminPartnerOrgId = partnerOrgId;
-  next();
+  const authHeader = req.headers['authorization'];
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing Authorization header (Bearer token required)', code: 'UNAUTHORIZED' });
+  }
+
+  const token = authHeader.slice(7);
+  try {
+    const { base44 } = await import('./base44Client.js');
+    base44.auth.setToken(token);
+    const me = await base44.auth.me();
+
+    const role = me?.adminRole ?? me?.role ?? null;
+    if (!role || !ROLE_CAPABILITIES[role]) {
+      return res.status(403).json({ error: 'User has no valid admin role', code: 'FORBIDDEN' });
+    }
+
+    req.adminRole = role;
+    req.adminPartnerOrgId = me?.partnerOrgId ?? null;
+    req.adminUser = me;
+    next();
+  } catch {
+    res.status(401).json({ error: 'Invalid or expired token', code: 'UNAUTHORIZED' });
+  }
 }
 
 /**
@@ -157,12 +184,12 @@ export function requireCapability(capability) {
 /**
  * Require that the requesting admin can access the specified case.
  * Attaches the user record to req.caseUser for downstream use.
- * @param {Function} getUserFn - (userId) → User (from store)
+ * @param {Function} getUserFn - async (userId) → User (from store)
  */
 export function requireCaseAccess(getUserFn) {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const { caseId } = req.params;
-    const user = getUserFn(caseId); // caseId === userId in this system
+    const user = await getUserFn(caseId); // caseId === userId in this system
     if (!user) {
       return res.status(404).json({ error: 'Case not found', code: 'NOT_FOUND' });
     }
