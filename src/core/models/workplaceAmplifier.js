@@ -17,6 +17,11 @@
  * @property {string[]} barrierIds       - Barriers this amplifies
  */
 
+/**
+ * Create a WorkplaceAmplifier object with defaults.
+ * @param {Partial<WorkplaceAmplifier>} fields
+ * @returns {WorkplaceAmplifier}
+ */
 export function createWorkplaceAmplifier(fields = {}) {
   return {
     id: fields.id ?? crypto.randomUUID(),
@@ -28,7 +33,14 @@ export function createWorkplaceAmplifier(fields = {}) {
   };
 }
 
-// Derived from friction types in workplace_scenarios.js + interview data
+/**
+ * Seed amplifier registry.
+ * Derived from friction type labels in workplace_scenarios.js and KU-WRK interview data.
+ * Stable IDs: AMP-001 through AMP-010.
+ * Types: sensory | relational | structural | temporal
+ *
+ * @type {WorkplaceAmplifier[]}
+ */
 export const WORKPLACE_AMPLIFIERS = [
   createWorkplaceAmplifier({ id: 'AMP-001', text_he: 'עומס חושי (רעש, צפיפות, תאורה)',         text_en: 'Sensory overload (noise, crowding, lighting)',   type: 'sensory',    workplaceTypes: ['office', 'field'],    barrierIds: ['sensory_discomfort', 'concentration', 'anxiety_attacks'] }),
   createWorkplaceAmplifier({ id: 'AMP-002', text_he: 'סמכות בלתי צפויה או לא עקבית',           text_en: 'Unpredictable or inconsistent authority',         type: 'relational', workplaceTypes: ['any'],               barrierIds: ['authority', 'emotional_regulation', 'anxiety_attacks'] }),

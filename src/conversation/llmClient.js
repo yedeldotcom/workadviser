@@ -266,6 +266,13 @@ export async function runInterviewTurn(messages, context = {}) {
   return parseInterviewTurnResponse(raw);
 }
 
+/**
+ * Build a plain-text context block injected into the interview turn prompt.
+ * Only includes fields that are set — empty context produces an empty string.
+ *
+ * @param {{ phase?: string, workplaceType?: string, orgSize?: string, answeredBarrierIds?: string[], resuming?: boolean }} context
+ * @returns {string}
+ */
 function buildContextBlock(context) {
   const lines = [];
   if (context.phase) lines.push(`Employment phase: ${context.phase}`);
@@ -278,6 +285,14 @@ function buildContextBlock(context) {
   return lines.join('\n');
 }
 
+/**
+ * Parse the raw LLM response string for an interview turn.
+ * Extracts JSON (strips markdown code fences if present).
+ * On parse failure, returns a graceful fallback with the raw text as the message.
+ *
+ * @param {string} raw - Raw string from LLM response content
+ * @returns {{ nextMessage: string, detectedSignals: object[], confidenceLevel: string, shouldEscalate: boolean, questionId: string | null }}
+ */
 function parseInterviewTurnResponse(raw) {
   // Extract JSON from response (may be wrapped in markdown code fences)
   const jsonMatch = raw.match(/```(?:json)?\s*([\s\S]*?)```/) ?? [null, raw];
@@ -328,6 +343,14 @@ export async function generateUserReport(pipelineResult, profile) {
   return { sections: parseReportSections(raw), rawText: raw };
 }
 
+/**
+ * Build the LLM prompt for generating an 8-section user-facing Hebrew report.
+ * Uses only the outputs of engines 1-3 (intake, interpretation, translation).
+ *
+ * @param {object} engines - Pipeline engine outputs
+ * @param {object | null} profile - UserProfile (used for disclosure level)
+ * @returns {string}
+ */
 function buildUserReportPrompt(engines, profile) {
   const { intake, interpretation, translation } = engines;
   const criticalBarriers = intake.criticalBarriers.map(b => `${b.he} (${b.score}/5)`).join(', ');
@@ -385,6 +408,16 @@ export async function generateEmployerReport(pipelineResult, profile, disclosure
   return { sections: parseReportSections(raw), rawText: raw };
 }
 
+/**
+ * Build the LLM prompt for generating an 8-section employer-facing Hebrew report.
+ * Disclosure level controls the instruction injected — this is the primary
+ * safety mechanism ensuring employer output doesn't copy user report content.
+ * CRITICAL: the prompt explicitly instructs the LLM that this is NOT derived from the user report.
+ *
+ * @param {object} engines - Pipeline engine outputs
+ * @param {'functional_only' | 'partial_contextual' | 'full_voluntary'} disclosureLevel
+ * @returns {string}
+ */
 function buildEmployerReportPrompt(engines, disclosureLevel) {
   const { translation, implementation } = engines;
   const topAccommodations = translation.recommendations
@@ -423,6 +456,14 @@ CRITICAL: This document must NOT be a copy of or derived directly from any perso
 
 // ─── Shared Utilities ─────────────────────────────────────────────────────────
 
+/**
+ * Parse a numbered Hebrew report into a section map.
+ * Matches lines like "1. מטרת המסמך" as section headers.
+ * All content lines until the next header are grouped under that section.
+ *
+ * @param {string} raw - Raw Hebrew report text from LLM
+ * @returns {Record<string, string>} Section label → section content
+ */
 function parseReportSections(raw) {
   // Extract numbered sections from Hebrew report text
   const sections = {};

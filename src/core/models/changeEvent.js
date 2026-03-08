@@ -23,7 +23,15 @@
  * @property {string | null} notes
  */
 
-// Revalidation level per event type
+/**
+ * Maps each change event type to its required revalidation level (FPP §5.7).
+ *
+ * - full_reassessment: Major context change — restart barrier scoring (hired, leave, fired, etc.)
+ * - partial_revalidation: Significant but bounded change — re-score affected barriers (promotion, relocation)
+ * - light_refresh: Minor context shift — check staleness on top recommendations (team_change, schedule_change)
+ *
+ * @type {Record<string, RevalidationLevel>}
+ */
 const REVALIDATION_LEVELS = {
   hired:           'full_reassessment',
   new_role:        'full_reassessment',
@@ -40,6 +48,12 @@ const REVALIDATION_LEVELS = {
   commute_change:  'light_refresh',
 };
 
+/**
+ * Create a ChangeEvent object with defaults.
+ * revalidationLevel is auto-derived from eventType unless explicitly overridden.
+ * @param {Partial<ChangeEvent>} fields
+ * @returns {ChangeEvent}
+ */
 export function createChangeEvent(fields = {}) {
   const now = new Date().toISOString();
   const eventType = fields.eventType ?? 'schedule_change';

@@ -22,6 +22,8 @@ const _auditLog        = new Map(); // logId → AuditLog
 const _pipelineResults = new Map(); // sessionId → pipelineResult
 
 // ─── Write ────────────────────────────────────────────────────────────────────
+// Each save* function upserts by primary key and returns the saved object.
+// appendAuditLog uses entry.id as key (audit entries are immutable once written).
 
 export function saveUser(user)               { _users.set(user.id, user); return user; }
 export function saveProfile(profile)         { _profiles.set(profile.userId, profile); return profile; }
@@ -32,9 +34,11 @@ export function saveReport(report)           { _reports.set(report.id, report); 
 export function saveLead(lead)               { _leads.set(lead.id, lead); return lead; }
 export function saveApproval(approval)       { _approvals.set(approval.id, approval); return approval; }
 export function appendAuditLog(entry)        { _auditLog.set(entry.id, entry); return entry; }
+/** @param {string} sessionId @param {object} result */
 export function savePipelineResult(sessionId, result) { _pipelineResults.set(sessionId, result); return result; }
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
+// Each get* function returns the entity or null (never throws for missing IDs).
 
 export function getUser(userId)              { return _users.get(userId) ?? null; }
 export function getProfile(userId)           { return _profiles.get(userId) ?? null; }
@@ -44,9 +48,11 @@ export function getSignal(signalId)          { return _signals.get(signalId) ?? 
 export function getReport(reportId)          { return _reports.get(reportId) ?? null; }
 export function getLead(leadId)              { return _leads.get(leadId) ?? null; }
 export function getApproval(approvalId)      { return _approvals.get(approvalId) ?? null; }
+/** @param {string} sessionId @returns {object | null} */
 export function getPipelineResult(sessionId) { return _pipelineResults.get(sessionId) ?? null; }
 
 // ─── List ─────────────────────────────────────────────────────────────────────
+// Each getAll* function returns a snapshot array (safe to mutate).
 
 export function getAllUsers()     { return [..._users.values()]; }
 export function getAllProfiles()  { return [..._profiles.values()]; }

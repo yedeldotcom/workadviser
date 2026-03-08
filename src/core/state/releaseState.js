@@ -1,7 +1,20 @@
 /**
  * ReleaseStateMachine — FPP §9.2
  *
- * Governs the lifecycle of a ReportObject from draft generation to delivery.
+ * Governs the lifecycle of a ReportObject from draft generation to final delivery.
+ *
+ * Happy path (user report):
+ *   draft_generated → admin_review_required → admin_approved → user_delivery_ready
+ *     → delivered_to_user → user_viewed → archived
+ *
+ * Employer share path (requires user consent):
+ *   user_viewed → user_approved_for_employer → employer_delivery_ready
+ *     → sent_to_employer → employer_viewed → archived
+ *
+ * Withhold path (admin or user blocks delivery):
+ *   any non-terminal state → withheld → archived
+ *
+ * Every report must reach either 'archived' or 'withheld' — no silent drops.
  */
 
 export const RELEASE_STATES = {
@@ -19,6 +32,10 @@ export const RELEASE_STATES = {
   ARCHIVED:                     'archived',
 };
 
+/**
+ * Valid state transitions for report release.
+ * @type {Record<string, string[]>}
+ */
 const TRANSITIONS = {
   draft_generated:            ['admin_review_required', 'admin_approved'],
   admin_review_required:      ['admin_approved', 'withheld'],
@@ -34,14 +51,26 @@ const TRANSITIONS = {
   archived:                   [],
 };
 
+/**
+ * Check whether a release state transition is permitted.
+ * @param {string} from - Current release state
+ * @param {string} to   - Desired next state
+ * @returns {boolean}
+ */
 export function isValidReleaseTransition(from, to) {
   return (TRANSITIONS[from] ?? []).includes(to);
 }
 
 /**
+ * Transition a ReportObject to a new release state.
+ * Automatically stamps audit timestamps (adminReviewedAt, userApprovedAt, deliveredAt)
+ * when entering the relevant states.
+ *
  * @param {import('../models/report.js').ReportObject} report
  * @param {string} toState
  * @param {{ adminReviewedAt?: string, userApprovedAt?: string, deliveredAt?: string }} [opts]
+ * @returns {import('../models/report.js').ReportObject}
+ * @throws {Error} If the transition is not valid for the report's current state
  */
 export function transitionRelease(report, toState, opts = {}) {
   if (!isValidReleaseTransition(report.state, toState)) {

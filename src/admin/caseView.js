@@ -167,6 +167,16 @@ export function buildLogicMap(pipelineResult) {
 
 // ─── Case summary ──────────────────────────────────────────────────────────────
 
+/**
+ * Build a compact status summary for the admin case list view.
+ * Contains only pre-computed aggregates — no raw message or signal data.
+ *
+ * @param {object} user
+ * @param {object | null} profile
+ * @param {object[]} sessions
+ * @param {object[]} reports
+ * @returns {{ userId: string, channel: string, consentState: string, pendingReports: number, ... }}
+ */
 function buildCaseSummary(user, profile, sessions, reports) {
   const latestSession = sessions.sort((a, b) => new Date(b.lastActiveAt) - new Date(a.lastActiveAt))[0] ?? null;
   const pendingReports = reports.filter(r => ['draft_generated', 'admin_review_required'].includes(r.state));
@@ -190,7 +200,12 @@ function buildCaseSummary(user, profile, sessions, reports) {
 
 // ─── Sanitizers ───────────────────────────────────────────────────────────────
 
-/** Remove raw phone number etc. from user for non-owner roles */
+/**
+ * Sanitize a User record for non-system_owner admin roles.
+ * Omits: phoneNumber (system_owner only), any PII beyond what is listed below.
+ * @param {object} user
+ * @returns {{ id: string, channel: string, consentState: string, partnerSource: string | null, createdAt: string }}
+ */
 function sanitizeUser(user) {
   return {
     id: user.id,
@@ -202,6 +217,13 @@ function sanitizeUser(user) {
   };
 }
 
+/**
+ * Sanitize a UserProfile for the case workspace.
+ * Omits raw interview history, admin review history, and other internal arrays.
+ * Retains fields needed for the admin case page summary display.
+ * @param {object} profile
+ * @returns {object}
+ */
 function sanitizeProfile(profile) {
   return {
     disclosurePreference: profile.disclosurePreference,

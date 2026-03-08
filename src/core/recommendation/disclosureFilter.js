@@ -157,7 +157,18 @@ export function filterForEmployer(caseAnalysis, profile, disclosureLevel) {
 }
 
 // ─── Sub-filters ─────────────────────────────────────────────────────────────
+// These functions are internal to filterForEmployer().
+// Each receives only the data it needs — no direct access to full case analysis.
 
+/**
+ * Build a generic work impact summary (safe at all levels ≥ functional_only).
+ * Uses Hebrew severity labels to avoid clinical framing in employer output.
+ * At partial_contextual+, adds investmentPriorities and trajectory.
+ *
+ * @param {object} engines        - Pipeline engine outputs
+ * @param {string} disclosureLevel
+ * @returns {{ overallImpactLevel: string, primaryWorkDomains: string[], investmentPriorities?: string[], trajectory?: string | null }}
+ */
 function buildWorkImpactSummary(engines, disclosureLevel) {
   const { intake, interpretation } = engines;
   const severity = intake.overallSeverity;
@@ -183,6 +194,16 @@ function buildWorkImpactSummary(engines, disclosureLevel) {
   return impactSummary;
 }
 
+/**
+ * Filter barrier data according to the disclosure representation level.
+ *   'functional_impact_only'        → score only (no IDs or names)
+ *   'functional_name'               → id + en name + score (no cluster)
+ *   'functional_name_with_context'  → id + he + en + score + cluster
+ *
+ * @param {object} intake             - Engine 1 (intake) output
+ * @param {string} representation     - From FIELD_RULES[level].barrierRepresentation
+ * @returns {object[]}
+ */
 function filterBarriers(intake, representation) {
   const barriers = intake.criticalBarriers ?? [];
   return barriers.map(b => {
@@ -197,6 +218,16 @@ function filterBarriers(intake, representation) {
   });
 }
 
+/**
+ * Filter accommodation recommendations for employer output.
+ * At functional_only, barrierName is omitted (anonymous recommendations).
+ * At partial_contextual+, barrierName is included for context.
+ * At most 5 recommendations, 2 accommodations each.
+ *
+ * @param {object} translation   - Engine 3 (translation) output
+ * @param {string} disclosureLevel
+ * @returns {object[]}
+ */
 function filterAccommodations(translation, disclosureLevel) {
   if (!translation.recommendations) return [];
   return translation.recommendations.slice(0, 5).map(rec => ({
@@ -213,6 +244,15 @@ function filterAccommodations(translation, disclosureLevel) {
   }));
 }
 
+/**
+ * Build high-level accommodation category labels.
+ * Safe at all disclosure levels — no individual barrier data exposed.
+ * Categories: low_cost_adjustments, structural_changes, management_practices,
+ *             physical_environment, scheduling_flexibility.
+ *
+ * @param {object} translation - Engine 3 output
+ * @returns {string[]}
+ */
 function buildAccommodationCategories(translation) {
   // High-level category groupings — safe at any disclosure level
   const categories = new Set();
@@ -228,6 +268,14 @@ function buildAccommodationCategories(translation) {
   return [...categories];
 }
 
+/**
+ * Filter amplifier patterns for employer output (only at full_voluntary).
+ * Returns functional labels only — no clinical content or trigger names.
+ * Note: triggers are NEVER shared with employers regardless of disclosure level.
+ *
+ * @param {object} intake - Engine 1 output
+ * @returns {{ id: string, en: string }[]}
+ */
 function filterAmplifiers(intake) {
   // Amplifiers are safe at full_voluntary — functional labels, no clinical content
   return (intake.patterns ?? []).map(p => ({
@@ -236,6 +284,13 @@ function filterAmplifiers(intake) {
   }));
 }
 
+/**
+ * Build safe context notes for employer output (only at full_voluntary).
+ * Never includes: personal identifiers, diagnosis, raw interview quotes, phone number.
+ *
+ * @param {object | null} profile - UserProfile
+ * @returns {{ employmentStage: string | null, disclosurePreference: string } | null}
+ */
 function buildContextNotes(profile) {
   if (!profile) return null;
   return {
@@ -245,6 +300,13 @@ function buildContextNotes(profile) {
   };
 }
 
+/**
+ * Identify the top 3 workplace domains by recommendation frequency.
+ * Used in workImpactSummary — domain names only, no barrier linkage.
+ *
+ * @param {object} translation - Engine 3 output
+ * @returns {string[]} Up to 3 domain IDs, most frequent first
+ */
 function buildPrimaryDomains(translation) {
   const domainCounts = {};
   (translation.recommendations ?? []).forEach(rec => {
@@ -256,6 +318,14 @@ function buildPrimaryDomains(translation) {
     .map(([domain]) => domain);
 }
 
+/**
+ * Build an org-level lecture opportunity signal.
+ * Safe at all disclosure levels — never tied to the individual case.
+ * High/critical severity cases suggest the org may benefit from awareness training.
+ *
+ * @param {object | null} summary - Pipeline summary object
+ * @returns {{ hasOrgLevelOpportunity: boolean, suggestedAngle: string } | null}
+ */
 function buildLectureSignal(summary) {
   if (!summary) return null;
   // Org-level signal only — never tied to individual case

@@ -1,8 +1,20 @@
 /**
  * InterviewStateMachine — FPP §9.2
  *
- * States: not_started → onboarding → active → paused → distress_hold → complete
- *         → dropped_silent | dropped_distress | dropped_trust
+ * Governs the lifecycle of an InterviewSession.
+ *
+ * State diagram:
+ *   not_started → onboarding → active ──┬→ paused → active (resume)
+ *                                        ├→ distress_hold → active (resume)
+ *                                        ├→ complete               (terminal)
+ *                                        ├→ dropped_silent          (terminal)
+ *                                        ├→ dropped_distress        (terminal)
+ *                                        └→ dropped_trust           (terminal)
+ *
+ * Dropout types (FPP §2.5):
+ *   - dropped_silent:   user stopped responding (no explicit signal)
+ *   - dropped_distress: session ended due to distress escalation
+ *   - dropped_trust:    user explicitly stopped due to trust/consent concerns
  */
 
 export const INTERVIEW_STATES = {
@@ -17,7 +29,12 @@ export const INTERVIEW_STATES = {
   DROPPED_TRUST:    'dropped_trust',
 };
 
-// Valid transitions: from → [allowed to states]
+/**
+ * Valid state transitions.
+ * Keys are source states; values are arrays of allowed destination states.
+ * Any transition not listed here will be rejected by transitionInterview().
+ * @type {Record<string, string[]>}
+ */
 const TRANSITIONS = {
   not_started:      ['onboarding'],
   onboarding:       ['active', 'dropped_trust'],
@@ -30,6 +47,12 @@ const TRANSITIONS = {
   dropped_trust:    [],  // terminal
 };
 
+/**
+ * Check whether a state transition is permitted.
+ * @param {string} from - Current interview state
+ * @param {string} to   - Desired next state
+ * @returns {boolean}
+ */
 export function isValidTransition(from, to) {
   return (TRANSITIONS[from] ?? []).includes(to);
 }

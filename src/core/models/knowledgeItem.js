@@ -67,7 +67,14 @@ export function createKnowledgeItem(fields = {}) {
   };
 }
 
-// Canonical knowledge sources (from knowledge/extracted/enriched/_index.json)
+/**
+ * Canonical knowledge source registry.
+ * Corresponds to the 5 raw Hebrew source documents extracted in Step 0.5.
+ * Stable IDs: SRC-001 through SRC-005.
+ * Used by KnowledgeItem.sourceIds[] to trace knowledge back to original documents.
+ *
+ * @type {KnowledgeSource[]}
+ */
 export const KNOWLEDGE_SOURCES = [
   createKnowledgeSource({ id: 'SRC-001', role: 'classification', filename: 'barriers_questionnaire.docx', extractedAt: '2026-03-08T00:00:00.000Z', version: '1.0' }),
   createKnowledgeSource({ id: 'SRC-002', role: 'interpretation', filename: 'barriers_background.docx',    extractedAt: '2026-03-08T00:00:00.000Z', version: '1.0' }),

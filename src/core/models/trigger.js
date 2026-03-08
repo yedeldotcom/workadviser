@@ -19,6 +19,11 @@
  * @property {string[]} knowledgeSourceIds - KU IDs this trigger was derived from
  */
 
+/**
+ * Create a Trigger object with defaults.
+ * @param {Partial<Trigger>} fields
+ * @returns {Trigger}
+ */
 export function createTrigger(fields = {}) {
   return {
     id: fields.id ?? crypto.randomUUID(),
@@ -30,7 +35,16 @@ export function createTrigger(fields = {}) {
   };
 }
 
-// Seed triggers derived from interview data (KU-WRK-* units)
+/**
+ * Seed trigger registry.
+ * Derived from the KU-WRK-* knowledge units (interview_workplace.json).
+ * Each trigger maps to one or more barriers it is known to activate.
+ * Stable IDs: TR-001 through TR-007.
+ *
+ * To be extended in Step 10 when trigger taxonomy is formalized.
+ *
+ * @type {Trigger[]}
+ */
 export const KNOWN_TRIGGERS = [
   createTrigger({ id: 'TR-001', text_he: 'ישיבות ספונטניות ולא מתוכננות',        text_en: 'Unplanned spontaneous meetings',             category: 'temporal',    barrierIds: ['anxiety_attacks', 'concentration'],  knowledgeSourceIds: ['KU-WRK-004'] }),
   createTrigger({ id: 'TR-002', text_he: 'שפה דחופה ומלחיצה ("חובת הגעה")',        text_en: 'Urgency language ("mandatory attendance")',  category: 'relational',  barrierIds: ['emotional_regulation', 'anxiety_attacks'], knowledgeSourceIds: ['KU-WRK-005'] }),

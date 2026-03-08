@@ -144,6 +144,16 @@ export function editRecommendation(reportId, recommendationId, newText_he, chang
   return { report: updatedReport, log };
 }
 
+/**
+ * Apply a text edit to a specific recommendation within report sections.
+ * Sections is a free-form object — searches all array-valued keys for a matching item.id.
+ * Sets item.edited = true as a change marker for downstream audit tools.
+ *
+ * @param {object | null} sections       - Report sections object
+ * @param {string} recommendationId      - ID of the recommendation to update
+ * @param {string} newText_he            - Replacement Hebrew text
+ * @returns {object | null}              - Updated sections (shallow clone)
+ */
 function applyRecommendationEdit(sections, recommendationId, newText_he) {
   if (!sections) return sections;
   // sections is a free-form object; find recommendation by ID in any array

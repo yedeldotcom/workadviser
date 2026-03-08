@@ -65,6 +65,11 @@ export function createRecommendationFamily(fields = {}) {
   };
 }
 
+/**
+ * Return a fresh TemplateTracking object with all counters at zero.
+ * Merged into createRecommendationTemplate() so new templates start with a clean slate.
+ * @returns {TemplateTracking}
+ */
 function defaultTracking() {
   return {
     retrievalCount: 0,

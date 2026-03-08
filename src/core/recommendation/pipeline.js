@@ -18,6 +18,61 @@ import { SCENARIO_DATABASE } from '../../engines/translation/workplace_scenarios
 import { createRenderedRecommendation } from '../models/recommendation.js';
 import { meetsDisclosureLevel } from './disclosureFilter.js';
 
+// ─── Type definitions ─────────────────────────────────────────────────────────
+
+/**
+ * @typedef {Object} CaseProfile
+ * All case dimensions extracted in Step 1 and used throughout the pipeline.
+ * @property {string[]} barrierIds        - Active barrier IDs (from criticalBarriers)
+ * @property {Record<string, number>} barrierScores - Barrier ID → Likert score (1–5)
+ * @property {string} overallSeverity     - 'low' | 'moderate' | 'high' | 'critical'
+ * @property {Record<string, number>} clusterScores - Cluster → mean score
+ * @property {string[]} triggerIds        - Active trigger IDs
+ * @property {string[]} amplifierIds      - Active amplifier IDs
+ * @property {string[]} riskFlags         - Active risk flag IDs (e.g. 'distress_risk')
+ * @property {string | null} trajectory   - 'improving' | 'stable' | 'declining' | null
+ * @property {string[]} investmentPriorities - Ranked domain IDs
+ * @property {string} disclosureLevel     - One of DISCLOSURE_LEVELS
+ * @property {string} employmentStage     - One of EMPLOYMENT_STAGES
+ * @property {string | null} workplaceType
+ * @property {string | null} caseId       - Set by runRecommendationPipeline
+ * @property {object | null} pendingFollowUp
+ * @property {object[]} changeEvents
+ */
+
+/**
+ * @typedef {Object} CandidateTemplate
+ * A template-like object derived from SCENARIO_DATABASE or injected for testing.
+ * @property {string} id
+ * @property {string} familyId           - Groups near-duplicate templates for dedup
+ * @property {string[]} barrierTags      - Barrier IDs this template addresses
+ * @property {string[]} stageTags        - Employment stages where this applies
+ * @property {string[]} workplaceTypeTags - Workplace types (empty = all types)
+ * @property {string[]} actorTags        - Who implements this ('employer' | 'hr' | 'direct_manager')
+ * @property {string[]} disclosureSuitability - Disclosure levels at which this is shareable
+ * @property {'high' | 'medium' | 'low'} confidenceLevel
+ * @property {string} lifecycleState     - From RecommendationLifecycleMachine
+ * @property {string} domain             - Workplace domain (e.g. 'management', 'physical_env')
+ * @property {string} action_he          - Hebrew accommodation text
+ * @property {string | null} action_en   - English accommodation text
+ * @property {string} cost               - 'zero' | 'low' | 'medium' | 'high'
+ * @property {string} friction           - Friction type this addresses (e.g. 'sensory_overload')
+ * @property {object} tracking           - Lifecycle tracking counters
+ * @property {string[]} knowledgeSourceIds
+ */
+
+/**
+ * @typedef {Object} RecommendationResult
+ * Full output of runRecommendationPipeline().
+ * @property {CaseProfile} caseProfile
+ * @property {number} candidates         - Total templates retrieved in Step 2
+ * @property {number} eligible           - Templates that passed all gates in Step 3
+ * @property {Array<{ templateId: string, failedGate: string }>} gateLog
+ * @property {Array<{ template: CandidateTemplate, score: number }>} selected - After dedup
+ * @property {{ user: object[], employer: object[], hr: object[] }} packages
+ * @property {{ totalSelected: number, autoApproved: number, pendingReview: number, needsHumanReview: boolean }} summary
+ */
+
 // ─── Employment stages (FPP §2.2) ────────────────────────────────────────────
 
 export const EMPLOYMENT_STAGES = [
