@@ -1,0 +1,491 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.042Z",
+  "source_file": "שאלון חסמים בתעסוקה.docx",
+  "source_role": "classification_authority",
+  "unit_count": 13,
+  "id_prefix": "KU-BARRIER",
+  "description": "13-item barrier taxonomy — classification authority. Stable IDs correspond 1:1 with BARRIER_IDS in src/engines/intake/barriers.js",
+  "units": [
+    {
+      "id": "KU-BARRIER-001",
+      "type": "barrier_definition",
+      "barrier_id": "fatigue",
+      "index": 1,
+      "text_he": "עייפות",
+      "text_en": "Fatigue",
+      "cluster": "physical_functional",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 1
+      },
+      "barrier_ids_inferred": [
+        "fatigue"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-002",
+      "type": "barrier_definition",
+      "barrier_id": "morning_functioning",
+      "index": 2,
+      "text_he": "יכולת להיות פעיל.ה בבקרים",
+      "text_en": "Morning functioning",
+      "cluster": "physical_functional",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 2
+      },
+      "barrier_ids_inferred": [
+        "morning_functioning"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-003",
+      "type": "barrier_definition",
+      "barrier_id": "procrastination",
+      "index": 3,
+      "text_he": "דחיינות או קושי בהתארגנות וניהול עצמי",
+      "text_en": "Procrastination / self-organisation",
+      "cluster": "self_regulation",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 3
+      },
+      "barrier_ids_inferred": [
+        "procrastination"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-004",
+      "type": "barrier_definition",
+      "barrier_id": "sensory_discomfort",
+      "index": 4,
+      "text_he": "אי-נוחות בסביבת העבודה (יותר מידי רעשים, צפיפות, תאורה וכדומה)",
+      "text_en": "Workplace sensory discomfort",
+      "cluster": "environmental",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 4
+      },
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-005",
+      "type": "barrier_definition",
+      "barrier_id": "avoidance",
+      "index": 5,
+      "text_he": "מיעוט ביציאה מהבית (או הימנעות אחרת)",
+      "text_en": "Avoidance / reduced leaving home",
+      "cluster": "avoidance_social",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 5
+      },
+      "barrier_ids_inferred": [
+        "avoidance"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-006",
+      "type": "barrier_definition",
+      "barrier_id": "irritability",
+      "index": 6,
+      "text_he": "רגזנות יתר (פתיל קצר)",
+      "text_en": "Irritability / short fuse",
+      "cluster": "relational",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 6
+      },
+      "barrier_ids_inferred": [
+        "irritability"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-007",
+      "type": "barrier_definition",
+      "barrier_id": "anxiety_attacks",
+      "index": 7,
+      "text_he": "התקפי חרדה",
+      "text_en": "Anxiety attacks",
+      "cluster": "psychological",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 7
+      },
+      "barrier_ids_inferred": [
+        "anxiety_attacks"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-008",
+      "type": "barrier_definition",
+      "barrier_id": "concentration",
+      "index": 8,
+      "text_he": "קשיי ריכוז",
+      "text_en": "Concentration difficulties",
+      "cluster": "cognitive",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 8
+      },
+      "barrier_ids_inferred": [
+        "concentration"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-009",
+      "type": "barrier_definition",
+      "barrier_id": "authority",
+      "index": 9,
+      "text_he": "התמודדות עם גורם סמכות",
+      "text_en": "Coping with authority figures",
+      "cluster": "relational",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 9
+      },
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-010",
+      "type": "barrier_definition",
+      "barrier_id": "motivation",
+      "index": 10,
+      "text_he": "היעדר מוטיבציה",
+      "text_en": "Lack of motivation",
+      "cluster": "self_regulation",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 10
+      },
+      "barrier_ids_inferred": [
+        "motivation"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-011",
+      "type": "barrier_definition",
+      "barrier_id": "emotional_regulation",
+      "index": 11,
+      "text_he": "ויסות רגשי בעבודה",
+      "text_en": "Emotional regulation at work",
+      "cluster": "psychological",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 11
+      },
+      "barrier_ids_inferred": [
+        "emotional_regulation"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-012",
+      "type": "barrier_definition",
+      "barrier_id": "time_management",
+      "index": 12,
+      "text_he": "ניהול זמן וניהול עצמי בעבודה",
+      "text_en": "Time management / self-management at work",
+      "cluster": "self_regulation",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 12
+      },
+      "barrier_ids_inferred": [
+        "time_management"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-BARRIER-013",
+      "type": "barrier_definition",
+      "barrier_id": "self_worth",
+      "index": 13,
+      "text_he": "הערך העצמי שלי",
+      "text_en": "Self-worth",
+      "cluster": "psychological",
+      "scale": {
+        "min": 1,
+        "max": 5,
+        "labels_he": [
+          "בכלל לא מפריע",
+          "מפריע מעט",
+          "מפריע במידה מסוימת",
+          "מפריע במידה רבה",
+          "מפריע במידה רבה מאוד"
+        ],
+        "labels_en": [
+          "Does not interfere at all",
+          "Interferes a little",
+          "Interferes to some extent",
+          "Interferes greatly",
+          "Interferes very greatly"
+        ]
+      },
+      "source_ref": {
+        "file": "שאלון חסמים בתעסוקה.docx",
+        "role": "classification_authority",
+        "item_index": 13
+      },
+      "barrier_ids_inferred": [
+        "self_worth"
+      ],
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    }
+  ]
+}

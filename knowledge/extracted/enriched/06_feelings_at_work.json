@@ -1,0 +1,169 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.115Z",
+  "source_file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+  "source_role": "communication_authority",
+  "unit_count": 9,
+  "id_prefix": "KU-PDF",
+  "extraction_quality": "poor",
+  "description": "Feelings-at-work PDF (Natal/Anatz). Image-heavy source — only partial extraction possible. Use for qualitative illustration only.",
+  "units": [
+    {
+      "id": "KU-PDF-001",
+      "type": "signal",
+      "subtype": "emotional_state",
+      "original_index": 1,
+      "text_he": "מרגישים בעבודה?",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 1
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-002",
+      "type": "signal",
+      "subtype": "emotional_state",
+      "original_index": 2,
+      "text_he": "?חוסר ודאות ושליטהאיך מרגיש",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 2
+      },
+      "barrier_ids_inferred": [
+        "anxiety_attacks",
+        "procrastination"
+      ],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-003",
+      "type": "signal",
+      "subtype": "emotional_state",
+      "original_index": 3,
+      "text_he": "?ניהול לא רגישאיך מרגיש",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 3
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-004",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 1,
+      "text_he": "מרגישים בעבודה?",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 4
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-005",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 2,
+      "text_he": "פיזית במשרד או בסניף, במפגש עם מנהלים, עם משאבי אנוש",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 5
+      },
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-006",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 3,
+      "text_he": "?העבודה",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 6
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-007",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 4,
+      "text_he": "במקום העבודהקשה להרגיש בטוח",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 7
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-008",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 5,
+      "text_he": "״הפוסט טראומה שלך לא תיכנס למשרד״ :ירון",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 8
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    },
+    {
+      "id": "KU-PDF-009",
+      "type": "workplace_manifestation",
+      "subtype": "situation",
+      "original_index": 6,
+      "text_he": "אפשר להפוך את מקום העבודה למותאם",
+      "source_ref": {
+        "file": "איך פוסט טראומטים מרגישים בעבודה_ - אנ״צ וננט״ל.pdf",
+        "role": "communication_authority",
+        "unit_index": 9
+      },
+      "barrier_ids_inferred": [],
+      "extraction_quality": "poor",
+      "note": "Source PDF is image-heavy; only ~50 lines were extractable. Low confidence.",
+      "lifecycle_state": "active",
+      "promotion_state": "candidate"
+    }
+  ]
+}

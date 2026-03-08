@@ -1,0 +1,252 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.044Z",
+  "source_file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+  "source_role": "interpretation_authority",
+  "unit_count": 6,
+  "id_prefix": "KU-INTERP",
+  "description": "Clinical interpretation context: questionnaire metadata, barrier-outcome correlations, and employment trajectory findings (Natal 2021–2023)",
+  "clinical_correlations": [
+    {
+      "id": "KU-INTERP-001",
+      "type": "context_modifier",
+      "subtype": "clinical_correlation",
+      "text_he": "קשר חיובי בין הערכת חסמים לחרדה, דיכאון, תסמינים פוסט-טראומתיים, וקשיי תפקוד",
+      "text_en": "Positive correlation between barrier score and anxiety, depression, PTSD symptoms, and functional difficulties",
+      "finding_period": "2021–2023",
+      "data_source": "Natal Employment Unit",
+      "time_points": [
+        "entry",
+        "completion",
+        "follow_up"
+      ],
+      "barrier_ids_inferred": [
+        "anxiety_attacks",
+        "emotional_regulation",
+        "fatigue",
+        "concentration"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-002",
+      "type": "context_modifier",
+      "subtype": "clinical_correlation",
+      "text_he": "ציון חסמים גבוה קשור לדימוי החלמה נמוך ולמסוגלות מקצועית נמוכה בכניסה לאימון",
+      "text_en": "High barrier score at program entry correlates with lower recovery self-assessment and lower occupational self-efficacy",
+      "finding_period": "2021–2023",
+      "data_source": "Natal Employment Unit",
+      "time_points": [
+        "entry"
+      ],
+      "barrier_ids_inferred": [
+        "motivation",
+        "self_worth"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    }
+  ],
+  "trajectory_findings": [
+    {
+      "id": "KU-INTERP-003",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "הקשר בין הימנעות לחסמים מחליש ממשמעותי בסיום האימון — מרמה מובהקת לבלתי מובהקת",
+      "text_en": "The correlation between avoidance barrier and overall score weakens significantly by program completion — from significant to non-significant",
+      "phase": "program_completion",
+      "direction": "decreasing",
+      "barrier_ids_inferred": [
+        "avoidance"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-004",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "בשלבים הראשונים של השתלבות בעבודה — עלייה בחשיפה לטריגרים, ועלייה בחסמי ויסות רגשי ועייפות",
+      "text_en": "Early employment integration phase: increased trigger exposure → higher emotional regulation and fatigue barriers. General functioning improves despite this.",
+      "phase": "early_employment",
+      "direction": "increasing_then_stabilising",
+      "barrier_ids_inferred": [
+        "emotional_regulation",
+        "fatigue",
+        "anxiety_attacks"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-005",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "למרות עלייה בחסמים הסובייקטיביים בתחילת העבודה — התפקוד הכללי עולה והמטופלים מדווחים על יכולת גוברת לניהול הסימפטומים",
+      "text_en": "Despite subjective barrier increase at employment entry, overall functioning improves and patients report growing symptom management capacity",
+      "phase": "early_employment",
+      "direction": "positive_functional_trajectory",
+      "barrier_ids_inferred": [
+        "emotional_regulation",
+        "fatigue",
+        "self_worth"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    }
+  ],
+  "questionnaire_metadata": {
+    "id": "KU-INTERP-006",
+    "type": "context_modifier",
+    "subtype": "instrument_description",
+    "text_he": "שאלון אד-הוק שנבנה על ידי צוות התעסוקה והמחקר של נט\"ל, 13 פריטים, סולם ליקרט 1–5, טווח ציונים 13–65, ציון גבוה = חסמים גבוהים יותר",
+    "text_en": "Ad-hoc questionnaire built by Natal employment and research team. 13 items, Likert 1–5, score range 13–65. Higher score = higher barrier load.",
+    "scoring_range": {
+      "min": 13,
+      "max": 65
+    },
+    "item_count": 13,
+    "source_ref": {
+      "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+      "role": "interpretation_authority",
+      "section": "תיאור השאלון"
+    },
+    "barrier_ids_inferred": []
+  },
+  "units": [
+    {
+      "id": "KU-INTERP-006",
+      "type": "context_modifier",
+      "subtype": "instrument_description",
+      "text_he": "שאלון אד-הוק שנבנה על ידי צוות התעסוקה והמחקר של נט\"ל, 13 פריטים, סולם ליקרט 1–5, טווח ציונים 13–65, ציון גבוה = חסמים גבוהים יותר",
+      "text_en": "Ad-hoc questionnaire built by Natal employment and research team. 13 items, Likert 1–5, score range 13–65. Higher score = higher barrier load.",
+      "scoring_range": {
+        "min": 13,
+        "max": 65
+      },
+      "item_count": 13,
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "תיאור השאלון"
+      },
+      "barrier_ids_inferred": []
+    },
+    {
+      "id": "KU-INTERP-001",
+      "type": "context_modifier",
+      "subtype": "clinical_correlation",
+      "text_he": "קשר חיובי בין הערכת חסמים לחרדה, דיכאון, תסמינים פוסט-טראומתיים, וקשיי תפקוד",
+      "text_en": "Positive correlation between barrier score and anxiety, depression, PTSD symptoms, and functional difficulties",
+      "finding_period": "2021–2023",
+      "data_source": "Natal Employment Unit",
+      "time_points": [
+        "entry",
+        "completion",
+        "follow_up"
+      ],
+      "barrier_ids_inferred": [
+        "anxiety_attacks",
+        "emotional_regulation",
+        "fatigue",
+        "concentration"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-002",
+      "type": "context_modifier",
+      "subtype": "clinical_correlation",
+      "text_he": "ציון חסמים גבוה קשור לדימוי החלמה נמוך ולמסוגלות מקצועית נמוכה בכניסה לאימון",
+      "text_en": "High barrier score at program entry correlates with lower recovery self-assessment and lower occupational self-efficacy",
+      "finding_period": "2021–2023",
+      "data_source": "Natal Employment Unit",
+      "time_points": [
+        "entry"
+      ],
+      "barrier_ids_inferred": [
+        "motivation",
+        "self_worth"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-003",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "הקשר בין הימנעות לחסמים מחליש ממשמעותי בסיום האימון — מרמה מובהקת לבלתי מובהקת",
+      "text_en": "The correlation between avoidance barrier and overall score weakens significantly by program completion — from significant to non-significant",
+      "phase": "program_completion",
+      "direction": "decreasing",
+      "barrier_ids_inferred": [
+        "avoidance"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-004",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "בשלבים הראשונים של השתלבות בעבודה — עלייה בחשיפה לטריגרים, ועלייה בחסמי ויסות רגשי ועייפות",
+      "text_en": "Early employment integration phase: increased trigger exposure → higher emotional regulation and fatigue barriers. General functioning improves despite this.",
+      "phase": "early_employment",
+      "direction": "increasing_then_stabilising",
+      "barrier_ids_inferred": [
+        "emotional_regulation",
+        "fatigue",
+        "anxiety_attacks"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    },
+    {
+      "id": "KU-INTERP-005",
+      "type": "context_modifier",
+      "subtype": "trajectory",
+      "text_he": "למרות עלייה בחסמים הסובייקטיביים בתחילת העבודה — התפקוד הכללי עולה והמטופלים מדווחים על יכולת גוברת לניהול הסימפטומים",
+      "text_en": "Despite subjective barrier increase at employment entry, overall functioning improves and patients report growing symptom management capacity",
+      "phase": "early_employment",
+      "direction": "positive_functional_trajectory",
+      "barrier_ids_inferred": [
+        "emotional_regulation",
+        "fatigue",
+        "self_worth"
+      ],
+      "source_ref": {
+        "file": "רקע לשאלון חסמים מתוך האוגדן.docx",
+        "role": "interpretation_authority",
+        "section": "פירוש הממצאים"
+      }
+    }
+  ]
+}

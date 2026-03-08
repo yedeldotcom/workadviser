@@ -1,10 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { BARRIER_IDS, BARRIERS, validateResponses, scoreResponses } from '../src/engine1_intake/index.js';
-import { interpretProfile } from '../src/engine2_interpretation/index.js';
-import { translateToWorkplace } from '../src/engine3_translation/index.js';
-import { generateImplementationPlan } from '../src/engine4_implementation/index.js';
-import { generateFraming } from '../src/engine5_framing/index.js';
+import { BARRIER_IDS, BARRIERS, validateResponses, scoreResponses } from '../src/engines/intake/index.js';
+import { interpretProfile } from '../src/engines/interpretation/index.js';
+import { translateToWorkplace } from '../src/engines/translation/index.js';
+import { generateImplementationPlan } from '../src/engines/implementation/index.js';
+import { generateFraming } from '../src/engines/framing/index.js';
 import { runPipeline } from '../src/pipeline/index.js';
 
 const makeResponses = (defaultScore = 3) =>

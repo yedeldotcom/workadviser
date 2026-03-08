@@ -1,0 +1,153 @@
+{
+  "enriched_at": "2026-03-08T09:34:05.072Z",
+  "source_file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+  "source_role": "applied_pattern_authority",
+  "sheet": "משרדים ועבודה",
+  "unit_count": 6,
+  "id_prefix": "KU-WRK",
+  "description": "Workplace-domain accessibility challenges from lived-experience interviews. Each unit is one challenge-solution pair with optional interviewee quote. pilot_scope=true.",
+  "units": [
+    {
+      "id": "KU-WRK-001",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-1",
+        "row_index": 0
+      },
+      "challenge_type_he": "שולחן עבודה מתחלף במשרד (שיטת hot desk)",
+      "challenge_description_he": "מבקשים מעובדים לבחור שולחן מתחלף כשהם באים למשרד, אי ודאות מורכב מאוד",
+      "solution_type_he": "נהלים והדרכה",
+      "solution_type_en": "Policies and training",
+      "solution_description_he": "הקצאת שולחן מתחלף קבוע למבקשים.",
+      "quote_he": "ג׳רמי: מבקשים ממני כל פעם לשבת במקום אחר ואני לא מסוגל.",
+      "technical_description_he": "מערכת רישום לשולחנות מייצר חוסר ודאות",
+      "barrier_ids_inferred": [
+        "anxiety_attacks",
+        "procrastination"
+      ],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-WRK-002",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-2",
+        "row_index": 1
+      },
+      "challenge_type_he": "בינוי משרד בעייתי",
+      "challenge_description_he": "מרחבי עבודה בלי חלונות, או עם מסדרונות חשוכים מקשים על תנועה במרחב.",
+      "solution_type_he": "חקיקה ומדיניות",
+      "solution_type_en": "Legislation and policy",
+      "solution_description_he": "בניית תקן למשרד הממשלה לעיצוב מרחב נגיש רגשית",
+      "quote_he": "ענבל: הייתי הולכת במסדרונות ופוחדת",
+      "technical_description_he": "המרחב ללא חלונות, צבוע בצבע מדכא, התאורה פלורוסנטית ולא מספיקה או מספיקה מדי, מסדרנונות ארוכים עם הרבה דלתות.",
+      "barrier_ids_inferred": [
+        "sensory_discomfort"
+      ],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-WRK-003",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-3",
+        "row_index": 2
+      },
+      "challenge_type_he": "ראיונות עבודה פושלניים",
+      "challenge_description_he": "מראיינים שואלים על אירועים טראומטים ומציפים מועמדים, שלא מרגישים בנוח לא לענות",
+      "solution_type_he": "חקיקה ומדיניות",
+      "solution_type_en": "Legislation and policy",
+      "solution_description_he": "עדכון חוקי העבודה ככה שיהיה איסור לשאול על טראומה בכלל בראיונות עבודה ובמרחב העבודה.",
+      "quote_he": "ירון: הוא התחיל לשאול אותה על הנובה משום מקום ובלי קשר לראיון",
+      "technical_description_he": "בזמן ראיון מראיין שואל על שירות צבאי או על טראומה כלשהי, מסית את המיקוד וגורם להצפה, תוך דילמה האם לשתף פעולה או לא.",
+      "barrier_ids_inferred": [
+        "sensory_discomfort",
+        "emotional_regulation"
+      ],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-WRK-004",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-4",
+        "row_index": 3
+      },
+      "challenge_type_he": "ימי כיף שאינם מותאים",
+      "challenge_description_he": "משאבי אנוש מחייבים הגעה לפעילויות שאינם מותאמות, כמו סיור בחברון או ללכת למטווח.",
+      "solution_type_he": "נהלים והדרכה",
+      "solution_type_en": "Policies and training",
+      "solution_description_he": "איסור יצירת חובת הגעה. איסור פעילויות לוחמתיות או פוליטיות",
+      "quote_he": "ג׳רמי: כמו שלא נלך לפארק חבלים עם מוגבל פיזית - לא נלך לסיור בחברון עם פוסט טראומטי",
+      "technical_description_he": "יצירת פעילות חברה שאינה מותאמת לפוסט טראומטים. בחירת מילים שמייצרת חובת הגעה",
+      "barrier_ids_inferred": [],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-WRK-005",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-5",
+        "row_index": 4
+      },
+      "challenge_type_he": "שפה דחופה ומלחיצה",
+      "challenge_description_he": "מנהלים בוחרים בשפה שמייצרת תחושת דחיפות מדומה שמטרגרת.",
+      "solution_type_he": "נהלים והדרכה",
+      "solution_type_en": "Policies and training",
+      "solution_description_he": "איסור שימוש בשפה דחופה שלא לצורך",
+      "quote_he": "ג׳רמי: ״חובת הגעה״, ״לעזוב הכל ולפתור״, ״מטלה קריטית״",
+      "technical_description_he": "שימוש בשפה שמייצרת תחושת דחיפות מציפה רגשית.",
+      "barrier_ids_inferred": [
+        "authority"
+      ],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    },
+    {
+      "id": "KU-WRK-006",
+      "type": "workplace_manifestation",
+      "source_ref": {
+        "file": "אתגרי נגישות כפי שעלו מראיונות.xlsx",
+        "role": "applied_pattern_authority",
+        "sheet": "משרדים ועבודה",
+        "row_id": "wrk-6",
+        "row_index": 5
+      },
+      "challenge_type_he": null,
+      "challenge_description_he": "פגישה אישית אחד על אחד בחלל סגור עם דלת סגורה, עם אף אדם אחר בחדר",
+      "solution_type_he": null,
+      "solution_type_en": null,
+      "solution_description_he": null,
+      "quote_he": null,
+      "technical_description_he": null,
+      "barrier_ids_inferred": [],
+      "pilot_scope": true,
+      "lifecycle_state": "active",
+      "promotion_state": "validated"
+    }
+  ]
+}
