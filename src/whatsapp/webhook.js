@@ -28,7 +28,7 @@
 import { Router } from 'express';
 import { findOrCreateUser, findOrCreateSession, routeMessage } from './userRouter.js';
 import { sendMessages } from './sender.js';
-import { saveSession } from '../admin/base44Store.js';
+import { saveSession } from '../admin/store.js';
 
 const router = Router();
 const PROVIDER = process.env.WHATSAPP_PROVIDER ?? 'stub';
@@ -72,12 +72,12 @@ router.post('/webhook', async (req, res) => {
     const { from, text, mediaType } = parsed;
 
     // 1. Find or create user
-    const { user, isNew } = findOrCreateUser(from, {
+    const { user, isNew } = await findOrCreateUser(from, {
       partnerSource: req.query.partner ?? null,
     });
 
     // 2. Find or create session
-    const { session } = findOrCreateSession(user.id);
+    const { session } = await findOrCreateSession(user.id);
 
     // 3. Route message
     const result = await routeMessage(session, text ?? '');
