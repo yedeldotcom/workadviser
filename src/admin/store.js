@@ -19,9 +19,12 @@ const _reports           = new Map(); // reportId → ReportObject
 const _leads             = new Map(); // leadId → LeadObject
 const _approvals         = new Map(); // approvalId → ApprovalObject
 const _auditLog          = new Map(); // logId → AuditLog
-const _pipelineResults   = new Map(); // sessionId → pipelineResult
-const _changeEvents      = new Map(); // eventId → ChangeEvent
-const _followUpCheckins  = new Map(); // checkinId → FollowUpCheckin
+const _pipelineResults       = new Map(); // sessionId → pipelineResult
+const _changeEvents          = new Map(); // eventId → ChangeEvent
+const _followUpCheckins      = new Map(); // checkinId → FollowUpCheckin
+const _knowledgeItems        = new Map(); // itemId → KnowledgeItem
+const _recommendationTemplates = new Map(); // templateId → RecommendationTemplate
+const _feedback              = new Map(); // feedbackId → RecommendationFeedback
 
 // ─── Write ────────────────────────────────────────────────────────────────────
 // Each save* function upserts by primary key and returns the saved object.
@@ -38,8 +41,11 @@ export function saveApproval(approval)       { _approvals.set(approval.id, appro
 export function appendAuditLog(entry)        { _auditLog.set(entry.id, entry); return entry; }
 /** @param {string} sessionId @param {object} result */
 export function savePipelineResult(sessionId, result) { _pipelineResults.set(sessionId, result); return result; }
-export function saveChangeEvent(event)    { _changeEvents.set(event.id, event); return event; }
-export function saveFollowUpCheckin(c)    { _followUpCheckins.set(c.id, c); return c; }
+export function saveChangeEvent(event)             { _changeEvents.set(event.id, event); return event; }
+export function saveFollowUpCheckin(c)             { _followUpCheckins.set(c.id, c); return c; }
+export function saveKnowledgeItem(item)            { _knowledgeItems.set(item.id, item); return item; }
+export function saveRecommendationTemplate(tmpl)   { _recommendationTemplates.set(tmpl.id, tmpl); return tmpl; }
+export function saveFeedback(fb)                   { _feedback.set(fb.id, fb); return fb; }
 
 // ─── Read ─────────────────────────────────────────────────────────────────────
 // Each get* function returns the entity or null (never throws for missing IDs).
@@ -54,8 +60,11 @@ export function getLead(leadId)              { return _leads.get(leadId) ?? null
 export function getApproval(approvalId)      { return _approvals.get(approvalId) ?? null; }
 /** @param {string} sessionId @returns {object | null} */
 export function getPipelineResult(sessionId) { return _pipelineResults.get(sessionId) ?? null; }
-export function getChangeEvent(eventId)       { return _changeEvents.get(eventId) ?? null; }
-export function getFollowUpCheckin(id)        { return _followUpCheckins.get(id) ?? null; }
+export function getChangeEvent(eventId)              { return _changeEvents.get(eventId) ?? null; }
+export function getFollowUpCheckin(id)               { return _followUpCheckins.get(id) ?? null; }
+export function getKnowledgeItem(id)                 { return _knowledgeItems.get(id) ?? null; }
+export function getRecommendationTemplate(id)        { return _recommendationTemplates.get(id) ?? null; }
+export function getFeedback(id)                      { return _feedback.get(id) ?? null; }
 
 // ─── List ─────────────────────────────────────────────────────────────────────
 // Each getAll* function returns a snapshot array (safe to mutate).
@@ -66,8 +75,11 @@ export function getAllSessions()       { return [..._sessions.values()]; }
 export function getAllReports()        { return [..._reports.values()]; }
 export function getAllLeads()          { return [..._leads.values()]; }
 export function getAllAuditLogs()      { return [..._auditLog.values()]; }
-export function getAllChangeEvents()   { return [..._changeEvents.values()]; }
-export function getAllFollowUpCheckins() { return [..._followUpCheckins.values()]; }
+export function getAllChangeEvents()            { return [..._changeEvents.values()]; }
+export function getAllFollowUpCheckins()        { return [..._followUpCheckins.values()]; }
+export function getAllKnowledgeItems()          { return [..._knowledgeItems.values()]; }
+export function getAllRecommendationTemplates() { return [..._recommendationTemplates.values()]; }
+export function getAllFeedback()                { return [..._feedback.values()]; }
 
 /** Sessions for a specific user */
 export function getSessionsForUser(userId) {
@@ -115,6 +127,9 @@ export function resetStore() {
   _pipelineResults.clear();
   _changeEvents.clear();
   _followUpCheckins.clear();
+  _knowledgeItems.clear();
+  _recommendationTemplates.clear();
+  _feedback.clear();
 }
 
 /** Store statistics — useful for health check endpoint */

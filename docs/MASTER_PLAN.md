@@ -29,7 +29,7 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - 162 new tests covering all modules
 
 **What is still missing (FPP scope not yet built):**
-- Gap visibility + recommendation analytics (Step 10 — next)
+- Gap visibility + recommendation analytics ✅
 - Follow-up / change-event layer (Step 9)
 - Gap visibility + recommendation analytics (Step 10)
 - Landing Page + WhatsApp Entry (deferred)
@@ -488,20 +488,31 @@ Deferred to later (when KnowledgeBase is live):
 ---
 
 ### Step 10 — Gap Visibility + Recommendation Analytics (FPP §3.6, §4.9)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-**Gap Visibility (FPP §3.6):**
-- [ ] Create `src/admin/gapVisibility.js`
-  - Gap types: knowledge | logic | rule | workflow/interface
-  - Coverage dimensions: barrier × stage × actor × workplace_type × intervention_type
-  - Show: weak zones | high-output/low-evidence areas | repeated admin corrections | high-conflict areas | what type of new source is needed
+**Gap Visibility (FPP §3.6) — `src/admin/gapVisibility.js`:**
+- [x] `weakZones()` — finds uncovered barrier × stage × workplaceType cells (knowledge/logic/rule gap types)
+- [x] `highOutputLowEvidence()` — templates with many inclusions but low confidence or thin sources
+- [x] `repeatedAdminCorrections()` — templates with high edit-rate (critical/high/medium severity)
+- [x] `highConflictAreas()` — templates with high rejection rate from audit log
+- [x] `suggestNewSourceTypes()` — maps gap type → empirical_research / practitioner_guide / expert_protocol / case_pattern
+- [x] `coverageSummary()` — aggregate stats: totalCells, coveragePercent, worstBarriers, worstStages
 
-**Recommendation Analytics (FPP §4.9):**
-- [ ] Feedback collection: delivery feedback | usefulness feedback | employer action feedback | admin quality feedback
-- [ ] Analytics endpoints: retrieval frequency, inclusion frequency, approval rate, stale rate
-- [ ] Knowledge promotion workflow (FPP §3.7): case_only → candidate_pattern → validated → rule_update_candidate
-  - De-identify before promotion
-  - Log source case(s), who promoted, scope (global | campaign | segment)
+**Recommendation Analytics (FPP §4.9) — `src/admin/recommendationAnalytics.js`:**
+- [x] `createFeedback()` — delivery / usefulness / employer_action / admin_quality feedback objects
+- [x] `retrievalFrequency()` / `inclusionFrequency()` — rate per case
+- [x] `approvalRate()` — with editRate breakdown
+- [x] `staleRate()` — staleCount + staleRate across template registry
+- [x] `templateSummary()` — per-template roll-up of all four metrics
+- [x] `incrementTracking()` / `markTemplateStale()` — tracking helpers called by pipeline
+- [x] Knowledge promotion (FPP §3.7): `promoteKnowledgeItem()` — case_only → candidate_pattern → validated → rule_update_candidate, audit logged with source cases + scope
+- [x] `deIdentifyForPromotion()` — redacts IDs, emails, phone numbers, Hebrew name patterns; warns on dates
+
+**Admin router — 6 new endpoints:** analytics/gaps, analytics/gaps/corrections, analytics/recommendations, analytics/recommendations/summary, analytics/recommendations/:templateId/feedback, knowledge/:itemId/promote
+
+**Store extended** with `_knowledgeItems`, `_recommendationTemplates`, `_feedback` maps
+**Permissions** — `view_queue` and `promote_knowledge` added to system_owner + admin_operator
+**54 tests in `tests/admin/analytics.test.js`** — 373 tests total, all passing
 
 ---
 
@@ -533,7 +544,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0–3, 5–9 are complete. **Next: Step 10 — Gap Visibility + Recommendation Analytics.**
+Steps 0–3, 5–10 are complete.
 
 ---
 
@@ -550,6 +561,7 @@ Steps 0–3, 5–9 are complete. **Next: Step 10 — Gap Visibility + Recommenda
 - [x] Step 7: Report objects + release states (4 output types) ✅
 - [x] Step 8: Lead export / API handoff ✅
 - [x] Step 9: Follow-up / change-event layer ✅
+- [x] Step 10: Gap visibility + recommendation analytics ✅
 - [ ] Step 10: Gap visibility + recommendation analytics
 
 ---

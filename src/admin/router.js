@@ -65,6 +65,7 @@ import {
 import {
   getAllUsers, getAllSessions, getAllReports, getAllLeads,
   getUser, getLead, getProfile, getStoreCounts, getChangeEventsForUser,
+  getAllRecommendationTemplates, getAllKnowledgeItems, getAllAuditLogs,
 } from './store.js';
 import {
   confirmLead,
@@ -82,6 +83,15 @@ import {
   getDueCheckins,
   runScheduler,
 } from '../followup/index.js';
+import {
+  weakZones, highOutputLowEvidence, repeatedAdminCorrections,
+  highConflictAreas, suggestNewSourceTypes, coverageSummary,
+} from './gapVisibility.js';
+import {
+  retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
+  templateSummary, promoteKnowledgeItem, createFeedback,
+} from './recommendationAnalytics.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './store.js';
 
 const router = Router();
 
@@ -380,6 +390,102 @@ router.get('/cases/:caseId/due-checkins',
   requireCaseAccess(getUser),
   (req, res) => {
     res.json(getDueCheckins(req.params.caseId));
+  }
+);
+
+// ─── Gap Visibility endpoints (FPP §3.6) ─────────────────────────────────────
+
+router.get('/analytics/gaps',
+  requireCapability('view_queue'),
+  (req, res) => {
+    const templates = getAllRecommendationTemplates();
+    const items     = getAllKnowledgeItems();
+    const zones     = weakZones(templates, items);
+    const summary   = coverageSummary(zones);
+    const suggestions = suggestNewSourceTypes(zones);
+    res.json({ summary, zones, suggestions });
+  }
+);
+
+router.get('/analytics/gaps/corrections',
+  requireCapability('view_queue'),
+  (req, res) => {
+    const templates = getAllRecommendationTemplates();
+    res.json({
+      highOutputLowEvidence: highOutputLowEvidence(templates),
+      repeatedAdminCorrections: repeatedAdminCorrections(templates),
+      highConflictAreas: highConflictAreas(templates, getAllAuditLogs()),
+    });
+  }
+);
+
+// ─── Recommendation Analytics endpoints (FPP §4.9) ───────────────────────────
+
+router.get('/analytics/recommendations',
+  requireCapability('view_queue'),
+  (req, res) => {
+    const templates  = getAllRecommendationTemplates();
+    const totalCases = getAllSessions().length;
+    res.json({
+      retrievalFrequency: retrievalFrequency(templates, totalCases),
+      inclusionFrequency: inclusionFrequency(templates, totalCases),
+      approvalRate: approvalRate(templates),
+      staleRate: staleRate(templates),
+    });
+  }
+);
+
+router.get('/analytics/recommendations/summary',
+  requireCapability('view_queue'),
+  (req, res) => {
+    const templates  = getAllRecommendationTemplates();
+    const totalCases = getAllSessions().length;
+    res.json(templateSummary(templates, totalCases));
+  }
+);
+
+router.post('/analytics/recommendations/:templateId/feedback',
+  requireCapability('view_queue'),
+  (req, res) => {
+    const { feedbackType, polarity, notes, caseId } = req.body ?? {};
+    if (!feedbackType || !polarity) {
+      return res.status(400).json({ error: 'feedbackType and polarity are required' });
+    }
+    const fb = createFeedback({
+      templateId: req.params.templateId,
+      caseId: caseId ?? null,
+      feedbackType,
+      polarity,
+      notes: notes ?? null,
+      recordedBy: req.adminRole,
+    });
+    saveFeedback(fb);
+    res.json(fb);
+  }
+);
+
+// ─── Knowledge promotion (FPP §3.7) ──────────────────────────────────────────
+
+router.post('/knowledge/:itemId/promote',
+  requireCapability('promote_knowledge'),
+  (req, res) => {
+    const { scope, sourceCaseIds, notes } = req.body ?? {};
+    if (!scope || !Array.isArray(sourceCaseIds) || sourceCaseIds.length === 0) {
+      return res.status(400).json({ error: 'scope and sourceCaseIds[] are required' });
+    }
+    const item = getKnowledgeItem(req.params.itemId);
+    if (!item) return res.status(404).json({ error: 'Knowledge item not found' });
+    try {
+      const result = promoteKnowledgeItem(item, {
+        promotedBy: req.adminRole,
+        scope,
+        sourceCaseIds,
+        notes: notes ?? null,
+      });
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
   }
 );
 

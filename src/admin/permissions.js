@@ -46,6 +46,8 @@ const ROLE_CAPABILITIES = {
     'view_raw_messages',
     'view_voice_notes',
     'send_employer_report',
+    'view_queue',
+    'promote_knowledge',
   ],
   admin_operator: [
     'view_all_cases',
@@ -60,6 +62,8 @@ const ROLE_CAPABILITIES = {
     'export_lead',
     'view_audit_log',
     'send_employer_report',
+    'view_queue',
+    'promote_knowledge',
   ],
   clinical_content_partner: [
     'view_assigned_cases',
