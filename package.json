@@ -12,8 +12,15 @@
     "implement": "node src/engine4_implementation/index.js",
     "frame": "node src/engine5_framing/index.js",
     "test": "node --test tests/*.test.js",
-    "pipeline:demo": "node src/pipeline/demo.js"
+    "pipeline:demo": "node src/pipeline/demo.js",
+    "extract": "node scripts/extract-knowledge.js"
   },
   "license": "UNLICENSED",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "mammoth": "^1.11.0",
+    "officeparser": "^6.0.4",
+    "pdf-parse": "^1.1.1",
+    "xlsx": "^0.18.5"
+  }
 }

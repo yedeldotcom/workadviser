@@ -1,0 +1,179 @@
+{
+  "source": "שאלון חסמים בתעסוקה.docx",
+  "role": "classification_authority",
+  "description": "Employment barriers questionnaire — 13-item Likert scale defining the barrier taxonomy",
+  "raw_text": "לפניך רשימה של אתגרים שעלולים להפריע למי שסובלים ממצוקה פוסט-טראומטית בהשתלבות בעבודה. לגבי כל אחד מהאתגרים, אנא סמן.י את המידה שבה הוא מפריע לך:\n\n\n\nבכלל לא  מפריע\n\nמפריע מעט\n\nמפריע במידה מסוימת\n\nמפריע במידה רבה\n\nמפריע במידה רבה מאוד\n\nעייפות\n\n1\n\n2\n\n3\n\n4\n\n5\n\nיכולת להיות פעיל.ה בבקרים\n\n1\n\n2\n\n3\n\n4\n\n5\n\nדחיינות או קושי בהתארגנות וניהול עצמי\n\n1\n\n2\n\n3\n\n4\n\n5\n\nאי-נוחות בסביבת העבודה (יותר מידי רעשים, צפיפות, תאורה וכדומה)\n\n1\n\n2\n\n3\n\n4\n\n5\n\nמיעוט ביציאה מהבית (או הימנעות אחרת)\n\n1\n\n2\n\n3\n\n4\n\n5\n\nרגזנות יתר (פתיל קצר)\n\n1\n\n2\n\n3\n\n4\n\n5\n\nהתקפי חרדה\n\n1\n\n2\n\n3\n\n4\n\n5\n\nקשיי ריכוז\n\n1\n\n2\n\n3\n\n4\n\n5\n\nהתמודדות עם גורם סמכות\n\n1\n\n2\n\n3\n\n4\n\n5\n\nהיעדר מוטיבציה\n\n1\n\n2\n\n3\n\n4\n\n5\n\nויסות רגשי בעבודה\n\n1\n\n2\n\n3\n\n4\n\n5\n\nניהול זמן וניהול עצמי בעבודה\n\n1\n\n2\n\n3\n\n4\n\n5\n\nהערך העצמי שלי\n\n1\n\n2\n\n3\n\n4\n\n5\n\n\n\n\n\n",
+  "extracted": {
+    "barrier_items": [
+      "עייפות",
+      "יכולת להיות פעיל.ה בבקרים",
+      "דחיינות או קושי בהתארגנות וניהול עצמי",
+      "אי-נוחות בסביבת העבודה (יותר מידי רעשים, צפיפות, תאורה וכדומה)",
+      "מיעוט ביציאה מהבית (או הימנעות אחרת)",
+      "רגזנות יתר (פתיל קצר)",
+      "התקפי חרדה",
+      "קשיי ריכוז",
+      "התמודדות עם גורם סמכות",
+      "היעדר מוטיבציה",
+      "ויסות רגשי בעבודה",
+      "ניהול זמן וניהול עצמי בעבודה",
+      "הערך העצמי שלי"
+    ],
+    "scale_labels": [
+      "בכלל לא  מפריע",
+      "מפריע במידה מסוימת",
+      "מפריע במידה רבה",
+      "מפריע במידה רבה מאוד",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "context": [
+      "לפניך רשימה של אתגרים שעלולים להפריע למי שסובלים ממצוקה פוסט-טראומטית בהשתלבות בעבודה. לגבי כל אחד מהאתגרים, אנא סמן.י את המידה שבה הוא מפריע לך:",
+      "מפריע מעט"
+    ],
+    "total_lines": 84
+  },
+  "knowledge_units": [
+    {
+      "type": "barrier_definition",
+      "index": 1,
+      "text_he": "עייפות",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 2,
+      "text_he": "יכולת להיות פעיל.ה בבקרים",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 3,
+      "text_he": "דחיינות או קושי בהתארגנות וניהול עצמי",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 4,
+      "text_he": "אי-נוחות בסביבת העבודה (יותר מידי רעשים, צפיפות, תאורה וכדומה)",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 5,
+      "text_he": "מיעוט ביציאה מהבית (או הימנעות אחרת)",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 6,
+      "text_he": "רגזנות יתר (פתיל קצר)",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 7,
+      "text_he": "התקפי חרדה",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 8,
+      "text_he": "קשיי ריכוז",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 9,
+      "text_he": "התמודדות עם גורם סמכות",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 10,
+      "text_he": "היעדר מוטיבציה",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 11,
+      "text_he": "ויסות רגשי בעבודה",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 12,
+      "text_he": "ניהול זמן וניהול עצמי בעבודה",
+      "source_role": "classification_authority"
+    },
+    {
+      "type": "barrier_definition",
+      "index": 13,
+      "text_he": "הערך העצמי שלי",
+      "source_role": "classification_authority"
+    }
+  ]
+}
