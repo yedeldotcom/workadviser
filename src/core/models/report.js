@@ -35,7 +35,7 @@ export function createReport(fields = {}) {
   const now = new Date().toISOString();
   return {
     id: fields.id ?? crypto.randomUUID(),
-    version: fields.version ?? '1',
+    version: fields.version ?? '1.0.0',
     caseId: fields.caseId ?? null,
     reportType: fields.reportType ?? 'user',
     state: fields.state ?? 'draft_generated',
@@ -47,6 +47,8 @@ export function createReport(fields = {}) {
     adminReviewedAt: fields.adminReviewedAt ?? null,
     userApprovedAt: fields.userApprovedAt ?? null,
     supersededBy: fields.supersededBy ?? null,
+    previousVersionId: fields.previousVersionId ?? null,  // FPP §5.5 revision chain
+    metadata: fields.metadata ?? null,                    // renderer-specific metrics
   };
 }
 

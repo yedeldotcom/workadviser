@@ -25,11 +25,13 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - Conversation engine: onboarding, interviewer, sessionManager, voiceHandler, LLM client (FPP §8 operating prompt)
 - Admin command center: store, queues, caseView, actions, permissions, Express router + server — 37 tests
 - Recommendation workbench: 7-step selection pipeline + disclosure filter (45 tests)
-- 126 new tests covering all models, state machines, conversation, admin, and recommendation
+- Report renderers: user (8-section), employer (disclosure-filtered), anonymous org, lead detection (36 tests)
+- 162 new tests covering all modules
 
 **What is still missing (FPP scope not yet built):**
-- Structured report objects with release states (rendering layer — Step 7)
-- Lead/lecture opportunity detection
+- Lead export / API handoff (Step 8)
+- Follow-up / change-event layer (Step 9)
+- Gap visibility + recommendation analytics (Step 10)
 - Landing Page + WhatsApp Entry (deferred)
 
 ---
@@ -406,35 +408,41 @@ Deferred to later (when KnowledgeBase is live):
 ---
 
 ### Step 7 — Report Objects + Release States (FPP §5)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-Build all 4 output types as structured report objects with proper state machines:
+4 report renderers in `src/reports/`:
 
-**End-User Report (FPP §5.1A):**
-- [ ] 8-section structure: what we understood | main barriers | what amplifies them | top 3 user recommendations | top 3 employer actions | suggested conversation prep | resources | what was NOT shared
-- [ ] Hebrew copy tone from FPP §7.4
-- [ ] Delivered via WhatsApp summary + secure web link
+**End-User Report — `userReport.js` (FPP §5.1A):**
+- [x] 8-section Hebrew renderer: what_we_understood | main_barriers | amplifiers | user_recommendations | employer_actions | conversation_prep | resources | what_was_not_shared
+- [x] Sections built from intake + interpretation + recommendation pipeline output
+- [x] Conversation prep includes objection handling from Engine 5 framing
+- [x] no_disclosure: employer_actions shows blocked message (not empty)
+- [x] State: admin_review_required when needsHumanReview; else draft_generated
+- [x] `createUserReportRevision()` — versioned reissue (FPP §5.5): never silently overwrites
 
-**Employer-Facing Report (FPP §5.1B):**
-- [ ] 8-section structure: purpose | functional work-impact summary | key accessibility barriers | top 3 adjustments | what communication helps | what to avoid | implementation priority | optional lecture note
-- [ ] Hebrew copy tone from FPP §7.5
-- [ ] **Must pass through disclosure filter** — never copy user report
-- [ ] Requires human approval before sending (FPP §5.4)
+**Employer Report — `employerReport.js` (FPP §5.1B):**
+- [x] 8-section renderer: purpose | work_impact_summary | key_barriers | top_adjustments | what_communication_helps | what_to_avoid | implementation_priority | lecture_note
+- [x] Always passes through `filterForEmployer()` — throws at no_disclosure
+- [x] Always created in admin_review_required state (FPP §5.4 mandatory approval)
+- [x] Employer output is NOT a copy of user report — separate section builders
 
-**Anonymous Organizational Signal (FPP §5.1C):**
-- [ ] 6-section structure: why org receives this | general trauma barrier indication | common patterns | org-level actions | optional lecture invitation | explicit no-identifying-info statement
-- [ ] Hebrew copy tone from FPP §7.6
-- [ ] Requires human approval (FPP §5.4)
+**Anonymous Org Signal — `anonymousReport.js` (FPP §5.1C):**
+- [x] 6-section renderer: why_org_receives_this | general_barrier_indication | common_patterns | org_level_actions | lecture_invitation | no_identifying_info
+- [x] disclosureLevel always 'no_disclosure' — no PII ever included
+- [x] Always admin_review_required; safe at all disclosure levels including no_disclosure
+- [x] Mandatory no_identifying_info section in every output
 
-**Lead Object (FPP §5.1D):**
-- [ ] All fields from FPP §5.1D
-- [ ] Lecture opportunity detection logic (case indicates org-level need)
-- [ ] LeadHandoffState machine
+**Lead Object — `leadReport.js` (FPP §5.1D):**
+- [x] `shouldCreateLead()` — detects high-severity + org-relevant pattern criteria
+- [x] `buildLeadObject()` — builds LeadObject with lecture angle, context notes, consent status
+- [x] `detectAndBuildLead()` — combined entry point (detection + build)
+- [x] Starts in 'detected' export state; must be manually escalated
+- [x] LECTURE_ANGLE_MAP maps dominant cluster → recommended lecture angle
 
-**All Reports:**
-- [ ] ReleaseState machine applied to every report object
-- [ ] Revision model (FPP §5.5): clarification request | correction request | sharing-boundary change | new-information update | versioned reissue
-- [ ] Reports never silently overwritten — always versioned reissue
+**Model update:**
+- [x] `createReport()` extended with `previousVersionId` and `metadata` fields
+
+**Tests:** 36 tests, 7 suites — all passing. 230 total, no regressions.
 
 ---
 
@@ -508,7 +516,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0, 0.5, 1, 2, 3 (conversation engine), 5 (admin), and 6 (recommendation workbench) are complete. **Next: Step 7 — Report Objects + Release States (4 output types).**
+Steps 0–3, 5–7 are complete. **Next: Step 8 — Lead Export / API Handoff.**
 
 ---
 
@@ -522,7 +530,7 @@ Steps 0, 0.5, 1, 2, 3 (conversation engine), 5 (admin), and 6 (recommendation wo
 - [ ] Step 4: Landing page + WhatsApp entry (deferred)
 - [x] Step 5: Admin queues + main case page ✅
 - [x] Step 6: Logic map + recommendation workbench (disclosure filter) ✅
-- [ ] Step 7: Report objects + release states (4 output types)
+- [x] Step 7: Report objects + release states (4 output types) ✅
 - [ ] Step 8: Lead export / API handoff
 - [ ] Step 9: Follow-up / change-event layer
 - [ ] Step 10: Gap visibility + recommendation analytics

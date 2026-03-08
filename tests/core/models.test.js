@@ -210,7 +210,7 @@ describe('createReport', () => {
   it('starts in draft_generated state', () => {
     const r = createReport({ caseId: 'c-1', reportType: 'user' });
     assert.equal(r.state, 'draft_generated');
-    assert.equal(r.version, '1');
+    assert.equal(r.version, '1.0.0');
     assert.equal(r.disclosureLevel, 'no_disclosure');
   });
 });
