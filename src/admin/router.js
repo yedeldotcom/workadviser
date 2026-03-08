@@ -21,6 +21,13 @@
  *   POST /admin/cases/:caseId/mark-followup
  *   POST /admin/cases/:caseId/mark-delivery-ready
  *
+ * Lead export endpoints (FPP §6.5):
+ *   POST /admin/leads/:leadId/confirm
+ *   POST /admin/leads/:leadId/ready-for-export
+ *   POST /admin/leads/:leadId/export
+ *   POST /admin/leads/:leadId/archive
+ *   GET  /admin/leads/:leadId
+ *
  * System:
  *   GET  /admin/health
  */
@@ -50,8 +57,14 @@ import {
 } from './actions.js';
 import {
   getAllUsers, getAllSessions, getAllReports, getAllLeads,
-  getUser, getStoreCounts,
+  getUser, getLead, getStoreCounts,
 } from './store.js';
+import {
+  confirmLead,
+  markLeadReadyForExport,
+  exportLead,
+  archiveLead,
+} from '../export/leadExporter.js';
 
 const router = Router();
 
@@ -205,6 +218,73 @@ router.post('/cases/:caseId/mark-delivery-ready',
 
     try {
       const result = markReportReadyForDelivery(reportId, req.adminRole);
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+// ─── Lead export endpoints (FPP §6.5) ────────────────────────────────────────
+
+router.get('/leads/:leadId',
+  requireCapability('export_lead'),
+  (req, res) => {
+    const lead = getLead(req.params.leadId);
+    if (!lead) return res.status(404).json({ error: 'Lead not found' });
+    res.json(lead);
+  }
+);
+
+router.post('/leads/:leadId/confirm',
+  requireCapability('export_lead'),
+  (req, res) => {
+    try {
+      const result = confirmLead(req.params.leadId, req.adminRole);
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.post('/leads/:leadId/ready-for-export',
+  requireCapability('export_lead'),
+  (req, res) => {
+    const { consentBasis } = req.body ?? {};
+    try {
+      const result = markLeadReadyForExport(req.params.leadId, req.adminRole, { consentBasis });
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.post('/leads/:leadId/export',
+  requireCapability('export_lead'),
+  async (req, res) => {
+    const { target, webhookUrl, consentBasis } = req.body ?? {};
+    try {
+      const result = await exportLead(req.params.leadId, req.adminRole, {
+        target: target ?? 'internal',
+        webhookUrl,
+        consentBasis,
+      });
+      res.json(result);
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
+  }
+);
+
+router.post('/leads/:leadId/archive',
+  requireCapability('export_lead'),
+  (req, res) => {
+    const { reason } = req.body ?? {};
+    if (!reason) return res.status(400).json({ error: 'reason is required' });
+    try {
+      const result = archiveLead(req.params.leadId, req.adminRole, reason);
       res.json(result);
     } catch (err) {
       res.status(422).json({ error: err.message });

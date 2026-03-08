@@ -29,7 +29,7 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 - 162 new tests covering all modules
 
 **What is still missing (FPP scope not yet built):**
-- Lead export / API handoff (Step 8)
+- Follow-up / change-event layer (Step 9 — next)
 - Follow-up / change-event layer (Step 9)
 - Gap visibility + recommendation analytics (Step 10)
 - Landing Page + WhatsApp Entry (deferred)
@@ -447,14 +447,19 @@ Deferred to later (when KnowledgeBase is live):
 ---
 
 ### Step 8 — Lead Export / API Handoff (FPP §6.5)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-- [ ] Create `src/export/leadExporter.js`
-  - Export only minimum necessary data (FPP §6.5 safe fields list)
-  - Log every export: what sent, to which system, when, by which trigger, under which consent basis
-- [ ] Create `POST /admin/leads/:leadId/export` endpoint
-- [ ] Webhook/API stub for external CRM handoff
-- [ ] Audit trail for all exports
+- [x] `src/export/leadExporter.js` — lead lifecycle actions + export with SAFE_EXPORT_FIELDS whitelist
+  - `buildExportPayload()` — strips caseId, createdAt, consentStatus, exportState; only org-level fields
+  - `confirmLead()` — detected → lead_created
+  - `markLeadReadyForExport()` — lead_created → ready_for_export
+  - `exportLead()` — consent gate + state gate + internal/crm_webhook targets + audit log
+  - `archiveLead()` — any state → archived with reason
+  - `sendToWebhook()` — HTTP POST stub for external CRM
+- [x] Admin router endpoints: GET /leads/:leadId, POST /leads/:leadId/confirm, /ready-for-export, /export, /archive
+- [x] Audit log written for every export event (action, target, consentBasis, payloadFields)
+- [x] 45 tests in `tests/export/leadExporter.test.js` — payload safety, full lifecycle, edge cases
+- [x] `npm test` glob updated to include subdirectories: 275 tests, all passing
 
 ---
 
@@ -516,7 +521,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0–3, 5–7 are complete. **Next: Step 8 — Lead Export / API Handoff.**
+Steps 0–3, 5–8 are complete. **Next: Step 9 — Follow-Up / Change-Event Layer.**
 
 ---
 
@@ -531,7 +536,7 @@ Steps 0–3, 5–7 are complete. **Next: Step 8 — Lead Export / API Handoff.**
 - [x] Step 5: Admin queues + main case page ✅
 - [x] Step 6: Logic map + recommendation workbench (disclosure filter) ✅
 - [x] Step 7: Report objects + release states (4 output types) ✅
-- [ ] Step 8: Lead export / API handoff
+- [x] Step 8: Lead export / API handoff ✅
 - [ ] Step 9: Follow-up / change-event layer
 - [ ] Step 10: Gap visibility + recommendation analytics
 
