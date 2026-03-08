@@ -1,12 +1,12 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-08 | Branch: `claude/review-fpp-pilot-FGQv2` | **414 tests, all passing**
+Last updated: 2026-03-08 | Branch: `claude/review-fpp-pilot-FGQv2` | **Steps 0–10 + Infrastructure done**
 
 ---
 
 ## Current State
 
-The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory, no persistence):
+The repo contains a working 5-engine **reasoning pipeline** deployed to Railway, connected to WhatsApp via Meta Cloud API:
 
 | Engine | File | Status |
 |--------|------|--------|
@@ -16,27 +16,34 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 | Engine 4: Implementation | `src/engines/implementation/` | ✅ Done — 15 organizational procedure modules, 3 readiness levels |
 | Engine 5: Framing | `src/engines/framing/` | ✅ Done — 4 audience types, Natal 7-pillar model, objection handling |
 | Pipeline | `src/pipeline/` | ✅ Done — `runPipeline()` + `runPipelineHebrew()`, JSON + Hebrew output |
-| Tests | `tests/pipeline.test.js` | ✅ Done — 15 tests covering all engines + integration |
 
 **What is done beyond the 5-engine pipeline:**
-- Knowledge extraction (Step 0.5): 7 Hebrew source docs → `knowledge/extracted/*.json` (barriers, background, interview patterns, procedures, employer framing, feelings at work) + enriched pass
-- Core data model: 15 model files in `src/core/models/` — User, UserProfile, InterviewSession, Message, NormalizedSignal (versioned), Barrier, Trigger, WorkplaceAmplifier, ChangeEvent, Recommendation (Family/Template/Rendered+TracingChain), Report, Lead, ApprovalObject, AuditLog, RuleObject, KnowledgeItem/Source
-- State machines: 5 machines in `src/core/state/` — Interview, Release (audit-logged), RecommendationLifecycle, LeadHandoff, ReviewApproval (audit-logged)
-- Conversation engine: onboarding, interviewer, sessionManager (mergeSignals + attachSignalIds), voiceHandler (Whisper via openai SDK), LLM client (FPP §8 operating prompt)
+- Knowledge extraction (Step 0.5): 7 Hebrew source docs → `knowledge/extracted/*.json`
+- Core data model: 15 model files in `src/core/models/`
+- State machines: 5 machines in `src/core/state/`
+- Conversation engine: onboarding, interviewer, sessionManager, voiceHandler (Whisper), LLM client (FPP §8 prompt)
 - Admin command center: store, queues, caseView, actions, permissions, Express router + server
-- Recommendation workbench: 7-step selection pipeline + disclosure filter + TracingChain (FPP §9.6 full traceability)
+- Recommendation workbench: 7-step selection pipeline + disclosure filter + TracingChain (FPP §9.6)
 - Report renderers: user (8-section), employer (disclosure-filtered), anonymous org, lead detection
 - Follow-up / change-event layer (Step 9): scheduler, changeEventDetector, staleness assessment
 - Gap visibility + recommendation analytics (Step 10): weakZones, corrections, conflicts, knowledge promotion
-- Landing Page + WhatsApp entry (Step 4): webhook (Twilio/Meta/stub), sender, landingPage
-- Lead export + CRM handoff (Step 8): leadExporter with audit trail
-- FPP §9.6 Non-Negotiables: all 7 PASS — stable IDs, full traceability, release state audit, admin edit audit, disclosure isolation, employer≠user report, human-review enforced
-- 414 tests, all passing
+- Landing Page + WhatsApp entry: webhook (Twilio/Meta/stub), sender, landingPage
+- Lead export + CRM handoff: leadExporter with audit trail
+- Base44 persistence layer: `src/admin/base44Client.js` + `src/admin/base44Store.js` (see Infrastructure section)
+- FPP §9.6 Non-Negotiables: all 7 PASS
+- Railway deployment: live at production URL, serving `/whatsapp/webhook`
+
+**Test status (as of 2026-03-08):**
+- 26 of 36 test suites passing
+- 10 test suites failing due to `BASE44_APP_ID` env var not set in test environment
+  - Affected: `tests/admin/admin.test.js`, `tests/admin/analytics.test.js`, `tests/conversation/conversation.test.js`, `tests/core/recommendation.test.js`, `tests/core/stateMachines.test.js`
+  - Fix: either mock `base44Client.js` in tests, or set `BASE44_APP_ID=test` in test runner env
 
 **What is still missing:**
-- Database persistence (currently in-memory — swap `src/admin/store.js` maps for Postgres/Redis)
-- E2E integration tests with a live WhatsApp provider (Twilio or Meta)
-- Production deployment config (env vars, process manager, TLS)
+- Fix test suite: guard `base44Client.js` import so it doesn't throw during tests (use `process.env.NODE_ENV === 'test'` guard or env mock)
+- Base44 Admin Panel frontend (Step 11 — see below)
+- E2E integration tests with live WhatsApp (Meta Cloud API)
+- Permanent Meta access token for production (use System User — see Infrastructure section)
 
 ---
 
@@ -548,7 +555,10 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-Steps 0–10 + Step 4 are complete. All planned implementation steps are done.
+1. **Fix test suite** — guard `base44Client.js` so `BASE44_APP_ID` doesn't throw in test env (10 suites blocked)
+2. **Set permanent Meta token** — follow System User steps in Infrastructure section above → update Railway `META_ACCESS_TOKEN`
+3. **Build Base44 admin panel** — use the Step 11 prompt above in Base44; point it at the Railway URL
+4. **Create Base44 entities** — create the 15 entities in Base44 dashboard, then swap `webhook.js` import from `store.js` → `base44Store.js`
 
 ---
 
@@ -566,7 +576,174 @@ Steps 0–10 + Step 4 are complete. All planned implementation steps are done.
 - [x] Step 8: Lead export / API handoff ✅
 - [x] Step 9: Follow-up / change-event layer ✅
 - [x] Step 10: Gap visibility + recommendation analytics ✅
-- [ ] Step 10: Gap visibility + recommendation analytics
+- [ ] Step 11: Base44 Admin Panel (frontend) ⬜
+- [ ] Infrastructure: fix test suite BASE44_APP_ID guard ⬜
+
+---
+
+## Step 11 — Base44 Admin Panel (FPP §6)
+**Status: ⬜ Not Started**
+
+Build the full admin panel as a Base44 app using the prompt below. The backend REST API is fully built (`/admin/*` endpoints). Base44 handles the frontend: UI, charts, role-based visibility, and all API calls.
+
+### Base44 Prompt
+
+Paste the following into Base44 to generate the admin panel app:
+
+```
+Build a full admin panel for WorkAdviser — a post-trauma employment barrier
+detection system. The backend REST API is at /admin (on Railway).
+Use Bearer token auth (login via POST /admin/login with email+password).
+
+--- PAGES ---
+
+1. DASHBOARD (home)
+   - 5 KPI cards: New Users | Active Cases | Review Required | Leads Ready | Knowledge Review
+     (fetch GET /admin/queues/summary)
+   - Bar chart: Session states breakdown (onboarding / active / paused / distress_hold)
+   - Line chart: Reports generated over time (by generatedAt date)
+   - Alert banner for any distress_hold cases (highlight in red)
+
+2. QUEUES (tabbed view, 4 tabs)
+   Tab 1 — New Users (GET /admin/queues/new-users)
+     Table: userId | channel | partnerSource | createdAt | action button "View"
+
+   Tab 2 — Active Cases (GET /admin/queues/active-cases)
+     Table: sessionId | userId | channel | state | phase | lastActiveAt | barriersCaptured
+     Red badge for distress_hold rows. Action: "Open Case"
+
+   Tab 3 — Review Required (GET /admin/queues/review-required)
+     Table: reportId | caseId | reportType | disclosureLevel | state | generatedAt | channel
+     Sorted oldest-first. Actions: "Approve" | "Reject"
+
+   Tab 4 — Leads Ready (GET /admin/queues/leads-ready)
+     Table: leadId | orgName | orgType | consentStatus | createdAt
+     Actions: "Confirm" | "Ready for Export" | "Export" | "Archive"
+
+3. CASE WORKSPACE (GET /admin/cases/:caseId)
+   - Case header: userId, channel, session state, phase
+   - Detected barriers list
+   - Reports section with per-report actions:
+     * Approve (POST /admin/cases/:caseId/approve-report)
+     * Reject (POST /admin/cases/:caseId/reject-report)
+     * Edit recommendation inline (POST /admin/cases/:caseId/edit-recommendation)
+       with fields: newText_he, meaningChanged toggle, reason, scope (local/reusable)
+     * Mark delivery ready (POST /admin/cases/:caseId/mark-delivery-ready)
+   - Notes panel: add note (POST /admin/cases/:caseId/add-note)
+   - Follow-up panel:
+     * Mark follow-up (POST /admin/cases/:caseId/mark-followup) with reason + dueAt
+     * Schedule follow-up (POST /admin/cases/:caseId/schedule-followup)
+       type: initial | periodic | event
+     * View due check-ins (GET /admin/cases/:caseId/due-checkins)
+   - Change events: record (POST /admin/cases/:caseId/change-event)
+     and resolve (POST /admin/cases/:caseId/change-event/:eventId/resolve)
+   - Staleness indicator (GET /admin/cases/:caseId/staleness) shown as a status badge
+
+4. LEADS (lead detail page, GET /admin/leads/:leadId)
+   - Lead info: orgName, orgType, lectureOpportunityReason, recommendedLectureAngle, consentStatus
+   - Action buttons with confirmation dialogs: Confirm | Ready for Export | Export | Archive
+
+5. ANALYTICS (2 sub-pages)
+   Sub-page A — Recommendation Analytics (GET /admin/analytics/recommendations/summary)
+     - Table of templates: templateId | retrievalFreq | inclusionFreq | approvalRate | staleRate
+     - Bar chart: Top 10 templates by inclusion frequency
+     - Per-template feedback form: feedbackType + polarity + notes
+       (POST /admin/analytics/recommendations/:templateId/feedback)
+
+   Sub-page B — Gap Visibility
+     - GET /admin/analytics/gaps → show coverage summary + weak zones list
+       Donut chart: covered vs weak zones
+     - GET /admin/analytics/gaps/corrections → show
+       "High output, low evidence" list
+       "Repeated admin corrections" list
+       "High conflict areas" list
+     - Knowledge promotion: POST /admin/knowledge/:itemId/promote
+       with scope + sourceCaseIds + notes
+
+--- ROLES & PERMISSIONS ---
+Roles: system_owner | case_manager | reviewer | lead_manager
+Show/hide actions based on role returned at login.
+system_owner sees everything. reviewer can only approve/reject/edit reports.
+lead_manager only sees Leads tab.
+
+--- DESIGN ---
+- RTL-compatible layout (content is in Hebrew — newText_he fields)
+- Clean dark sidebar nav
+- Status badges with color coding:
+  distress_hold = red, active = green, paused = yellow,
+  draft_generated = orange, admin_approved = blue, delivery_ready = purple
+- Confirmation modal for all destructive actions (reject, archive, export)
+- Toast notifications on success/error
+```
+
+---
+
+## Infrastructure & Deployment
+**Added post-Step 10**
+
+### Railway Deployment
+- `railway.json` added — start command: `node src/server.js`
+- Server runs on `PORT` env var (Railway injects this)
+- Endpoint: `https://<app>.up.railway.app`
+- WhatsApp webhook registered at: `https://<app>.up.railway.app/whatsapp/webhook`
+
+**Required Railway env vars:**
+| Var | Value |
+|-----|-------|
+| `ANTHROPIC_API_KEY` | Anthropic key for Claude (conversation engine) |
+| `OPENAI_API_KEY` | OpenAI key for Whisper voice transcription |
+| `META_ACCESS_TOKEN` | WhatsApp Cloud API permanent token (see below) |
+| `META_PHONE_NUMBER_ID` | Phone number ID from Meta API Setup page |
+| `WHATSAPP_BUSINESS_ACCOUNT_ID` | WABA ID from Meta API Setup page |
+| `WEBHOOK_VERIFY_TOKEN` | Secret string for Meta webhook verification |
+| `WHATSAPP_PROVIDER` | `meta` |
+| `BASE44_APP_ID` | Base44 app ID (required when persistence is enabled) |
+| `BASE44_SERVICE_TOKEN` | Base44 service token (required when persistence is enabled) |
+
+### WhatsApp Meta Cloud API — Permanent Token Setup
+
+The Meta "API Setup" page only provides **temporary tokens**. For production use a permanent System User token:
+
+1. Go to **business.facebook.com** → Settings → **Users → System Users**
+2. Create a system user (Admin role)
+3. Click **"Add assets"** → assign your WhatsApp app with full control
+4. Click **"Generate new token"** → select your app → check `whatsapp_business_messaging` → set expiry to **Never**
+5. Copy token → set as `META_ACCESS_TOKEN` in Railway
+
+### Base44 Persistence Layer
+
+**Files:**
+- `src/admin/base44Client.js` — singleton SDK client, requires `BASE44_APP_ID` + `BASE44_SERVICE_TOKEN`
+- `src/admin/base44Store.js` — async persistence layer implementing same interface as `store.js`
+
+**Entity mapping (must be created in Base44 dashboard):**
+
+| Base44 Entity | Maps to |
+|--------------|---------|
+| `User` | `_users` |
+| `UserProfile` | `_profiles` |
+| `InterviewSession` | `_sessions` |
+| `Message` | `_messages` |
+| `NormalizedSignal` | `_signals` |
+| `Report` | `_reports` |
+| `Lead` | `_leads` |
+| `Approval` | `_approvals` |
+| `AuditLog` | `_auditLog` |
+| `PipelineResult` | `_pipelineResults` |
+| `ChangeEvent` | `_changeEvents` |
+| `FollowUpCheckin` | `_followUpCheckins` |
+| `KnowledgeItem` | `_knowledgeItems` |
+| `RecommendationTemplate` | `_recommendationTemplates` |
+| `RecommendationFeedback` | `_feedback` |
+
+**Note:** The webhook handler (`src/whatsapp/webhook.js`) currently uses the in-memory `store.js` to unblock the pilot while Base44 entities are being configured. Swap the import to `base44Store.js` once entities are created in the dashboard.
+
+**Known issue:** `base44Client.js` throws at import time if `BASE44_APP_ID` is not set, which breaks test suites that import it transitively. Fix: add env guard at top of file:
+```js
+if (!process.env.BASE44_APP_ID && process.env.NODE_ENV !== 'test') {
+  throw new Error('...');
+}
+```
 
 ---
 
