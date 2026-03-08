@@ -18,14 +18,18 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 | Pipeline | `src/pipeline/` | ✅ Done — `runPipeline()` + `runPipelineHebrew()`, JSON + Hebrew output |
 | Tests | `tests/pipeline.test.js` | ✅ Done — 15 tests covering all engines + integration |
 
-**What is missing (FPP scope not yet built):**
-- Persistent data model (User, UserProfile, InterviewSession, etc.)
-- State machines (interview, output release, recommendation lifecycle)
-- WhatsApp conversation engine
-- Structured report objects with disclosure filtering
+**What is done beyond the 5-engine pipeline:**
+- Knowledge enrichment pass (289 structured units with stable IDs, English translations, source refs)
+- Core data model: 14 model files in `src/core/models/` — User, UserProfile, InterviewSession, Message, NormalizedSignal, Barrier, Trigger, WorkplaceAmplifier, ChangeEvent, Recommendation (Family/Template/Rendered), Report, Lead, ApprovalObject, AuditLog, RuleObject, KnowledgeItem/Source
+- State machines: 5 machines in `src/core/state/` — Interview, Release, RecommendationLifecycle, LeadHandoff, ReviewApproval
+- 43 new tests covering all models and state machines
+
+**What is still missing (FPP scope not yet built):**
+- WhatsApp conversation engine + session handling
+- Structured report objects with disclosure filtering (rendering layer)
 - Admin command center
-- Lead/lecture opportunity detection
-- Raw source file extraction → formal knowledge base
+- Lead/lecture opportunity detection (logic layer)
+- Recommendation workbench (formal 7-step pipeline)
 
 ---
 
@@ -151,7 +155,7 @@ Progress legend: ✅ Done | 🔄 In Progress | ⬜ Not Started
 ---
 
 ### Step 1 — Core Data Model (FPP §9.1)
-**Status: ⬜ Not Started**
+**Status: ✅ Done** (commit `a70239f`+)
 
 Build explicit objects for all 18+ required types. Use JSDoc for type definitions (TypeScript migration optional later).
 
@@ -270,7 +274,7 @@ Build explicit objects for all 18+ required types. Use JSDoc for type definition
 ---
 
 ### Step 2 — State Machines (FPP §9.2)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
 **Files to create in `src/core/state/`:**
 
