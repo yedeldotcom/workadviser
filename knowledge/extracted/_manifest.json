@@ -1,0 +1,41 @@
+{
+  "extraction_date": "2026-03-08T09:00:31.208Z",
+  "source_directory": "/home/user/workadviser/knowledge/raw",
+  "output_directory": "/home/user/workadviser/knowledge/extracted",
+  "files_processed": 7,
+  "files_failed": 0,
+  "total_knowledge_units": 882,
+  "units_by_type": {
+    "barrier_definition": 13,
+    "context_modifier/clinical_correlation": 2,
+    "context_modifier/trajectory": 1,
+    "workplace_manifestation": 495,
+    "trigger": 7,
+    "signal/lived_experience_quote": 112,
+    "implementation_action/principle": 11,
+    "implementation_action/action": 32,
+    "implementation_action/role_assignment": 200,
+    "signal/emotional_state": 3,
+    "workplace_manifestation/situation": 6
+  },
+  "errors": [],
+  "source_roles": {
+    "classification_authority": [
+      "01_barriers_questionnaire.json",
+      "02_visual_questionnaire.json"
+    ],
+    "interpretation_authority": [
+      "03_barriers_background.json"
+    ],
+    "applied_pattern_authority": [
+      "04_interview_challenges.json"
+    ],
+    "implementation_authority": [
+      "05_procedures_book.json"
+    ],
+    "communication_authority": [
+      "06_employer_presentation.json",
+      "07_feelings_at_work.json"
+    ]
+  }
+}

@@ -10,11 +10,11 @@ The repo contains a working 5-engine **reasoning pipeline** (pure JS, in-memory,
 
 | Engine | File | Status |
 |--------|------|--------|
-| Engine 1: Intake | `src/engine1_intake/` | ✅ Done — 13-barrier Likert scoring, cluster aggregation, 5 co-occurrence patterns |
-| Engine 2: Interpretation | `src/engine2_interpretation/` | ✅ Done — trajectory model, 3 risk flags, investment priorities |
-| Engine 3: Translation | `src/engine3_translation/` | ✅ Done — 13 barriers → workplace scenarios + accommodations (interview quotes) |
-| Engine 4: Implementation | `src/engine4_implementation/` | ✅ Done — 15 organizational procedure modules, 3 readiness levels |
-| Engine 5: Framing | `src/engine5_framing/` | ✅ Done — 4 audience types, Natal 7-pillar model, objection handling |
+| Engine 1: Intake | `src/engines/intake/` | ✅ Done — 13-barrier Likert scoring, cluster aggregation, 5 co-occurrence patterns |
+| Engine 2: Interpretation | `src/engines/interpretation/` | ✅ Done — trajectory model, 3 risk flags, investment priorities |
+| Engine 3: Translation | `src/engines/translation/` | ✅ Done — 13 barriers → workplace scenarios + accommodations (interview quotes) |
+| Engine 4: Implementation | `src/engines/implementation/` | ✅ Done — 15 organizational procedure modules, 3 readiness levels |
+| Engine 5: Framing | `src/engines/framing/` | ✅ Done — 4 audience types, Natal 7-pillar model, objection handling |
 | Pipeline | `src/pipeline/` | ✅ Done — `runPipeline()` + `runPipelineHebrew()`, JSON + Hebrew output |
 | Tests | `tests/pipeline.test.js` | ✅ Done — 15 tests covering all engines + integration |
 
@@ -109,73 +109,44 @@ Progress legend: ✅ Done | 🔄 In Progress | ⬜ Not Started
 ---
 
 ### Step 0 — Repo Reorganization
-**Status: ⬜ Not Started**
+**Status: ✅ Done** (commit `be07a56`)
 
-Actions:
-- [ ] Create `docs/`, `knowledge/raw/`, `knowledge/extracted/`, `scripts/`, `src/core/`, `src/engines/`, `tests/core/`
-- [ ] Move FPP .md → `docs/`
-- [ ] Move 7 Hebrew source files → `knowledge/raw/` (rename to safe ASCII names)
-- [ ] Move `src/engine1_intake/` → `src/engines/intake/`
-- [ ] Move `src/engine2_interpretation/` → `src/engines/interpretation/`
-- [ ] Move `src/engine3_translation/` → `src/engines/translation/`
-- [ ] Move `src/engine4_implementation/` → `src/engines/implementation/`
-- [ ] Move `src/engine5_framing/` → `src/engines/framing/`
-- [ ] Update all import paths in `src/pipeline/index.js`, `src/pipeline/demo.js`, `tests/pipeline.test.js`
-- [ ] Copy this plan to `docs/MASTER_PLAN.md` (permanent location)
-- [ ] Verify tests still pass after reorganization: `npm test`
-
-**Files touched:** All src/ engine files (import-only changes), pipeline/index.js, pipeline/demo.js, tests/pipeline.test.js, package.json scripts
+- Created `docs/`, `knowledge/raw/`, `knowledge/extracted/`, `scripts/`, `src/core/`, `src/engines/`, `tests/core/`
+- Moved FPP .md → `docs/`
+- Moved 7 Hebrew source files → `knowledge/raw/` with ASCII names
+- Moved `src/engine1_intake/` → `src/engines/intake/`
+- Moved `src/engine2_interpretation/` → `src/engines/interpretation/`
+- Moved `src/engine3_translation/` → `src/engines/translation/`
+- Moved `src/engine4_implementation/` → `src/engines/implementation/`
+- Moved `src/engine5_framing/` → `src/engines/framing/`
+- Updated all import paths; fixed npm scripts; added extraction deps (xlsx, mammoth, pdf-parse, officeparser)
+- All 15 tests pass after reorganization
 
 ---
 
 ### Step 0.5 — Raw Files Analysis (Pre-Data Model)
-**Status: ⬜ Not Started — SEPARATE SESSION (Claude Opus 4.6)**
-**Rationale:** The 7 source files are large Hebrew documents (PDF, XLSX, PPTX, DOCX). Claude Opus 4.6 handles complex Hebrew document comprehension and structured extraction more reliably than Sonnet for this task. Run this step in a dedicated session, commit + push outputs, then continue Step 1 here.
+**Status: ✅ Done** (merged from separate session, commit `3330fc5`)
 
-**Purpose:** Before building formal data model objects, extract structured knowledge from the 7 Hebrew source documents. This step produces the ground truth that populates KnowledgeItem objects in the formal data model.
+**Results:** 882 knowledge units extracted across 5 source roles. See `knowledge/extracted/README.md` for full breakdown.
 
-**Source files and their FPP roles (§3.1):**
+| File | Role | Units | Quality |
+|------|------|-------|---------|
+| `knowledge/raw/barriers_questionnaire.docx` | Classification authority | 13 | ✅ All 13 barriers match existing `barriers.js` |
+| `knowledge/raw/barriers_visual.docx` | Visual/UI reference | 0 | ⚠️ Image-only, no extractable text |
+| `knowledge/raw/barriers_background.docx` | Interpretation authority | 3 | ⚠️ Short doc, partial clinical data |
+| `knowledge/raw/interview_challenges.xlsx` | Applied pattern authority | 614 | ✅ Rich — 14 sheets, 112 quotes, 495 workplace manifestations, 7 triggers |
+| `knowledge/raw/org_procedures.docx` | Implementation authority | 243 | ✅ 58 sections, 32 actions, 200 role refs |
+| `knowledge/raw/employer_presentation.pptx` | Communication authority | 0 | ⚠️ Image-heavy, no extractable text |
+| `knowledge/raw/ptsd_at_work.pdf` | Clinical/experiential authority | 9 | ⚠️ Image-heavy presentation |
 
-| File (after rename) | Original Name | FPP Role |
-|---------------------|---------------|----------|
-| `knowledge/raw/barriers_questionnaire.docx` | שאלון חסמים בתעסוקה.docx | Classification authority |
-| `knowledge/raw/barriers_background.docx` | רקע לשאלון חסמים מתוך האוגדן.docx | Interpretation authority |
-| `knowledge/raw/barriers_visual.docx` | שאלון החסמים ויזואלי.docx | Visual/UI reference |
-| `knowledge/raw/interview_challenges.xlsx` | אתגרי נגישות כפי שעלו מראיונות.xlsx | Applied pattern authority |
-| `knowledge/raw/org_procedures.docx` | ספר נהלים ארגוני לדוגמה.docx | Employer implementation authority |
-| `knowledge/raw/employer_presentation.pptx` | הרצאה למעסיקים כנס נכי צהל גרסתסופית.pptx | Communication authority |
-| `knowledge/raw/ptsd_at_work.pdf` | איך פוסט טראומטים מרגישים בעבודה_.pdf | Clinical/experiential authority |
-
-**Actions for the Opus session:**
-- [ ] Repo reorganization (Step 0) must be done FIRST so `knowledge/raw/` exists
-- [ ] Add extraction dependencies to package.json: `xlsx`, `mammoth`, `pdf-parse`
-- [ ] Create `scripts/extract-knowledge.js`:
-  - Parse `interview_challenges.xlsx` → `knowledge/extracted/interview_patterns.json`
-    - Extract: challenge categories, frequency counts, employer context, quotes
-  - Parse `barriers_questionnaire.docx` via mammoth → `knowledge/extracted/barriers_classification.json`
-    - Extract: full barrier list, sub-items, scoring instructions
-  - Parse `barriers_background.docx` via mammoth → `knowledge/extracted/barriers_interpretation.json`
-    - Extract: clinical correlations, trajectory notes, interpretation rules
-  - Parse `org_procedures.docx` via mammoth → `knowledge/extracted/org_procedures.json`
-    - Extract: procedure modules, role assignments, readiness levels
-  - Parse `ptsd_at_work.pdf` via pdf-parse → `knowledge/extracted/ptsd_at_work.json`
-    - Extract: symptom descriptions, workplace manifestations, key statistics
-  - PPTX → use `officeparser` or `pptx2json` → `knowledge/extracted/employer_framing.json`
-    - Extract: Natal 7 pillars, 3 workplace challenges, core messaging
-- [ ] Add npm script: `"extract": "node scripts/extract-knowledge.js"`
-- [ ] Run extraction, validate outputs are non-empty JSON
-- [ ] Write `knowledge/extracted/README.md` — document each file: source role, what was extracted, gaps found, what new barriers/patterns/scenarios/templates were discovered vs. already in code
-- [ ] Commit + push to `claude/review-fpp-pilot-FGQv2`
-
-**Why this comes before Step 1:** The extracted content directly determines:
-- Which KnowledgeItem types need to be formally represented
-- Validation that our 13-item barrier list is complete (or needs additions)
-- New patterns and scenarios not yet in workplace_scenarios.js
-- Procedure modules not yet in procedures.js
-
-**Output:** `knowledge/extracted/*.json` + `knowledge/extracted/README.md` — structured knowledge ready to be loaded by `src/core/knowledge/knowledgeBase.js`
-
-**Session prompt for Opus 4.6 session:** See bottom of this document → "Opus Session Prompt"
+**Key findings for Step 1:**
+1. Barriers.js is **complete and correct** — 13-item taxonomy matches source exactly
+2. **8 documented gaps** — see `knowledge/extracted/README.md` for full list
+3. Interview xlsx is the richest source but covers 14 domains; **pilot scope = "משרדים ועבודה" sheet only**
+4. **Trigger taxonomy** needs to be built from interview quotes and scenario friction types
+5. **Workplace amplifier taxonomy** needs to be derived (no source doc defines it explicitly)
+6. **Recommendation templates** need to be promoted from implicit accommodation actions to formal objects with IDs/versions
+7. **framing.js hardcoded content** is accepted as canonical communication authority (PPTX/PDF unreadable)
 
 ---
 
@@ -542,26 +513,23 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ---
 
-## Immediate Next Actions (This Session)
+## Immediate Next Actions
 
-1. **Step 0**: Reorganize repo (move files, rename engines, update imports, verify tests pass)
-2. Copy this plan to `docs/MASTER_PLAN.md` after Step 0
-3. **→ STOP:** Trigger Opus 4.6 session for Step 0.5 (raw files analysis), then resume here for Step 1+
+Steps 0 and 0.5 are complete. **Next: Step 1 — Core Data Model.**
 
-## Session Handoff Order
-
-```
-[This session]  Step 0 — reorganize repo + copy plan to docs/MASTER_PLAN.md
-[Opus session]  Step 0.5 — raw files analysis → commit/push knowledge/extracted/
-[This session]  Step 1+ — core data model, state machines, etc.
-```
+Key inputs from Step 0.5 for Step 1:
+- Trigger taxonomy: derive from `knowledge/extracted/04_interview_challenges.json` friction types + implicit triggers in quotes
+- Workplace amplifier taxonomy: derive from friction type labels in `workplace_scenarios.js`
+- Recommendation templates: promote accommodation actions from `workplace_scenarios.js` and procedure modules from `procedures.js` to formal objects with IDs, versions, lifecycle
+- Disclosure suitability tags: manually assign per template (no source data available)
+- Employment stage tags: map procedure modules to 7 FPP stages
 
 ---
 
 ## Progress Checklist (Summary)
 
-- [ ] Step 0: Repo reorganization ← **next in this session**
-- [ ] Step 0.5: Raw files analysis + knowledge extraction ← **separate Opus session**
+- [x] Step 0: Repo reorganization ✅
+- [x] Step 0.5: Raw files analysis + knowledge extraction ✅
 - [ ] Step 1: Core data model (18 objects)
 - [ ] Step 2: State machines (5 machines)
 - [ ] Step 3: Landing page + WhatsApp entry
