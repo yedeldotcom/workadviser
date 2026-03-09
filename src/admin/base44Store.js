@@ -75,11 +75,22 @@ async function safeList(entity) {
 }
 
 /**
- * Safe filter: returns [] instead of throwing if Base44 API fails.
+ * Safe filter: always returns an array.
+ * Normalises common Base44 envelope shapes: plain array, {data:[...]}, {items:[...]}, {results:[...]}.
+ * Logs both the raw response and any errors so Railway logs show exactly what comes back.
  */
 async function safeFilter(entity, ...args) {
   try {
-    return await entity.filter(...args);
+    const raw = await entity.filter(...args);
+    // Normalise to array
+    let arr;
+    if (Array.isArray(raw))          arr = raw;
+    else if (Array.isArray(raw?.data))    arr = raw.data;
+    else if (Array.isArray(raw?.items))   arr = raw.items;
+    else if (Array.isArray(raw?.results)) arr = raw.results;
+    else                              arr = [];
+    console.log(`[base44Store] filter ok — returned ${arr.length} record(s), raw type: ${Array.isArray(raw) ? 'array' : typeof raw}`);
+    return arr;
   } catch (err) {
     console.error(`[base44Store] filter failed:`, err?.message ?? err);
     return [];
