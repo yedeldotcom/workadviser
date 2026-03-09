@@ -30,7 +30,7 @@ import {
   getDistressCheckIn,
   getNextQuestion,
   estimateProgress,
-  QUESTION_BANK,
+  getEffectiveQuestionBank,
 } from './interviewer.js';
 
 // ─── Session creation ─────────────────────────────────────────────────────────
@@ -53,13 +53,13 @@ export function createSession(userId, phase = 'pre_employment') {
  * @param {import('../core/models/interviewSession.js').InterviewSession} session
  * @returns {{ session: object, message: string }}
  */
-export function resumeSession(session) {
+export async function resumeSession(session) {
   if (session.state !== 'paused') {
     throw new Error(`Cannot resume session in state: ${session.state}`);
   }
   const resumed = transitionInterview(session, 'active');
-  const answeredCount = resumed.detectedBarrierIds?.length ?? 0;
-  const progress = estimateProgress(getAnsweredQuestionIds(resumed));
+  const answeredIds = await getAnsweredQuestionIds(resumed);
+  const progress = await estimateProgress(answeredIds);
 
   const contextMessage = `${RESUME_REMINDER}\n\n_התקדמות: ${progress}% מהשאלות ענית/ה._`;
   return { session: resumed, message: contextMessage };
@@ -354,9 +354,9 @@ export function buildLLMHistory(messageRecords) {
  * Get next question for the current session state.
  * @param {import('../core/models/interviewSession.js').InterviewSession} session
  * @param {string[]} answeredQuestionIds
- * @returns {import('../conversation/interviewer.js').QUESTION_BANK[0] | null}
+ * @returns {Promise<import('../conversation/interviewer.js').QUESTION_BANK[0] | null>}
  */
-export function getNextInterviewQuestion(session, answeredQuestionIds = []) {
+export async function getNextInterviewQuestion(session, answeredQuestionIds = []) {
   return getNextQuestion(answeredQuestionIds, session.detectedBarrierIds);
 }
 
@@ -375,9 +375,10 @@ export function hasMinimumData(session) {
  * In full persistence, these would come from the message store.
  * For now, returns the question IDs tracked in the resume point and detected barriers.
  */
-function getAnsweredQuestionIds(session) {
+async function getAnsweredQuestionIds(session) {
   // Heuristic: map detected barrier IDs to their canonical question IDs
-  return QUESTION_BANK
+  const effectiveBank = await getEffectiveQuestionBank();
+  return effectiveBank
     .filter(q => q.barrierIds.some(id => session.detectedBarrierIds.includes(id)))
     .map(q => q.id);
 }

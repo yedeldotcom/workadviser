@@ -14,6 +14,8 @@
  * 7. Pause/skip/stop instructions
  */
 
+import { getContentConfig } from '../admin/base44Store.js';
+
 // ─── Onboarding message sequence (Hebrew) ────────────────────────────────────
 
 export const ONBOARDING_MESSAGES = [
@@ -122,20 +124,34 @@ export function shouldShowResumeReminder(session) {
 }
 
 /**
- * Returns the full ordered onboarding message sequence.
- * @returns {typeof ONBOARDING_MESSAGES}
+ * Returns the full ordered onboarding message sequence, with admin overrides applied.
+ * @returns {Promise<typeof ONBOARDING_MESSAGES>}
  */
-export function getOnboardingScript() {
-  return [...ONBOARDING_MESSAGES];
+export async function getOnboardingScript() {
+  const messages = ONBOARDING_MESSAGES.map(m => ({ ...m }));
+  try {
+    const config = await getContentConfig('onboarding_overrides');
+    if (config?.overrides) {
+      for (const msg of messages) {
+        if (config.overrides[msg.id]?.text) {
+          msg.text = config.overrides[msg.id].text;
+        }
+      }
+    }
+  } catch {
+    // Fall back to defaults if Base44 is unavailable
+  }
+  return messages;
 }
 
 /**
- * Returns the onboarding message at a given step (1-indexed).
+ * Returns the onboarding message at a given step (1-indexed), with overrides applied.
  * @param {number} step
- * @returns {typeof ONBOARDING_MESSAGES[0] | null}
+ * @returns {Promise<typeof ONBOARDING_MESSAGES[0] | null>}
  */
-export function getOnboardingStep(step) {
-  return ONBOARDING_MESSAGES.find(m => m.step === step) ?? null;
+export async function getOnboardingStep(step) {
+  const messages = await getOnboardingScript();
+  return messages.find(m => m.step === step) ?? null;
 }
 
 /**

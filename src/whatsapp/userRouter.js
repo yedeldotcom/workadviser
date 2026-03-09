@@ -170,7 +170,7 @@ export async function routeMessage(session, text, context = {}) {
  * The user must consent (כן / yes / מוכן/ה) after the last step to begin the interview.
  */
 async function _handleOnboarding(session, action, context) {
-  const script = getOnboardingScript();
+  const script = await getOnboardingScript();
   const step = (session.onboardingStep ?? 0) + 1;
 
   if (step <= script.length) {
@@ -219,7 +219,7 @@ async function _handleActiveInterview(session, text, context) {
   } catch {
     // Fallback: use scripted question bank
     const answeredIds = session.detectedBarrierIds.map(id => `q-${id}`);
-    const nextQ = getNextInterviewQuestion(session, answeredIds);
+    const nextQ = await getNextInterviewQuestion(session, answeredIds);
     const fallbackText = nextQ?.text_he ?? 'איך הולך לך בעבודה? אפשר לספר קצת?';
     llmResult = { nextMessage: fallbackText, detectedSignals: [], confidenceLevel: 'low', shouldEscalate: false, questionId: null };
   }
@@ -240,7 +240,7 @@ async function _handleActiveInterview(session, text, context) {
  * Handle a paused session — send resume reminder and resume.
  */
 async function _handlePaused(session, context) {
-  const { session: resumed, message: resumeMsg } = resumeSession(session);
+  const { session: resumed, message: resumeMsg } = await resumeSession(session);
   const { session: s2, message: outMsg } = recordOutboundMessage(resumed, resumeMsg);
   // Then send first question
   saveSession(s2);

@@ -64,21 +64,21 @@ describe('Onboarding', () => {
     assert.equal(ONBOARDING_MESSAGES.length, 7);
   });
 
-  it('getOnboardingScript returns all 7 messages in order', () => {
-    const script = getOnboardingScript();
+  it('getOnboardingScript returns all 7 messages in order', async () => {
+    const script = await getOnboardingScript();
     assert.equal(script.length, 7);
     script.forEach((msg, i) => assert.equal(msg.step, i + 1));
   });
 
-  it('getOnboardingStep returns correct step', () => {
-    const step3 = getOnboardingStep(3);
+  it('getOnboardingStep returns correct step', async () => {
+    const step3 = await getOnboardingStep(3);
     assert.ok(step3);
     assert.equal(step3.step, 3);
     assert.equal(step3.type, 'output');
   });
 
-  it('getOnboardingStep returns null for invalid step', () => {
-    assert.equal(getOnboardingStep(99), null);
+  it('getOnboardingStep returns null for invalid step', async () => {
+    assert.equal(await getOnboardingStep(99), null);
   });
 
   it('shouldShowOnboarding returns true for not_started sessions', () => {
@@ -157,12 +157,12 @@ describe('Question bank', () => {
     assert.ok(intensities.has(INTENSITY.HIGH));
   });
 
-  it('getTotalQuestions matches QUESTION_BANK length', () => {
-    assert.equal(getTotalQuestions(), QUESTION_BANK.length);
+  it('getTotalQuestions matches QUESTION_BANK length', async () => {
+    assert.equal(await getTotalQuestions(), QUESTION_BANK.length);
   });
 
-  it('getHighIntensityQuestionIds returns only HIGH-intensity IDs', () => {
-    const highIds = getHighIntensityQuestionIds();
+  it('getHighIntensityQuestionIds returns only HIGH-intensity IDs', async () => {
+    const highIds = await getHighIntensityQuestionIds();
     assert.ok(highIds.length > 0);
     for (const id of highIds) {
       const q = QUESTION_BANK.find(q => q.id === id);
@@ -175,43 +175,43 @@ describe('Question bank', () => {
 // ─── Adaptive sequencing ──────────────────────────────────────────────────────
 
 describe('getNextQuestion', () => {
-  it('starts with LOW intensity questions', () => {
-    const first = getNextQuestion([], []);
+  it('starts with LOW intensity questions', async () => {
+    const first = await getNextQuestion([], []);
     assert.ok(first);
     assert.equal(first.intensity, INTENSITY.LOW);
   });
 
-  it('blocks MEDIUM questions until 3 LOW answered', () => {
+  it('blocks MEDIUM questions until 3 LOW answered', async () => {
     const lowIds = QUESTION_BANK.filter(q => q.intensity === INTENSITY.LOW).slice(0, 2).map(q => q.id);
-    const next = getNextQuestion(lowIds, []);
+    const next = await getNextQuestion(lowIds, []);
     assert.equal(next?.intensity, INTENSITY.LOW);
   });
 
-  it('allows MEDIUM questions after 3 LOW answered', () => {
+  it('allows MEDIUM questions after 3 LOW answered', async () => {
     const lowIds = QUESTION_BANK.filter(q => q.intensity === INTENSITY.LOW).slice(0, 3).map(q => q.id);
-    const next = getNextQuestion(lowIds, []);
+    const next = await getNextQuestion(lowIds, []);
     // Either LOW (if more remain) or MEDIUM — must NOT be HIGH
     assert.ok(next === null || next.intensity !== INTENSITY.HIGH);
   });
 
-  it('allows HIGH questions after 2 MEDIUM answered', () => {
+  it('allows HIGH questions after 2 MEDIUM answered', async () => {
     const lowIds = QUESTION_BANK.filter(q => q.intensity === INTENSITY.LOW).slice(0, 4).map(q => q.id);
     const medIds = QUESTION_BANK.filter(q => q.intensity === INTENSITY.MEDIUM).slice(0, 2).map(q => q.id);
-    const next = getNextQuestion([...lowIds, ...medIds], []);
+    const next = await getNextQuestion([...lowIds, ...medIds], []);
     // Now HIGH should be reachable
     assert.ok(next !== null);
   });
 
-  it('returns null when all questions answered', () => {
+  it('returns null when all questions answered', async () => {
     const allIds = QUESTION_BANK.map(q => q.id);
-    const next = getNextQuestion(allIds, []);
+    const next = await getNextQuestion(allIds, []);
     assert.equal(next, null);
   });
 
-  it('prefers uncovered barriers', () => {
+  it('prefers uncovered barriers', async () => {
     // If fatigue is already covered, next question should prefer other barriers
     const lowIds = QUESTION_BANK.filter(q => q.intensity === INTENSITY.LOW).slice(0, 1).map(q => q.id);
-    const next = getNextQuestion(lowIds, ['fatigue']);
+    const next = await getNextQuestion(lowIds, ['fatigue']);
     if (next) {
       // Next question should not be about fatigue if possible
       const fatigueQuestions = QUESTION_BANK.filter(q => q.barrierIds.includes('fatigue')).map(q => q.id);
@@ -224,17 +224,17 @@ describe('getNextQuestion', () => {
 // ─── Progress estimation ──────────────────────────────────────────────────────
 
 describe('estimateProgress', () => {
-  it('returns 0 for empty answer list', () => {
-    assert.equal(estimateProgress([]), 0);
+  it('returns 0 for empty answer list', async () => {
+    assert.equal(await estimateProgress([]), 0);
   });
 
-  it('returns 100 for all questions answered', () => {
-    assert.equal(estimateProgress(QUESTION_BANK.map(q => q.id)), 100);
+  it('returns 100 for all questions answered', async () => {
+    assert.equal(await estimateProgress(QUESTION_BANK.map(q => q.id)), 100);
   });
 
-  it('returns a value between 0 and 100', () => {
+  it('returns a value between 0 and 100', async () => {
     const half = QUESTION_BANK.slice(0, Math.floor(QUESTION_BANK.length / 2)).map(q => q.id);
-    const progress = estimateProgress(half);
+    const progress = await estimateProgress(half);
     assert.ok(progress >= 0 && progress <= 100);
   });
 });
@@ -283,18 +283,18 @@ describe('createSession', () => {
 });
 
 describe('resumeSession', () => {
-  it('resumes a paused session to active', () => {
+  it('resumes a paused session to active', async () => {
     const session = createSession('u-1');
     // Manually set to paused for test
     const paused = { ...session, state: 'paused', resumePoint: { questionId: 'Q-ENV-01', savedAt: '2026-01-01' } };
-    const { session: resumed, message } = resumeSession(paused);
+    const { session: resumed, message } = await resumeSession(paused);
     assert.equal(resumed.state, 'active');
     assert.ok(message.includes('ברוך') || message.length > 0);
   });
 
-  it('throws when resuming non-paused session', () => {
+  it('throws when resuming non-paused session', async () => {
     const session = createSession('u-1');
-    assert.throws(() => resumeSession(session), /Cannot resume/);
+    await assert.rejects(() => resumeSession(session), /Cannot resume/);
   });
 });
 

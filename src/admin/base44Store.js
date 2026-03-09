@@ -323,6 +323,32 @@ export async function getAllFeedback() {
   return safeList(db.RecommendationFeedback);
 }
 
+// ─── Content Config (admin content editor overrides) ──────────────────────────
+
+/**
+ * Get a content config record by key.
+ * @param {string} configKey - e.g. "onboarding_overrides", "question_overrides"
+ * @returns {Promise<object|null>}
+ */
+export async function getContentConfig(configKey) {
+  const results = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
+  return results[0] ?? null;
+}
+
+/**
+ * Save (upsert) a content config record by key.
+ * @param {string} configKey
+ * @param {object} data - the payload to store alongside the key
+ * @returns {Promise<object>}
+ */
+export async function saveContentConfig(configKey, data) {
+  const existing = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
+  if (existing[0]) {
+    return db.ContentConfig.update(existing[0].id, { configKey, ...data });
+  }
+  return db.ContentConfig.create({ configKey, ...data });
+}
+
 // ─── Test helpers ─────────────────────────────────────────────────────────────
 
 /**
@@ -339,6 +365,7 @@ export async function resetStore() {
     db.User, db.UserProfile, db.InterviewSession, db.Message, db.NormalizedSignal,
     db.Report, db.Lead, db.Approval, db.AuditLog, db.PipelineResult, db.ChangeEvent,
     db.FollowUpCheckin, db.KnowledgeItem, db.RecommendationTemplate, db.RecommendationFeedback,
+    db.ContentConfig,
   ];
 
   await Promise.all(entities.map(async entity => {
