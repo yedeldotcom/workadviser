@@ -99,18 +99,30 @@ const router = Router();
 
 /**
  * POST /admin/login
- * Authenticates with Base44 and returns a Bearer token.
- * In dev mode (no BASE44_APP_ID), returns a stub token based on provided role.
+ * Three auth modes (checked in order):
+ *   1. ADMIN_PASSWORD env var set → password-only auth, returns system_owner token
+ *   2. No BASE44_APP_ID → dev mode, returns stub token from role body field
+ *   3. BASE44_APP_ID set → delegates to Base44 auth
  */
 router.post('/login', async (req, res) => {
   const { email, password, role } = req.body ?? {};
 
-  // Dev mode: no Base44 configured — return stub token from role header
+  // Mode 1: simple password auth — set ADMIN_PASSWORD in Railway env vars
+  if (process.env.ADMIN_PASSWORD) {
+    if (!password) return res.status(400).json({ error: 'password is required' });
+    if (password !== process.env.ADMIN_PASSWORD) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    return res.json({ token: `admin-token:system_owner`, role: 'system_owner' });
+  }
+
+  // Mode 2: dev mode — no Base44 configured
   if (!process.env.BASE44_APP_ID) {
     if (!role) return res.status(400).json({ error: 'role is required in dev mode' });
     return res.json({ token: `dev-stub:${role}`, role, dev: true });
   }
 
+  // Mode 3: Base44 auth
   if (!email || !password) {
     return res.status(400).json({ error: 'email and password are required' });
   }
