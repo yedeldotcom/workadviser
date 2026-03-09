@@ -53,10 +53,12 @@ async function upsert(entity, id, newData) {
     const result = exists
       ? await entity.update(id, newData)
       : await entity.create(newData);
-    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
+    const eName = entity.$name ?? '?';
+    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} ${eName} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
     return result;
   } catch (err) {
-    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} id=${id}:`, err?.message ?? err);
+    const eName = entity.$name ?? '?';
+    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} ${eName} id=${id}:`, err?.message ?? err);
     throw err;
   }
 }
