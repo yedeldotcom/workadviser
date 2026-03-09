@@ -183,7 +183,7 @@ async function _handleOnboarding(session, action, context) {
 
   // All onboarding steps shown — waiting for consent
   if (action === 'consent_needed') {
-    const nudge = 'אשמח לקבל "כן" כדי להתחיל. או "עצור" אם שינית את דעתך.';
+    const nudge = 'כשרוצים להתחיל — כותבים "כן". אם לא עכשיו — "עצור".';
     const { session: s2, message: outMsg } = recordOutboundMessage(session, nudge);
     await saveSession(s2);
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
