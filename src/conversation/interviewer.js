@@ -160,6 +160,29 @@ export const QUESTION_BANK = [
   },
 ];
 
+// ─── Runtime question bank override ──────────────────────────────────────────
+// Set at server startup from Base44 (see server.js → loadContentOverrides).
+// When set, replaces QUESTION_BANK for all interview sequencing.
+
+let _qbOverride = null;
+
+/**
+ * Set a runtime override for the question bank.
+ * Called by server.js after loading from Base44, and by the PUT endpoint after saving.
+ * @param {typeof QUESTION_BANK} items
+ */
+export function setQuestionBankOverride(items) {
+  _qbOverride = items;
+}
+
+/**
+ * Returns the active question bank — admin override if set, otherwise hardcoded default.
+ * @returns {typeof QUESTION_BANK}
+ */
+export function getActiveQuestionBank() {
+  return _qbOverride ?? QUESTION_BANK;
+}
+
 // ─── Distress detection ───────────────────────────────────────────────────────
 
 const DISTRESS_KEYWORDS_HE = [
@@ -220,17 +243,18 @@ export function getDistressCheckIn() {
  * @returns {typeof QUESTION_BANK[0] | null} Next question, or null if interview is complete
  */
 export function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = []) {
+  const bank = getActiveQuestionBank();
   const answered = new Set(answeredQuestionIds);
   const covered = new Set(answeredBarrierIds);
 
-  const lowAnswered   = QUESTION_BANK.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
-  const mediumAnswered = QUESTION_BANK.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
+  const lowAnswered   = bank.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
+  const mediumAnswered = bank.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
 
   const allowMedium = lowAnswered >= 3;
   const allowHigh   = mediumAnswered >= 2;
 
   // Find candidates: unanswered + allowed intensity + uncovered barrier (preferred)
-  const candidates = QUESTION_BANK.filter(q => {
+  const candidates = bank.filter(q => {
     if (answered.has(q.id)) return false;
     if (q.intensity === INTENSITY.MEDIUM && !allowMedium) return false;
     if (q.intensity === INTENSITY.HIGH   && !allowHigh)   return false;
@@ -251,14 +275,14 @@ export function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = [
  * Return the total number of questions in the bank.
  */
 export function getTotalQuestions() {
-  return QUESTION_BANK.length;
+  return getActiveQuestionBank().length;
 }
 
 /**
  * Return all questions that need a distress check-in after them.
  */
 export function getHighIntensityQuestionIds() {
-  return QUESTION_BANK.filter(q => q.distressCheckIn).map(q => q.id);
+  return getActiveQuestionBank().filter(q => q.distressCheckIn).map(q => q.id);
 }
 
 /**
@@ -267,5 +291,5 @@ export function getHighIntensityQuestionIds() {
  * @returns {number} 0–100
  */
 export function estimateProgress(answeredQuestionIds) {
-  return Math.round((answeredQuestionIds.length / QUESTION_BANK.length) * 100);
+  return Math.round((answeredQuestionIds.length / getActiveQuestionBank().length) * 100);
 }

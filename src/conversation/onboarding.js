@@ -37,6 +37,21 @@ export const ONBOARDING_MESSAGES = [
   },
 ];
 
+// ─── Runtime content override ─────────────────────────────────────────────────
+// Set at server startup from Base44 (see server.js → loadContentOverrides).
+// When set, overrides ONBOARDING_MESSAGES for all new sessions.
+
+let _override = null;
+
+/**
+ * Set a runtime override for the onboarding message sequence.
+ * Called by server.js after loading from Base44, and by the PUT endpoint after saving.
+ * @param {typeof ONBOARDING_MESSAGES} items
+ */
+export function setOnboardingOverride(items) {
+  _override = items;
+}
+
 // ─── Channel-specific variants ────────────────────────────────────────────────
 
 // Short version for re-onboarding after a long pause
@@ -64,10 +79,12 @@ export function shouldShowResumeReminder(session) {
 
 /**
  * Returns the full ordered onboarding message sequence.
+ * Returns the admin-edited override from Base44 if one has been loaded,
+ * otherwise falls back to the hardcoded ONBOARDING_MESSAGES default.
  * @returns {typeof ONBOARDING_MESSAGES}
  */
 export function getOnboardingScript() {
-  return [...ONBOARDING_MESSAGES];
+  return _override ?? [...ONBOARDING_MESSAGES];
 }
 
 /**

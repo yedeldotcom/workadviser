@@ -91,9 +91,9 @@ import {
   retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
-import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './base44Store.js';
-import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
-import { QUESTION_BANK } from '../conversation/interviewer.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, saveContentItem, getContentCached } from './base44Store.js';
+import { ONBOARDING_MESSAGES, setOnboardingOverride } from '../conversation/onboarding.js';
+import { QUESTION_BANK, setQuestionBankOverride } from '../conversation/interviewer.js';
 
 const router = Router();
 
@@ -539,14 +539,48 @@ router.post('/knowledge/:itemId/promote',
 router.get('/content/onboarding',
   requireCapability('view_queue'),
   (req, res) => {
-    res.json(ONBOARDING_MESSAGES);
+    res.json(getContentCached('onboarding') ?? ONBOARDING_MESSAGES);
+  }
+);
+
+router.put('/content/onboarding',
+  requireCapability('view_queue'),
+  async (req, res) => {
+    const items = req.body;
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ error: 'Expected an array of message objects' });
+    }
+    try {
+      await saveContentItem('onboarding', items, req.adminRole);
+      setOnboardingOverride(items);
+      res.json({ ok: true, count: items.length });
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
   }
 );
 
 router.get('/content/questions',
   requireCapability('view_queue'),
   (req, res) => {
-    res.json(QUESTION_BANK);
+    res.json(getContentCached('questions') ?? QUESTION_BANK);
+  }
+);
+
+router.put('/content/questions',
+  requireCapability('view_queue'),
+  async (req, res) => {
+    const items = req.body;
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ error: 'Expected an array of question objects' });
+    }
+    try {
+      await saveContentItem('questions', items, req.adminRole);
+      setQuestionBankOverride(items);
+      res.json({ ok: true, count: items.length });
+    } catch (err) {
+      res.status(422).json({ error: err.message });
+    }
   }
 );
 

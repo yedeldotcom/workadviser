@@ -33,6 +33,7 @@ import { db } from './base44Client.js';
 const _userByPhone  = new Map(); // phoneNumber → User
 const _sessionById  = new Map(); // sessionId  → InterviewSession
 const _sessionsByUserId = new Map(); // userId → sessionId[]
+const _contentCache = new Map(); // key ('onboarding'|'questions') → items array
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -432,6 +433,58 @@ export async function resetStore() {
     const all = await entity.list();
     await Promise.all(all.map(item => entity.delete(item.id)));
   }));
+}
+
+// ─── Content overrides ────────────────────────────────────────────────────────
+
+/**
+ * Returns the cached content override for a given key, or null if not loaded.
+ * Synchronous — safe to call in the hot conversation path.
+ * @param {'onboarding'|'questions'} key
+ * @returns {Array|null}
+ */
+export function getContentCached(key) {
+  return _contentCache.get(key) ?? null;
+}
+
+/**
+ * Loads all ContentItem records from Base44 into the in-process cache.
+ * Called once at server startup (non-blocking). Returns a map of key → items.
+ * If Base44 is unavailable, logs and returns {} — hardcoded defaults are used.
+ * @returns {Promise<Record<string, Array>>}
+ */
+export async function loadContentOverrides() {
+  const all = await safeList(db.ContentItem);
+  const result = {};
+  for (const item of all) {
+    try {
+      const parsed = typeof item.items === 'string' ? JSON.parse(item.items) : item.items;
+      _contentCache.set(item.key, parsed);
+      result[item.key] = parsed;
+    } catch {
+      console.error(`[base44Store] loadContentOverrides: failed to parse items for key=${item.key}`);
+    }
+  }
+  console.log(`[base44Store] loadContentOverrides: loaded ${Object.keys(result).length} override(s)`);
+  return result;
+}
+
+/**
+ * Saves a content override to Base44 and updates the in-process cache immediately.
+ * @param {'onboarding'|'questions'} key
+ * @param {Array} items
+ * @param {string} updatedBy
+ */
+export async function saveContentItem(key, items, updatedBy) {
+  const existing = await safeFilter(db.ContentItem, { key }, null, 1, 0);
+  const payload = { key, items: JSON.stringify(items), updatedAt: new Date().toISOString(), updatedBy: updatedBy ?? 'admin' };
+  if (existing[0]) {
+    await db.ContentItem.update(existing[0].id, payload);
+  } else {
+    await db.ContentItem.create(payload);
+  }
+  _contentCache.set(key, items);
+  console.log(`[base44Store] saveContentItem: saved key=${key} count=${items.length}`);
 }
 
 // ─── Health check ─────────────────────────────────────────────────────────────
