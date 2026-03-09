@@ -48,8 +48,34 @@ async function upsert(entity, id, newData) {
 async function safeGet(entity, id) {
   try {
     return await entity.get(id);
-  } catch {
+  } catch (err) {
+    console.error(`[base44Store] get failed:`, err?.message ?? err);
     return null;
+  }
+}
+
+/**
+ * Safe list: returns [] instead of throwing if Base44 API fails.
+ * Logs the error so it appears in Railway deploy logs.
+ */
+async function safeList(entity) {
+  try {
+    return await entity.list();
+  } catch (err) {
+    console.error(`[base44Store] list failed:`, err?.message ?? err);
+    return [];
+  }
+}
+
+/**
+ * Safe filter: returns [] instead of throwing if Base44 API fails.
+ */
+async function safeFilter(entity, ...args) {
+  try {
+    return await entity.filter(...args);
+  } catch (err) {
+    console.error(`[base44Store] filter failed:`, err?.message ?? err);
+    return [];
   }
 }
 
@@ -65,7 +91,7 @@ export async function getUser(userId) {
 }
 
 export async function getAllUsers() {
-  return db.User.list();
+  return safeList(db.User);
 }
 
 /**
@@ -73,7 +99,7 @@ export async function getAllUsers() {
  * Replaces the in-memory _phoneIndex Map with a query.
  */
 export async function getUserByPhone(phoneNumber) {
-  const results = await db.User.filter({ phoneNumber }, null, 1, 0);
+  const results = await safeFilter(db.User, { phoneNumber }, null, 1, 0);
   return results[0] ?? null;
 }
 
@@ -85,12 +111,12 @@ export async function saveProfile(profile) {
 
 export async function getProfile(userId) {
   // Profile uses userId as its primary lookup key (not a separate id)
-  const results = await db.UserProfile.filter({ userId }, null, 1, 0);
+  const results = await safeFilter(db.UserProfile, { userId }, null, 1, 0);
   return results[0] ?? null;
 }
 
 export async function getAllProfiles() {
-  return db.UserProfile.list();
+  return safeList(db.UserProfile);
 }
 
 // ─── Sessions ─────────────────────────────────────────────────────────────────
@@ -104,11 +130,11 @@ export async function getSession(sessionId) {
 }
 
 export async function getAllSessions() {
-  return db.InterviewSession.list();
+  return safeList(db.InterviewSession);
 }
 
 export async function getSessionsForUser(userId) {
-  return db.InterviewSession.filter({ userId });
+  return safeFilter(db.InterviewSession, { userId });
 }
 
 // ─── Messages ─────────────────────────────────────────────────────────────────
@@ -122,7 +148,7 @@ export async function getMessage(messageId) {
 }
 
 export async function getMessagesForSession(sessionId) {
-  return db.Message.filter({ sessionId });
+  return safeFilter(db.Message, { sessionId });
 }
 
 // ─── Signals ──────────────────────────────────────────────────────────────────
@@ -146,11 +172,11 @@ export async function getReport(reportId) {
 }
 
 export async function getAllReports() {
-  return db.Report.list();
+  return safeList(db.Report);
 }
 
 export async function getReportsForCase(caseId) {
-  return db.Report.filter({ caseId });
+  return safeFilter(db.Report, { caseId });
 }
 
 // ─── Leads ────────────────────────────────────────────────────────────────────
@@ -164,7 +190,7 @@ export async function getLead(leadId) {
 }
 
 export async function getAllLeads() {
-  return db.Lead.list();
+  return safeList(db.Lead);
 }
 
 // ─── Approvals ────────────────────────────────────────────────────────────────
@@ -178,7 +204,7 @@ export async function getApproval(approvalId) {
 }
 
 export async function getApprovalsForReport(reportId) {
-  return db.Approval.filter({ reportId });
+  return safeFilter(db.Approval, { reportId });
 }
 
 // ─── Audit Log ────────────────────────────────────────────────────────────────
@@ -189,18 +215,18 @@ export async function appendAuditLog(entry) {
 }
 
 export async function getAllAuditLogs() {
-  return db.AuditLog.list();
+  return safeList(db.AuditLog);
 }
 
 export async function getAuditLogForEntity(entityType, entityId) {
-  return db.AuditLog.filter({ entityType, entityId });
+  return safeFilter(db.AuditLog, { entityType, entityId });
 }
 
 // ─── Pipeline Results ─────────────────────────────────────────────────────────
 
 export async function savePipelineResult(sessionId, result) {
   const record = { sessionId, result };
-  const existing = await db.PipelineResult.filter({ sessionId }, null, 1, 0);
+  const existing = await safeFilter(db.PipelineResult, { sessionId }, null, 1, 0);
   if (existing[0]) {
     return db.PipelineResult.update(existing[0].id, record);
   }
@@ -208,7 +234,7 @@ export async function savePipelineResult(sessionId, result) {
 }
 
 export async function getPipelineResult(sessionId) {
-  const results = await db.PipelineResult.filter({ sessionId }, null, 1, 0);
+  const results = await safeFilter(db.PipelineResult, { sessionId }, null, 1, 0);
   return results[0]?.result ?? null;
 }
 
@@ -223,11 +249,11 @@ export async function getChangeEvent(eventId) {
 }
 
 export async function getAllChangeEvents() {
-  return db.ChangeEvent.list();
+  return safeList(db.ChangeEvent);
 }
 
 export async function getChangeEventsForUser(userId) {
-  return db.ChangeEvent.filter({ userId });
+  return safeFilter(db.ChangeEvent, { userId });
 }
 
 // ─── Follow-Up Check-ins ──────────────────────────────────────────────────────
@@ -241,11 +267,11 @@ export async function getFollowUpCheckin(id) {
 }
 
 export async function getAllFollowUpCheckins() {
-  return db.FollowUpCheckin.list();
+  return safeList(db.FollowUpCheckin);
 }
 
 export async function getCheckinsForUser(userId) {
-  return db.FollowUpCheckin.filter({ userId });
+  return safeFilter(db.FollowUpCheckin, { userId });
 }
 
 // ─── Knowledge Items ──────────────────────────────────────────────────────────
@@ -259,7 +285,7 @@ export async function getKnowledgeItem(id) {
 }
 
 export async function getAllKnowledgeItems() {
-  return db.KnowledgeItem.list();
+  return safeList(db.KnowledgeItem);
 }
 
 // ─── Recommendation Templates ─────────────────────────────────────────────────
@@ -273,7 +299,7 @@ export async function getRecommendationTemplate(id) {
 }
 
 export async function getAllRecommendationTemplates() {
-  return db.RecommendationTemplate.list();
+  return safeList(db.RecommendationTemplate);
 }
 
 // ─── Recommendation Feedback ──────────────────────────────────────────────────
@@ -287,7 +313,7 @@ export async function getFeedback(id) {
 }
 
 export async function getAllFeedback() {
-  return db.RecommendationFeedback.list();
+  return safeList(db.RecommendationFeedback);
 }
 
 // ─── Test helpers ─────────────────────────────────────────────────────────────
@@ -319,11 +345,11 @@ export async function resetStore() {
 /** Returns entity counts for the health check endpoint. */
 export async function getStoreCounts() {
   const [users, sessions, reports, leads, auditLogs] = await Promise.all([
-    db.User.list(),
-    db.InterviewSession.list(),
-    db.Report.list(),
-    db.Lead.list(),
-    db.AuditLog.list(),
+    safeList(db.User),
+    safeList(db.InterviewSession),
+    safeList(db.Report),
+    safeList(db.Lead),
+    safeList(db.AuditLog),
   ]);
   return {
     users:     users.length,
