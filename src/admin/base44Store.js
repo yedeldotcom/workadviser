@@ -27,6 +27,13 @@
 
 import { db } from './base44Client.js';
 
+// ─── In-process fallback cache ─────────────────────────────────────────────────
+// Used when Base44 filter queries fail (e.g. misconfigured schema or network issues).
+// Keeps user/session lookup working within the lifetime of a single server process.
+const _userByPhone  = new Map(); // phoneNumber → User
+const _sessionById  = new Map(); // sessionId  → InterviewSession
+const _sessionsByUserId = new Map(); // userId → sessionId[]
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
@@ -90,6 +97,7 @@ export async function saveUser(user) {
     full_name: user.full_name ?? phone,
   };
   const saved = await upsert(db.User, user.id, data);
+  if (user.phoneNumber) _userByPhone.set(user.phoneNumber, user);
   return saved;
 }
 
@@ -103,11 +111,15 @@ export async function getAllUsers() {
 
 /**
  * Lookup user by WhatsApp phone number (E.164 format).
- * Replaces the in-memory _phoneIndex Map with a query.
+ * Falls back to in-process cache when DB filter query fails.
  */
 export async function getUserByPhone(phoneNumber) {
   const results = await safeFilter(db.User, { phoneNumber }, null, 1, 0);
-  return results[0] ?? null;
+  if (results.length > 0) {
+    _userByPhone.set(phoneNumber, results[0]);
+    return results[0];
+  }
+  return _userByPhone.get(phoneNumber) ?? null;
 }
 
 // ─── Profiles ─────────────────────────────────────────────────────────────────
@@ -129,6 +141,11 @@ export async function getAllProfiles() {
 // ─── Sessions ─────────────────────────────────────────────────────────────────
 
 export async function saveSession(session) {
+  _sessionById.set(session.id, session);
+  const ids = _sessionsByUserId.get(session.userId) ?? [];
+  if (!ids.includes(session.id)) {
+    _sessionsByUserId.set(session.userId, [...ids, session.id]);
+  }
   return upsert(db.InterviewSession, session.id, session);
 }
 
@@ -141,7 +158,18 @@ export async function getAllSessions() {
 }
 
 export async function getSessionsForUser(userId) {
-  return safeFilter(db.InterviewSession, { userId });
+  const dbResults = await safeFilter(db.InterviewSession, { userId });
+  if (dbResults.length > 0) {
+    dbResults.forEach(s => {
+      _sessionById.set(s.id, s);
+      const ids = _sessionsByUserId.get(s.userId) ?? [];
+      if (!ids.includes(s.id)) _sessionsByUserId.set(s.userId, [...ids, s.id]);
+    });
+    return dbResults;
+  }
+  // Fallback: reconstruct from in-process cache
+  const cachedIds = _sessionsByUserId.get(userId) ?? [];
+  return cachedIds.map(id => _sessionById.get(id)).filter(Boolean);
 }
 
 // ─── Messages ─────────────────────────────────────────────────────────────────
