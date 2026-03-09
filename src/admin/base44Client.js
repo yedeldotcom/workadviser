@@ -1,29 +1,99 @@
 /**
- * Base44 Client — singleton SDK client for all server-side persistence.
+ * Base44 Client — direct HTTP client for server-side persistence.
  *
- * Replaces the volatile in-memory store with Base44's managed backend.
- * All data operations go through base44Store.js, which uses `db` from here.
+ * Uses the Base44 REST API with api_key header authentication.
+ * asServiceRole (Bearer token) only works inside Base44-hosted functions;
+ * external services (Railway) must use api_key header instead.
  *
- * Required env vars: BASE44_APP_ID, BASE44_SERVICE_TOKEN
+ * Required env vars: BASE44_APP_ID, BASE44_API_KEY
+ * (BASE44_API_KEY is the same key shown in Base44 → API tab)
  */
 
-import { createClient } from '@base44/sdk';
+const APP_ID  = process.env.BASE44_APP_ID;
+const API_KEY = process.env.BASE44_API_KEY ?? process.env.BASE44_SERVICE_TOKEN;
+const BASE_URL = 'https://base44.app/api';
 
-if (!process.env.BASE44_APP_ID) {
-  throw new Error('BASE44_APP_ID environment variable is required. Set it to your Base44 app ID.');
+if (!APP_ID) {
+  throw new Error('BASE44_APP_ID environment variable is required.');
+}
+if (!API_KEY) {
+  throw new Error('BASE44_API_KEY environment variable is required.');
 }
 
-if (!process.env.BASE44_SERVICE_TOKEN) {
-  throw new Error('BASE44_SERVICE_TOKEN environment variable is required. Set it to your Base44 API key.');
+const DEFAULT_HEADERS = {
+  'api_key': API_KEY,
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+};
+
+async function request(method, path, { body, params } = {}) {
+  let url = `${BASE_URL}/apps/${APP_ID}/entities/${path}`;
+  if (params && Object.keys(params).length > 0) {
+    const qs = new URLSearchParams();
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== undefined && v !== null) qs.set(k, String(v));
+    }
+    url += '?' + qs.toString();
+  }
+
+  const res = await fetch(url, {
+    method,
+    headers: DEFAULT_HEADERS,
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+
+  if (!res.ok) {
+    let msg;
+    try { msg = (await res.json()).message ?? res.statusText; }
+    catch { msg = res.statusText; }
+    const err = new Error(msg);
+    err.status = res.status;
+    throw err;
+  }
+
+  return res.json();
 }
 
-export const base44 = createClient({
-  appId: process.env.BASE44_APP_ID,
-  serviceToken: process.env.BASE44_SERVICE_TOKEN,
-});
+function createEntityHandler(entityName) {
+  return {
+    list(sort, limit, skip) {
+      const params = {};
+      if (sort)  params.sort  = sort;
+      if (limit) params.limit = limit;
+      if (skip)  params.skip  = skip;
+      return request('GET', entityName, { params });
+    },
+    filter(query, sort, limit, skip) {
+      const params = { q: JSON.stringify(query) };
+      if (sort)  params.sort  = sort;
+      if (limit) params.limit = limit;
+      if (skip)  params.skip  = skip;
+      return request('GET', entityName, { params });
+    },
+    get(id) {
+      return request('GET', `${entityName}/${id}`);
+    },
+    create(data) {
+      return request('POST', entityName, { body: data });
+    },
+    update(id, data) {
+      return request('PUT', `${entityName}/${id}`, { body: data });
+    },
+    delete(id) {
+      return request('DELETE', `${entityName}/${id}`);
+    },
+  };
+}
 
 /**
- * Service-role entity client — bypasses user-scoped permissions.
- * All server-side reads and writes should use this.
+ * Entity client — same interface as base44.asServiceRole.entities
+ * but uses api_key header (works from external services like Railway).
  */
-export const db = base44.asServiceRole.entities;
+export const db = new Proxy({}, {
+  get(_, entityName) {
+    if (typeof entityName !== 'string' || entityName === 'then' || entityName.startsWith('_')) {
+      return undefined;
+    }
+    return createEntityHandler(entityName);
+  },
+});
