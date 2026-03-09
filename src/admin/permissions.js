@@ -145,6 +145,18 @@ export async function attachAdminIdentity(req, res, next) {
   }
 
   const token = authHeader.slice(7);
+
+  // ADMIN_PASSWORD mode: tokens are in the form "admin-token:<role>"
+  if (process.env.ADMIN_PASSWORD && token.startsWith('admin-token:')) {
+    const role = token.slice('admin-token:'.length);
+    if (!ROLE_CAPABILITIES[role]) {
+      return res.status(403).json({ error: 'Invalid admin token role', code: 'FORBIDDEN' });
+    }
+    req.adminRole = role;
+    req.adminPartnerOrgId = null;
+    return next();
+  }
+
   try {
     const { base44 } = await import('./base44Client.js');
     base44.auth.setToken(token);
