@@ -41,11 +41,23 @@ const _sessionsByUserId = new Map(); // userId → sessionId[]
  * Otherwise create it. Returns the saved entity.
  */
 async function upsert(entity, id, newData) {
+  let exists = false;
   try {
     await entity.get(id);
-    return entity.update(id, newData);
+    exists = true;
   } catch {
-    return entity.create(newData);
+    // Not found — will create
+  }
+
+  try {
+    const result = exists
+      ? await entity.update(id, newData)
+      : await entity.create(newData);
+    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
+    return result;
+  } catch (err) {
+    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} id=${id}:`, err?.message ?? err);
+    throw err;
   }
 }
 
