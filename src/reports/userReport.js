@@ -23,6 +23,8 @@
 
 import { createReport } from '../core/models/report.js';
 import { runRecommendationPipeline } from '../core/recommendation/pipeline.js';
+import { attachSignalIds } from '../conversation/sessionManager.js';
+import { saveChains } from '../admin/base44Store.js';
 
 // ─── Section builders ─────────────────────────────────────────────────────────
 
@@ -185,17 +187,27 @@ function buildSection8_WhatWasNotShared(disclosureLevel, employerReportGenerated
  * @param {object} [opts]
  * @param {boolean} [opts.employerReportGenerated] - Whether employer report will be sent
  * @param {object[]} [opts.templateOverrides]      - Injected templates for testing
- * @returns {import('../core/models/report.js').ReportObject}
+ * @param {string}   [opts.sessionId]              - Session ID for persisting TracingChains
+ * @param {object[]} [opts.normalizedSignals]      - NormalizedSignal[] for signal→chain attachment
+ * @returns {Promise<import('../core/models/report.js').ReportObject>}
  */
-export function renderUserReport(pipelineResult, profile, opts = {}) {
+export async function renderUserReport(pipelineResult, profile, opts = {}) {
   const { engines } = pipelineResult;
   const { intake, interpretation, translation, framing } = engines;
   const disclosureLevel = profile?.disclosurePreference ?? 'no_disclosure';
 
   // Run recommendation pipeline to get packaged recommendations
-  const recResult = runRecommendationPipeline(pipelineResult, profile, {
+  let recResult = runRecommendationPipeline(pipelineResult, profile, {
     templateOverrides: opts.templateOverrides,
   });
+
+  // Attach signal IDs and persist TracingChains (FPP §9.6)
+  if (opts.normalizedSignals?.length) {
+    recResult = attachSignalIds(recResult, opts.normalizedSignals);
+  }
+  if (opts.sessionId && recResult.chains?.length) {
+    await saveChains(opts.sessionId, profile?.userId ?? null, recResult.chains);
+  }
 
   const sections = {
     what_we_understood:    buildSection1_WhatWeUnderstood(intake, interpretation),

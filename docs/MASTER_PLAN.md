@@ -23,7 +23,7 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 - State machines: 5 machines in `src/core/state/`
 - Conversation engine: onboarding, interviewer, sessionManager, voiceHandler (Whisper), LLM client (FPP §8 prompt)
 - Admin command center: store, queues, caseView, actions, permissions, Express router + server
-- Recommendation workbench: 7-step selection pipeline + disclosure filter + TracingChain (FPP §9.6)
+- Recommendation workbench: 7-step selection pipeline + disclosure filter + TracingChain (FPP §9.6) — chains now persisted to Base44 and exposed via admin API (`GET /admin/cases/:caseId/chains`)
 - Report renderers: user (8-section), employer (disclosure-filtered), anonymous org, lead detection
 - Follow-up / change-event layer (Step 9): scheduler, changeEventDetector, staleness assessment
 - Gap visibility + recommendation analytics (Step 10): weakZones, corrections, conflicts, knowledge promotion
@@ -558,7 +558,7 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 1. **Fix test suite** — guard `base44Client.js` so `BASE44_APP_ID` doesn't throw in test env (10 suites blocked)
 2. **Set permanent Meta token** — follow System User steps in Infrastructure section above → update Railway `META_ACCESS_TOKEN`
 3. **Build Base44 admin panel** — use the Step 11 prompt above in Base44; point it at the Railway URL
-4. **Create Base44 entities** — create the 15 entities in Base44 dashboard, then swap `webhook.js` import from `store.js` → `base44Store.js`
+4. **Create Base44 entities** — create the 16 entities in Base44 dashboard, then swap `webhook.js` import from `store.js` → `base44Store.js`
 
 ---
 
@@ -638,6 +638,14 @@ Use Bearer token auth (login via POST /admin/login with email+password).
    - Change events: record (POST /admin/cases/:caseId/change-event)
      and resolve (POST /admin/cases/:caseId/change-event/:eventId/resolve)
    - Staleness indicator (GET /admin/cases/:caseId/staleness) shown as a status badge
+   - Recommendation Logic Chains panel (GET /admin/cases/:caseId/chains):
+     * Collapsible tree per recommendation showing the full reasoning path:
+       Signal (detectedSignalIds) → Barrier (barrierIds) → Pattern (patternIds)
+       → Knowledge Sources (knowledgeSourceIds) → Template (templateId) → Score
+     * Each node shows IDs and labels where available
+     * Gates passed shown as green checkmark badges
+     * Score shown as a colored bar (0–100)
+     * Grouped by session, with session timestamp header
 
 4. LEADS (lead detail page, GET /admin/leads/:leadId)
    - Lead info: orgName, orgType, lectureOpportunityReason, recommendedLectureAngle, consentStatus
@@ -735,6 +743,7 @@ The Meta "API Setup" page only provides **temporary tokens**. For production use
 | `KnowledgeItem` | `_knowledgeItems` |
 | `RecommendationTemplate` | `_recommendationTemplates` |
 | `RecommendationFeedback` | `_feedback` |
+| `TracingChain` | `_tracingChains` |
 
 **Note:** The webhook handler (`src/whatsapp/webhook.js`) currently uses the in-memory `store.js` to unblock the pilot while Base44 entities are being configured. Swap the import to `base44Store.js` once entities are created in the dashboard.
 

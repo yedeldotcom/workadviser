@@ -24,6 +24,8 @@
 import { createReport } from '../core/models/report.js';
 import { filterForEmployer } from '../core/recommendation/disclosureFilter.js';
 import { runRecommendationPipeline } from '../core/recommendation/pipeline.js';
+import { attachSignalIds } from '../conversation/sessionManager.js';
+import { saveChains } from '../admin/base44Store.js';
 
 // ─── Section builders ─────────────────────────────────────────────────────────
 
@@ -153,20 +155,31 @@ function buildSection8_LectureNote(filteredData) {
  * @param {object} pipelineResult - Output of runPipeline()
  * @param {object} profile        - UserProfile
  * @param {object} [opts]
- * @param {object[]} [opts.templateOverrides] - Injected templates for testing
- * @returns {import('../core/models/report.js').ReportObject}
+ * @param {object[]} [opts.templateOverrides]  - Injected templates for testing
+ * @param {string}   [opts.sessionId]          - Session ID for persisting TracingChains
+ * @param {object[]} [opts.normalizedSignals]  - NormalizedSignal[] for signal→chain attachment
+ * @returns {Promise<import('../core/models/report.js').ReportObject>}
  * @throws {Error} If disclosure level is no_disclosure
  */
-export function renderEmployerReport(pipelineResult, profile, opts = {}) {
+export async function renderEmployerReport(pipelineResult, profile, opts = {}) {
   const disclosureLevel = profile?.disclosurePreference ?? 'no_disclosure';
 
   // Disclosure gate — throws immediately at no_disclosure
   const filteredData = filterForEmployer(pipelineResult, profile, disclosureLevel);
 
   // Get employer-package recommendations
-  const recResult = runRecommendationPipeline(pipelineResult, profile, {
+  let recResult = runRecommendationPipeline(pipelineResult, profile, {
     templateOverrides: opts.templateOverrides,
   });
+
+  // Attach signal IDs and persist TracingChains (FPP §9.6)
+  if (opts.normalizedSignals?.length) {
+    recResult = attachSignalIds(recResult, opts.normalizedSignals);
+  }
+  if (opts.sessionId && recResult.chains?.length) {
+    await saveChains(opts.sessionId, profile?.userId ?? null, recResult.chains);
+  }
+
   const employerPackage = recResult.packages.employer;
 
   const sections = {

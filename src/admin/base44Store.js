@@ -20,6 +20,7 @@
  *   KnowledgeItem         ← _knowledgeItems
  *   RecommendationTemplate ← _recommendationTemplates
  *   RecommendationFeedback ← _feedback
+ *   TracingChain          ← _tracingChains
  *   (no entity)           ← _phoneIndex (replaced by User.filter query)
  *
  * All entities must be created in the Base44 dashboard before use.
@@ -243,6 +244,40 @@ export async function savePipelineResult(sessionId, result) {
 export async function getPipelineResult(sessionId) {
   const results = await safeFilter(db.PipelineResult, { sessionId }, null, 1, 0);
   return results[0]?.result ?? null;
+}
+
+// ─── Tracing Chains ──────────────────────────────────────────────────────────
+
+export async function saveChains(sessionId, caseId, chains) {
+  const record = {
+    sessionId,
+    caseId,
+    chains: JSON.stringify(chains),
+    createdAt: new Date().toISOString(),
+  };
+  const existing = await safeFilter(db.TracingChain, { sessionId }, null, 1, 0);
+  if (existing[0]) {
+    return db.TracingChain.update(existing[0].id, record);
+  }
+  return db.TracingChain.create(record);
+}
+
+export async function getChains(sessionId) {
+  const results = await safeFilter(db.TracingChain, { sessionId }, null, 1, 0);
+  const raw = results[0]?.chains ?? null;
+  if (!raw) return [];
+  return typeof raw === 'string' ? JSON.parse(raw) : raw;
+}
+
+export async function getChainsForCase(userId) {
+  const sessions = await getSessionsForUser(userId);
+  const entries = await Promise.all(
+    sessions.map(async (s) => ({
+      sessionId: s.id,
+      chains: await getChains(s.id),
+    })),
+  );
+  return entries.filter(e => e.chains.length > 0);
 }
 
 // ─── Change Events ────────────────────────────────────────────────────────────

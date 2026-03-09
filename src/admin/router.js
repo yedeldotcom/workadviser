@@ -12,6 +12,7 @@
  *
  * Case endpoints:
  *   GET  /admin/cases/:caseId
+ *   GET  /admin/cases/:caseId/chains
  *
  * Case action endpoints:
  *   POST /admin/cases/:caseId/approve-report
@@ -91,7 +92,7 @@ import {
   retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
-import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './base44Store.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getChainsForCase } from './base44Store.js';
 
 const router = Router();
 
@@ -187,6 +188,14 @@ router.get('/cases/:caseId',
     const workspace = await buildCaseWorkspace(req.params.caseId, opts);
     if (!workspace) return res.status(404).json({ error: 'Case not found' });
     res.json(workspace);
+  }
+);
+
+router.get('/cases/:caseId/chains',
+  requireCaseAccess(getUser),
+  async (req, res) => {
+    const sessions = await getChainsForCase(req.params.caseId);
+    res.json({ caseId: req.params.caseId, sessions });
   }
 );
 

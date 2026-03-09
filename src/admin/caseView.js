@@ -24,6 +24,7 @@ import {
   getApprovalsForReport,
   getAuditLogForEntity,
   getPipelineResult,
+  getChains,
 } from './base44Store.js';
 
 // ─── Workspace builder ────────────────────────────────────────────────────────
@@ -60,6 +61,7 @@ export async function buildCaseWorkspace(userId, opts = {}) {
     const signals = signalObjects.filter(Boolean);
 
     const pipelineResult = await getPipelineResult(session.id);
+    const chains = await getChains(session.id);
 
     return {
       sessionId:   session.id,
@@ -76,6 +78,7 @@ export async function buildCaseWorkspace(userId, opts = {}) {
       messages,
       signals,
       pipelineResult: pipelineResult ? buildLogicMap(pipelineResult) : null,
+      chains,
     };
   }));
 
