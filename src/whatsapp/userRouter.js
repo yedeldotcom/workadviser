@@ -140,6 +140,12 @@ export async function routeMessage(session, text, context = {}) {
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'distress' };
   }
 
+  // Special case: user just consented during onboarding → send first scripted question.
+  // Don't call the LLM here — it has no conversation history and will re-do onboarding.
+  if (session.state === 'onboarding' && action === 'continue' && s1.state === 'active') {
+    return _handleFirstQuestion(s1);
+  }
+
   // State-specific routing
   switch (s1.state) {
     case 'onboarding':
@@ -164,6 +170,18 @@ export async function routeMessage(session, text, context = {}) {
 }
 
 // ─── State handlers ───────────────────────────────────────────────────────────
+
+/**
+ * Send the first scripted interview question after the user consents during onboarding.
+ * Uses the question bank directly — no LLM call — so the script doesn't jump ahead.
+ */
+async function _handleFirstQuestion(session) {
+  const nextQ = getNextInterviewQuestion(session, []);
+  const questionText = nextQ?.prompt ?? 'ספר/י לי קצת על סביבת העבודה שלך.';
+  const { session: s2, message: outMsg } = recordOutboundMessage(session, questionText, nextQ?.id ?? null);
+  await saveSession(s2);
+  return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
+}
 
 /**
  * Advance through onboarding steps.

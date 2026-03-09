@@ -1,12 +1,12 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-08 | Branch: `claude/review-fpp-pilot-FGQv2` | **Steps 0–10 + Infrastructure done**
+Last updated: 2026-03-09 | Branch: `claude/review-fpp-pilot-SrPJC` | **Steps 0–11 + Infrastructure done**
 
 ---
 
 ## Current State
 
-The repo contains a working 5-engine **reasoning pipeline** deployed to Railway, connected to WhatsApp via Meta Cloud API:
+The repo contains a working 5-engine **reasoning pipeline** deployed to Railway, connected to WhatsApp via Meta Cloud API, with a live Base44 admin panel.
 
 | Engine | File | Status |
 |--------|------|--------|
@@ -29,9 +29,16 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 - Gap visibility + recommendation analytics (Step 10): weakZones, corrections, conflicts, knowledge promotion
 - Landing Page + WhatsApp entry: webhook (Twilio/Meta/stub), sender, landingPage
 - Lead export + CRM handoff: leadExporter with audit trail
-- Base44 persistence layer: `src/admin/base44Client.js` + `src/admin/base44Store.js` (see Infrastructure section)
+- Base44 persistence layer: `src/admin/base44Client.js` + `src/admin/base44Store.js` — **live in production**
+- Base44 Admin Panel (Step 11): **live** — Dashboard, Queues, Case Workspace, Leads, Analytics, Content Editor
 - FPP §9.6 Non-Negotiables: all 7 PASS
 - Railway deployment: live at production URL, serving `/whatsapp/webhook`
+
+**Recent bug fixes (2026-03-09):**
+- **Script jumping** (`src/whatsapp/userRouter.js`): After user consents ("כן"), the bot was calling the LLM with no conversation history, causing the LLM to regenerate onboarding content instead of asking the first interview question. Fix: intercept the `onboarding→active` transition in `routeMessage` and send the first scripted question (`Q-ENV-01`) directly from the question bank — no LLM call at that point.
+- **Content Editor 404s** (`src/admin/router.js`): Base44 Content Editor was calling `GET /admin/content/onboarding` and `GET /admin/content/questions` but those endpoints didn't exist. Fix: added both endpoints returning `ONBOARDING_MESSAGES` and `QUESTION_BANK` respectively. Content is currently read-only (hardcoded in source); editing would require adding persistence.
+- **Base44 filter/query fixes** (2026-03-08): `base44Store.js` — use `filter` param instead of `q` for Base44 filter queries; `upsert` split into separate `get` + `update`/`create` operations; filter response normalization; `encodeURIComponent` for query params.
+- **Base44 data envelope fix** (2026-03-08): User custom fields (`phoneNumber`, `channel`, `consentState`, etc.) are stored inside a nested `data` object on the raw User record, not as top-level columns.
 
 **Test status (as of 2026-03-08):**
 - 26 of 36 test suites passing
@@ -41,7 +48,7 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 
 **What is still missing:**
 - Fix test suite: guard `base44Client.js` import so it doesn't throw during tests (use `process.env.NODE_ENV === 'test'` guard or env mock)
-- Base44 Admin Panel frontend (Step 11 — see below)
+- Content Editor write support: allow saving edits to onboarding messages and question bank (currently read-only)
 - E2E integration tests with live WhatsApp (Meta Cloud API)
 - Permanent Meta access token for production (use System User — see Infrastructure section)
 
@@ -557,8 +564,8 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 1. **Fix test suite** — guard `base44Client.js` so `BASE44_APP_ID` doesn't throw in test env (10 suites blocked)
 2. **Set permanent Meta token** — follow System User steps in Infrastructure section above → update Railway `META_ACCESS_TOKEN`
-3. **Build Base44 admin panel** — use the Step 11 prompt above in Base44; point it at the Railway URL
-4. **Create Base44 entities** — create the 15 entities in Base44 dashboard, then swap `webhook.js` import from `store.js` → `base44Store.js`
+3. **Content Editor write support** — add `PUT /admin/content/onboarding` and `PUT /admin/content/questions` endpoints backed by Base44 storage, so the admin panel can actually edit onboarding messages and question prompts without a code deploy
+4. **WhatsApp conversation history** — `_handleActiveInterview` currently passes an empty history array to the LLM (`buildLLMHistory([])`). Real conversation history must be loaded from the message store to give the LLM proper context for follow-up turns.
 
 ---
 
@@ -576,15 +583,21 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 - [x] Step 8: Lead export / API handoff ✅
 - [x] Step 9: Follow-up / change-event layer ✅
 - [x] Step 10: Gap visibility + recommendation analytics ✅
-- [ ] Step 11: Base44 Admin Panel (frontend) ⬜
+- [x] Step 11: Base44 Admin Panel (frontend) ✅ — live, includes Content Editor
 - [ ] Infrastructure: fix test suite BASE44_APP_ID guard ⬜
+- [ ] Content Editor write support ⬜
+- [ ] WhatsApp LLM conversation history (currently passes empty array) ⬜
 
 ---
 
 ## Step 11 — Base44 Admin Panel (FPP §6)
-**Status: ⬜ Not Started**
+**Status: ✅ Done**
 
-Build the full admin panel as a Base44 app using the prompt below. The backend REST API is fully built (`/admin/*` endpoints). Base44 handles the frontend: UI, charts, role-based visibility, and all API calls.
+Full admin panel is live as a Base44 app. Backend REST API at `/admin/*` serves all data. Includes Dashboard, Queues (4 tabs), Case Workspace, Leads, Analytics (2 sub-pages), and Content Editor (Onboarding Messages + Question Bank — currently read-only).
+
+**Known gap:** Content Editor displays content but cannot save edits (no PUT endpoints yet — see Immediate Next Actions).
+
+The prompt used to generate the Base44 app:
 
 ### Base44 Prompt
 

@@ -22,7 +22,6 @@ import cors from 'cors';
 import adminRouter from './admin/router.js';
 import webhookRouter from './whatsapp/webhook.js';
 import { landingPageHandler } from './whatsapp/landingPage.js';
-
 export function createApp() {
   const app = express();
 

@@ -53,10 +53,12 @@ async function upsert(entity, id, newData) {
     const result = exists
       ? await entity.update(id, newData)
       : await entity.create(newData);
-    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
+    const eName = entity.$name ?? '?';
+    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} ${eName} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
     return result;
   } catch (err) {
-    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} id=${id}:`, err?.message ?? err);
+    const eName = entity.$name ?? '?';
+    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} ${eName} id=${id}:`, err?.message ?? err);
     throw err;
   }
 }
@@ -111,37 +113,71 @@ async function safeFilter(entity, ...args) {
 
 // ─── Users ────────────────────────────────────────────────────────────────────
 
+/**
+ * Base44 User is a platform entity: only email and full_name are top-level.
+ * All custom fields (phoneNumber, channel, etc.) must go inside the `data` envelope.
+ * Direct REST updates to User are blocked by the platform; we only create.
+ */
 export async function saveUser(user) {
-  // Base44 User entity requires email and full_name; derive placeholders from phone number.
   const phone = user.phoneNumber ?? user.id;
-  const data = {
-    ...user,
+  const payload = {
+    id:        user.id,
     email:     user.email     ?? `wa_${phone.replace(/[^a-z0-9]/gi, '_')}@workadviser.local`,
     full_name: user.full_name ?? phone,
+    data: {
+      phoneNumber:   user.phoneNumber   ?? null,
+      channel:       user.channel       ?? 'whatsapp',
+      consentState:  user.consentState  ?? 'pending',
+      partnerSource: user.partnerSource ?? null,
+    },
   };
-  const saved = await upsert(db.User, user.id, data);
+  try {
+    await db.User.create(payload);
+    console.log(`[base44Store] User created id=${user.id} phoneNumber=${user.phoneNumber ?? '–'}`);
+  } catch (err) {
+    // 409 / duplicate = user already exists; that's fine for our create-only pattern
+    if (err?.status === 409 || /already exists|duplicate/i.test(err?.message ?? '')) {
+      console.log(`[base44Store] User already exists id=${user.id} — skipping create`);
+    } else {
+      console.error(`[base44Store] User create failed id=${user.id}:`, err?.message ?? err);
+      // Don't re-throw — in-memory cache below will keep the session alive
+    }
+  }
   if (user.phoneNumber) _userByPhone.set(user.phoneNumber, user);
-  return saved;
+}
+
+/**
+ * Flatten a raw Base44 User record (with nested `data`) into a plain user object.
+ */
+function normalizeUser(raw) {
+  return { ...raw.data, id: raw.id, email: raw.email, full_name: raw.full_name };
 }
 
 export async function getUser(userId) {
-  return safeGet(db.User, userId);
+  const raw = await safeGet(db.User, userId);
+  return raw ? normalizeUser(raw) : null;
 }
 
 export async function getAllUsers() {
-  return safeList(db.User);
+  const raws = await safeList(db.User);
+  return raws.map(normalizeUser);
 }
 
 /**
  * Lookup user by WhatsApp phone number (E.164 format).
- * Falls back to in-process cache when DB filter query fails.
+ * Checks in-process cache first (populated on create).
+ * On cache miss, lists all User records and scans data.phoneNumber (pilot-scale only).
  */
 export async function getUserByPhone(phoneNumber) {
-  const results = await safeFilter(db.User, { phoneNumber }, null, 1, 0);
-  if (results.length > 0) {
-    _userByPhone.set(phoneNumber, results[0]);
-    return results[0];
+  if (_userByPhone.has(phoneNumber)) return _userByPhone.get(phoneNumber);
+
+  // Rebuild cache from DB (handles server restarts)
+  const raws = await safeList(db.User);
+  for (const raw of raws) {
+    const p = raw.data?.phoneNumber;
+    if (p) _userByPhone.set(p, normalizeUser(raw));
   }
+  console.log(`[base44Store] getUserByPhone rebuilt cache from ${raws.length} DB record(s)`);
   return _userByPhone.get(phoneNumber) ?? null;
 }
 

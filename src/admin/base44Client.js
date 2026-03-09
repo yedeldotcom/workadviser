@@ -60,6 +60,7 @@ async function request(method, path, { body, params } = {}) {
 
 function createEntityHandler(entityName) {
   return {
+    $name: entityName, // Exposed for logging in upsert
     list(sort, limit, skip) {
       const params = {};
       if (sort)  params.sort  = sort;
@@ -68,10 +69,13 @@ function createEntityHandler(entityName) {
       return request('GET', entityName, { params });
     },
     filter(query, sort, limit, skip) {
-      const params = { q: JSON.stringify(query) };
+      // Base44 REST API uses 'filter' as the query param name (not 'q').
+      const filterStr = JSON.stringify(query);
+      const params = { filter: filterStr };
       if (sort)  params.sort  = sort;
       if (limit) params.limit = limit;
-      if (skip)  params.skip  = skip;
+      if (skip != null && skip !== 0) params.skip = skip;
+      console.log(`[base44Client] filter ${entityName} filter=${filterStr}${limit ? ` limit=${limit}` : ''}`);
       return request('GET', entityName, { params });
     },
     get(id) {

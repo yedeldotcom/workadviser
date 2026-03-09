@@ -84,7 +84,7 @@ router.post('/webhook', async (req, res) => {
     const result = await routeMessage(session, text ?? '');
 
     // 4. Persist updated session
-    saveSession(result.session);
+    await saveSession(result.session);
 
     // 5. Send outbound messages
     if (result.outboundTexts.length > 0) {
