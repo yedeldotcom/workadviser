@@ -35,7 +35,7 @@ export function createApp() {
       // Allow requests with no origin (curl, Postman, Railway health checks)
       if (!origin) return cb(null, true);
       // Allow any base44.com subdomain or explicitly listed origins
-      if (origin.endsWith('.base44.com') || origin === 'https://base44.com' || allowedOrigins.includes(origin)) {
+      if (origin.endsWith('.base44.com') || origin === 'https://base44.com' || origin.endsWith('.base44.app') || origin === 'https://base44.app' || allowedOrigins.includes(origin)) {
         return cb(null, true);
       }
       cb(new Error(`CORS: origin not allowed: ${origin}`));
