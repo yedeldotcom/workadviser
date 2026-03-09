@@ -29,11 +29,15 @@ const DEFAULT_HEADERS = {
 async function request(method, path, { body, params } = {}) {
   let url = `${BASE_URL}/apps/${APP_ID}/entities/${path}`;
   if (params && Object.keys(params).length > 0) {
-    const qs = new URLSearchParams();
+    // Use encodeURIComponent (not URLSearchParams) so that + in phone numbers
+    // becomes %2B instead of being decoded as a space on the server side.
+    const parts = [];
     for (const [k, v] of Object.entries(params)) {
-      if (v !== undefined && v !== null) qs.set(k, String(v));
+      if (v !== undefined && v !== null) {
+        parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`);
+      }
     }
-    url += '?' + qs.toString();
+    url += '?' + parts.join('&');
   }
 
   const res = await fetch(url, {

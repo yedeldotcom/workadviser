@@ -225,7 +225,7 @@ async function _handleActiveInterview(session, text, context) {
   }
 
   // Merge LLM-detected signals into session
-  const updatedSession = mergeSignals(session, llmResult.detectedSignals);
+  const { session: updatedSession } = mergeSignals(session, llmResult.detectedSignals);
 
   const { session: s2, message: outMsg } = recordOutboundMessage(
     updatedSession, llmResult.nextMessage, llmResult.questionId

@@ -27,6 +27,13 @@
 
 import { db } from './base44Client.js';
 
+// ─── In-process fallback cache ─────────────────────────────────────────────────
+// Used when Base44 filter queries fail (e.g. misconfigured schema or network issues).
+// Keeps user/session lookup working within the lifetime of a single server process.
+const _userByPhone  = new Map(); // phoneNumber → User
+const _sessionById  = new Map(); // sessionId  → InterviewSession
+const _sessionsByUserId = new Map(); // userId → sessionId[]
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
@@ -34,11 +41,23 @@ import { db } from './base44Client.js';
  * Otherwise create it. Returns the saved entity.
  */
 async function upsert(entity, id, newData) {
+  let exists = false;
   try {
     await entity.get(id);
-    return entity.update(id, newData);
+    exists = true;
   } catch {
-    return entity.create(newData);
+    // Not found — will create
+  }
+
+  try {
+    const result = exists
+      ? await entity.update(id, newData)
+      : await entity.create(newData);
+    console.log(`[base44Store] upsert ok — ${exists ? 'updated' : 'created'} id=${id}, phoneNumber=${newData.phoneNumber ?? '–'}, state=${newData.state ?? '–'}`);
+    return result;
+  } catch (err) {
+    console.error(`[base44Store] upsert failed — ${exists ? 'update' : 'create'} id=${id}:`, err?.message ?? err);
+    throw err;
   }
 }
 
@@ -68,11 +87,22 @@ async function safeList(entity) {
 }
 
 /**
- * Safe filter: returns [] instead of throwing if Base44 API fails.
+ * Safe filter: always returns an array.
+ * Normalises common Base44 envelope shapes: plain array, {data:[...]}, {items:[...]}, {results:[...]}.
+ * Logs both the raw response and any errors so Railway logs show exactly what comes back.
  */
 async function safeFilter(entity, ...args) {
   try {
-    return await entity.filter(...args);
+    const raw = await entity.filter(...args);
+    // Normalise to array
+    let arr;
+    if (Array.isArray(raw))          arr = raw;
+    else if (Array.isArray(raw?.data))    arr = raw.data;
+    else if (Array.isArray(raw?.items))   arr = raw.items;
+    else if (Array.isArray(raw?.results)) arr = raw.results;
+    else                              arr = [];
+    console.log(`[base44Store] filter ok — returned ${arr.length} record(s), raw type: ${Array.isArray(raw) ? 'array' : typeof raw}`);
+    return arr;
   } catch (err) {
     console.error(`[base44Store] filter failed:`, err?.message ?? err);
     return [];
@@ -90,6 +120,7 @@ export async function saveUser(user) {
     full_name: user.full_name ?? phone,
   };
   const saved = await upsert(db.User, user.id, data);
+  if (user.phoneNumber) _userByPhone.set(user.phoneNumber, user);
   return saved;
 }
 
@@ -103,11 +134,15 @@ export async function getAllUsers() {
 
 /**
  * Lookup user by WhatsApp phone number (E.164 format).
- * Replaces the in-memory _phoneIndex Map with a query.
+ * Falls back to in-process cache when DB filter query fails.
  */
 export async function getUserByPhone(phoneNumber) {
   const results = await safeFilter(db.User, { phoneNumber }, null, 1, 0);
-  return results[0] ?? null;
+  if (results.length > 0) {
+    _userByPhone.set(phoneNumber, results[0]);
+    return results[0];
+  }
+  return _userByPhone.get(phoneNumber) ?? null;
 }
 
 // ─── Profiles ─────────────────────────────────────────────────────────────────
@@ -129,6 +164,11 @@ export async function getAllProfiles() {
 // ─── Sessions ─────────────────────────────────────────────────────────────────
 
 export async function saveSession(session) {
+  _sessionById.set(session.id, session);
+  const ids = _sessionsByUserId.get(session.userId) ?? [];
+  if (!ids.includes(session.id)) {
+    _sessionsByUserId.set(session.userId, [...ids, session.id]);
+  }
   return upsert(db.InterviewSession, session.id, session);
 }
 
@@ -141,7 +181,18 @@ export async function getAllSessions() {
 }
 
 export async function getSessionsForUser(userId) {
-  return safeFilter(db.InterviewSession, { userId });
+  const dbResults = await safeFilter(db.InterviewSession, { userId });
+  if (dbResults.length > 0) {
+    dbResults.forEach(s => {
+      _sessionById.set(s.id, s);
+      const ids = _sessionsByUserId.get(s.userId) ?? [];
+      if (!ids.includes(s.id)) _sessionsByUserId.set(s.userId, [...ids, s.id]);
+    });
+    return dbResults;
+  }
+  // Fallback: reconstruct from in-process cache
+  const cachedIds = _sessionsByUserId.get(userId) ?? [];
+  return cachedIds.map(id => _sessionById.get(id)).filter(Boolean);
 }
 
 // ─── Messages ─────────────────────────────────────────────────────────────────
