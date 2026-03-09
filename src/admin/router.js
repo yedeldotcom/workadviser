@@ -92,6 +92,8 @@ import {
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
 import { saveFeedback, saveKnowledgeItem, getKnowledgeItem } from './base44Store.js';
+import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
+import { QUESTION_BANK } from '../conversation/interviewer.js';
 
 const router = Router();
 
@@ -529,6 +531,22 @@ router.post('/knowledge/:itemId/promote',
     } catch (err) {
       res.status(422).json({ error: err.message });
     }
+  }
+);
+
+// ─── Content Editor endpoints ─────────────────────────────────────────────────
+
+router.get('/content/onboarding',
+  requireCapability('view_queue'),
+  (req, res) => {
+    res.json(ONBOARDING_MESSAGES);
+  }
+);
+
+router.get('/content/questions',
+  requireCapability('view_queue'),
+  (req, res) => {
+    res.json(QUESTION_BANK);
   }
 );
 
