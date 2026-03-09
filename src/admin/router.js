@@ -35,6 +35,14 @@
  *   POST /admin/cases/:caseId/schedule-followup
  *   GET  /admin/cases/:caseId/due-checkins
  *
+ * Content editor endpoints:
+ *   GET   /admin/content/onboarding
+ *   PUT   /admin/content/onboarding/:id
+ *   GET   /admin/content/questions
+ *   PUT   /admin/content/questions/:id
+ *   POST  /admin/content/questions/reorder
+ *   PATCH /admin/content/questions/:id/toggle
+ *
  * System:
  *   GET  /admin/health
  */
@@ -91,9 +99,9 @@ import {
   retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
-import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, saveContentItem, getContentCached } from './base44Store.js';
-import { ONBOARDING_MESSAGES, setOnboardingOverride } from '../conversation/onboarding.js';
-import { QUESTION_BANK, setQuestionBankOverride } from '../conversation/interviewer.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getContentConfig, saveContentConfig } from './base44Store.js';
+import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
+import { QUESTION_BANK } from '../conversation/interviewer.js';
 
 const router = Router();
 
@@ -534,53 +542,154 @@ router.post('/knowledge/:itemId/promote',
   }
 );
 
-// ─── Content Editor endpoints ─────────────────────────────────────────────────
+// ─── Content editor endpoints ─────────────────────────────────────────────────
+
+// — Onboarding messages —
 
 router.get('/content/onboarding',
-  requireCapability('view_queue'),
-  (req, res) => {
-    res.json(getContentCached('onboarding') ?? ONBOARDING_MESSAGES);
+  requireCapability('view_all_cases'),
+  async (req, res) => {
+    const messages = ONBOARDING_MESSAGES.map(m => ({ ...m }));
+    const config = await getContentConfig('onboarding_overrides');
+    if (config?.overrides) {
+      for (const msg of messages) {
+        if (config.overrides[msg.id]?.text) {
+          msg.text = config.overrides[msg.id].text;
+        }
+      }
+    }
+    res.json(messages);
   }
 );
 
-router.put('/content/onboarding',
-  requireCapability('view_queue'),
+router.put('/content/onboarding/:id',
+  requireCapability('edit_recommendation'),
   async (req, res) => {
-    const items = req.body;
-    if (!Array.isArray(items)) {
-      return res.status(400).json({ error: 'Expected an array of message objects' });
+    const { id } = req.params;
+    const { text } = req.body ?? {};
+
+    if (!ONBOARDING_MESSAGES.find(m => m.id === id)) {
+      return res.status(404).json({ error: `Onboarding message "${id}" not found` });
     }
-    try {
-      await saveContentItem('onboarding', items, req.adminRole);
-      setOnboardingOverride(items);
-      res.json({ ok: true, count: items.length });
-    } catch (err) {
-      res.status(422).json({ error: err.message });
+    if (!text || typeof text !== 'string') {
+      return res.status(400).json({ error: 'text is required and must be a string' });
     }
+
+    const config = await getContentConfig('onboarding_overrides') ?? {};
+    const overrides = config.overrides ?? {};
+    overrides[id] = { text };
+    await saveContentConfig('onboarding_overrides', { overrides });
+    res.json({ id, text });
   }
 );
+
+// — Question bank —
 
 router.get('/content/questions',
-  requireCapability('view_queue'),
-  (req, res) => {
-    res.json(getContentCached('questions') ?? QUESTION_BANK);
+  requireCapability('view_all_cases'),
+  async (req, res) => {
+    let questions = QUESTION_BANK.map(q => ({ ...q, enabled: true }));
+
+    const [overrides, orderConfig, disabledConfig] = await Promise.all([
+      getContentConfig('question_overrides'),
+      getContentConfig('question_order'),
+      getContentConfig('question_disabled'),
+    ]);
+
+    // Apply text overrides
+    if (overrides?.overrides) {
+      for (const q of questions) {
+        const ov = overrides.overrides[q.id];
+        if (ov) {
+          if (ov.prompt)   q.prompt   = ov.prompt;
+          if (ov.followUp) q.followUp = ov.followUp;
+        }
+      }
+    }
+
+    // Apply custom order
+    if (orderConfig?.order && Array.isArray(orderConfig.order)) {
+      const orderMap = new Map(orderConfig.order.map((id, i) => [id, i]));
+      questions.sort((a, b) => {
+        const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
+        const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
+        return ai - bi;
+      });
+    }
+
+    // Mark disabled questions
+    if (disabledConfig?.disabled && Array.isArray(disabledConfig.disabled)) {
+      const disabledSet = new Set(disabledConfig.disabled);
+      for (const q of questions) {
+        if (disabledSet.has(q.id)) q.enabled = false;
+      }
+    }
+
+    res.json(questions);
   }
 );
 
-router.put('/content/questions',
-  requireCapability('view_queue'),
+router.put('/content/questions/:id',
+  requireCapability('edit_recommendation'),
   async (req, res) => {
-    const items = req.body;
-    if (!Array.isArray(items)) {
-      return res.status(400).json({ error: 'Expected an array of question objects' });
+    const { id } = req.params;
+    const { prompt, followUp } = req.body ?? {};
+
+    if (!QUESTION_BANK.find(q => q.id === id)) {
+      return res.status(404).json({ error: `Question "${id}" not found` });
     }
-    try {
-      await saveContentItem('questions', items, req.adminRole);
-      setQuestionBankOverride(items);
-      res.json({ ok: true, count: items.length });
-    } catch (err) {
-      res.status(422).json({ error: err.message });
+    if (!prompt && !followUp) {
+      return res.status(400).json({ error: 'At least one of prompt or followUp is required' });
     }
+
+    const config = await getContentConfig('question_overrides') ?? {};
+    const overrides = config.overrides ?? {};
+    overrides[id] = { ...overrides[id] };
+    if (prompt)   overrides[id].prompt   = prompt;
+    if (followUp) overrides[id].followUp = followUp;
+    await saveContentConfig('question_overrides', { overrides });
+    res.json({ id, ...overrides[id] });
+  }
+);
+
+router.post('/content/questions/reorder',
+  requireCapability('edit_recommendation'),
+  async (req, res) => {
+    const { order } = req.body ?? {};
+
+    if (!Array.isArray(order) || order.length === 0) {
+      return res.status(400).json({ error: 'order must be a non-empty array of question IDs' });
+    }
+
+    await saveContentConfig('question_order', { order });
+    res.json({ order });
+  }
+);
+
+router.patch('/content/questions/:id/toggle',
+  requireCapability('edit_recommendation'),
+  async (req, res) => {
+    const { id } = req.params;
+    const { enabled } = req.body ?? {};
+
+    if (!QUESTION_BANK.find(q => q.id === id)) {
+      return res.status(404).json({ error: `Question "${id}" not found` });
+    }
+    if (typeof enabled !== 'boolean') {
+      return res.status(400).json({ error: 'enabled must be a boolean' });
+    }
+
+    const config = await getContentConfig('question_disabled') ?? {};
+    const disabled = new Set(config.disabled ?? []);
+
+    if (enabled) {
+      disabled.delete(id);
+    } else {
+      disabled.add(id);
+    }
+
+    await saveContentConfig('question_disabled', { disabled: [...disabled] });
+    res.json({ id, enabled });
   }
 );
 

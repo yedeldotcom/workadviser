@@ -22,10 +22,6 @@ import cors from 'cors';
 import adminRouter from './admin/router.js';
 import webhookRouter from './whatsapp/webhook.js';
 import { landingPageHandler } from './whatsapp/landingPage.js';
-import { loadContentOverrides } from './admin/base44Store.js';
-import { setOnboardingOverride } from './conversation/onboarding.js';
-import { setQuestionBankOverride } from './conversation/interviewer.js';
-
 export function createApp() {
   const app = express();
 
@@ -89,11 +85,4 @@ if (process.argv[1]?.endsWith('server.js')) {
     console.log(`  WhatsApp     : http://localhost:${PORT}/whatsapp/webhook`);
     console.log(`  Admin API    : http://localhost:${PORT}/admin`);
   });
-
-  // Load admin-edited content overrides from Base44 into memory.
-  // Non-blocking — if Base44 is unavailable, hardcoded defaults are used.
-  loadContentOverrides().then(({ onboarding, questions }) => {
-    if (onboarding) setOnboardingOverride(onboarding);
-    if (questions)  setQuestionBankOverride(questions);
-  }).catch(err => console.error('[server] content load failed:', err.message));
 }

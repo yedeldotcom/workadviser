@@ -14,6 +14,8 @@
  * 7. Pause/skip/stop instructions
  */
 
+import { getContentConfig } from '../admin/base44Store.js';
+
 // ─── Onboarding message sequence (Hebrew) ────────────────────────────────────
 
 export const ONBOARDING_MESSAGES = [
@@ -36,21 +38,6 @@ export const ONBOARDING_MESSAGES = [
 מתחיל/ות?`,
   },
 ];
-
-// ─── Runtime content override ─────────────────────────────────────────────────
-// Set at server startup from Base44 (see server.js → loadContentOverrides).
-// When set, overrides ONBOARDING_MESSAGES for all new sessions.
-
-let _override = null;
-
-/**
- * Set a runtime override for the onboarding message sequence.
- * Called by server.js after loading from Base44, and by the PUT endpoint after saving.
- * @param {typeof ONBOARDING_MESSAGES} items
- */
-export function setOnboardingOverride(items) {
-  _override = items;
-}
 
 // ─── Channel-specific variants ────────────────────────────────────────────────
 
@@ -78,22 +65,34 @@ export function shouldShowResumeReminder(session) {
 }
 
 /**
- * Returns the full ordered onboarding message sequence.
- * Returns the admin-edited override from Base44 if one has been loaded,
- * otherwise falls back to the hardcoded ONBOARDING_MESSAGES default.
- * @returns {typeof ONBOARDING_MESSAGES}
+ * Returns the full ordered onboarding message sequence, with admin overrides applied.
+ * @returns {Promise<typeof ONBOARDING_MESSAGES>}
  */
-export function getOnboardingScript() {
-  return _override ?? [...ONBOARDING_MESSAGES];
+export async function getOnboardingScript() {
+  const messages = ONBOARDING_MESSAGES.map(m => ({ ...m }));
+  try {
+    const config = await getContentConfig('onboarding_overrides');
+    if (config?.overrides) {
+      for (const msg of messages) {
+        if (config.overrides[msg.id]?.text) {
+          msg.text = config.overrides[msg.id].text;
+        }
+      }
+    }
+  } catch {
+    // Fall back to defaults if Base44 is unavailable
+  }
+  return messages;
 }
 
 /**
- * Returns the onboarding message at a given step (1-indexed).
+ * Returns the onboarding message at a given step (1-indexed), with overrides applied.
  * @param {number} step
- * @returns {typeof ONBOARDING_MESSAGES[0] | null}
+ * @returns {Promise<typeof ONBOARDING_MESSAGES[0] | null>}
  */
-export function getOnboardingStep(step) {
-  return ONBOARDING_MESSAGES.find(m => m.step === step) ?? null;
+export async function getOnboardingStep(step) {
+  const messages = await getOnboardingScript();
+  return messages.find(m => m.step === step) ?? null;
 }
 
 /**

@@ -15,6 +15,7 @@
  */
 
 import { BARRIER_IDS } from '../engines/intake/index.js';
+import { getContentConfig } from '../admin/base44Store.js';
 
 // ─── Intensity levels ──────────────────────────────────────────────────────────
 
@@ -160,27 +161,52 @@ export const QUESTION_BANK = [
   },
 ];
 
-// ─── Runtime question bank override ──────────────────────────────────────────
-// Set at server startup from Base44 (see server.js → loadContentOverrides).
-// When set, replaces QUESTION_BANK for all interview sequencing.
-
-let _qbOverride = null;
+// ─── Effective question bank (with admin overrides) ──────────────────────────
 
 /**
- * Set a runtime override for the question bank.
- * Called by server.js after loading from Base44, and by the PUT endpoint after saving.
- * @param {typeof QUESTION_BANK} items
+ * Returns the question bank with admin overrides, custom order, and disabled
+ * questions filtered out.
+ * @returns {Promise<typeof QUESTION_BANK>}
  */
-export function setQuestionBankOverride(items) {
-  _qbOverride = items;
-}
+export async function getEffectiveQuestionBank() {
+  let questions = QUESTION_BANK.map(q => ({ ...q }));
+  try {
+    const [overrides, orderConfig, disabledConfig] = await Promise.all([
+      getContentConfig('question_overrides'),
+      getContentConfig('question_order'),
+      getContentConfig('question_disabled'),
+    ]);
 
-/**
- * Returns the active question bank — admin override if set, otherwise hardcoded default.
- * @returns {typeof QUESTION_BANK}
- */
-export function getActiveQuestionBank() {
-  return _qbOverride ?? QUESTION_BANK;
+    // Apply text overrides
+    if (overrides?.overrides) {
+      for (const q of questions) {
+        const ov = overrides.overrides[q.id];
+        if (ov) {
+          if (ov.prompt)   q.prompt   = ov.prompt;
+          if (ov.followUp) q.followUp = ov.followUp;
+        }
+      }
+    }
+
+    // Apply custom order
+    if (orderConfig?.order && Array.isArray(orderConfig.order)) {
+      const orderMap = new Map(orderConfig.order.map((id, i) => [id, i]));
+      questions.sort((a, b) => {
+        const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
+        const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
+        return ai - bi;
+      });
+    }
+
+    // Filter out disabled questions
+    if (disabledConfig?.disabled && Array.isArray(disabledConfig.disabled)) {
+      const disabledSet = new Set(disabledConfig.disabled);
+      questions = questions.filter(q => !disabledSet.has(q.id));
+    }
+  } catch {
+    // Fall back to defaults if Base44 is unavailable
+  }
+  return questions;
 }
 
 // ─── Distress detection ───────────────────────────────────────────────────────
@@ -240,21 +266,21 @@ export function getDistressCheckIn() {
  *
  * @param {string[]} answeredQuestionIds
  * @param {string[]} answeredBarrierIds
- * @returns {typeof QUESTION_BANK[0] | null} Next question, or null if interview is complete
+ * @returns {Promise<typeof QUESTION_BANK[0] | null>} Next question, or null if interview is complete
  */
-export function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = []) {
-  const bank = getActiveQuestionBank();
+export async function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = []) {
+  const effectiveBank = await getEffectiveQuestionBank();
   const answered = new Set(answeredQuestionIds);
   const covered = new Set(answeredBarrierIds);
 
-  const lowAnswered   = bank.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
-  const mediumAnswered = bank.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
+  const lowAnswered   = effectiveBank.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
+  const mediumAnswered = effectiveBank.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
 
   const allowMedium = lowAnswered >= 3;
   const allowHigh   = mediumAnswered >= 2;
 
   // Find candidates: unanswered + allowed intensity + uncovered barrier (preferred)
-  const candidates = bank.filter(q => {
+  const candidates = effectiveBank.filter(q => {
     if (answered.has(q.id)) return false;
     if (q.intensity === INTENSITY.MEDIUM && !allowMedium) return false;
     if (q.intensity === INTENSITY.HIGH   && !allowHigh)   return false;
@@ -272,24 +298,27 @@ export function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = [
 }
 
 /**
- * Return the total number of questions in the bank.
+ * Return the total number of questions in the effective bank.
  */
-export function getTotalQuestions() {
-  return getActiveQuestionBank().length;
+export async function getTotalQuestions() {
+  const effectiveBank = await getEffectiveQuestionBank();
+  return effectiveBank.length;
 }
 
 /**
  * Return all questions that need a distress check-in after them.
  */
-export function getHighIntensityQuestionIds() {
-  return getActiveQuestionBank().filter(q => q.distressCheckIn).map(q => q.id);
+export async function getHighIntensityQuestionIds() {
+  const effectiveBank = await getEffectiveQuestionBank();
+  return effectiveBank.filter(q => q.distressCheckIn).map(q => q.id);
 }
 
 /**
  * Estimate interview completion percentage.
  * @param {string[]} answeredQuestionIds
- * @returns {number} 0–100
+ * @returns {Promise<number>} 0–100
  */
-export function estimateProgress(answeredQuestionIds) {
-  return Math.round((answeredQuestionIds.length / getActiveQuestionBank().length) * 100);
+export async function estimateProgress(answeredQuestionIds) {
+  const effectiveBank = await getEffectiveQuestionBank();
+  return Math.round((answeredQuestionIds.length / effectiveBank.length) * 100);
 }
