@@ -82,7 +82,14 @@ async function safeFilter(entity, ...args) {
 // ─── Users ────────────────────────────────────────────────────────────────────
 
 export async function saveUser(user) {
-  const saved = await upsert(db.User, user.id, user);
+  // Base44 User entity requires email and full_name; derive placeholders from phone number.
+  const phone = user.phoneNumber ?? user.id;
+  const data = {
+    ...user,
+    email:     user.email     ?? `wa_${phone.replace(/[^a-z0-9]/gi, '_')}@workadviser.local`,
+    full_name: user.full_name ?? phone,
+  };
+  const saved = await upsert(db.User, user.id, data);
   return saved;
 }
 
