@@ -18,12 +18,32 @@ import { webcrypto } from 'crypto';
 if (!globalThis.crypto) globalThis.crypto = webcrypto;
 
 import express from 'express';
+import cors from 'cors';
 import adminRouter from './admin/router.js';
 import webhookRouter from './whatsapp/webhook.js';
 import { landingPageHandler } from './whatsapp/landingPage.js';
 
 export function createApp() {
   const app = express();
+
+  // CORS — allow Base44 frontend and any configured origin to call the admin API
+  const allowedOrigins = (process.env.CORS_ORIGINS ?? '')
+    .split(',').map(o => o.trim()).filter(Boolean);
+
+  app.use(cors({
+    origin: (origin, cb) => {
+      // Allow requests with no origin (curl, Postman, Railway health checks)
+      if (!origin) return cb(null, true);
+      // Allow any base44.com subdomain or explicitly listed origins
+      if (origin.endsWith('.base44.com') || origin === 'https://base44.com' || allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+      cb(new Error(`CORS: origin not allowed: ${origin}`));
+    },
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Admin-Role', 'X-Partner-Org'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  }));
 
   // Parse JSON bodies (needed for Meta Cloud API + admin routes)
   app.use(express.json());
