@@ -1,6 +1,6 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-09 | Branch: `claude/review-fpp-pilot-SrPJC` | **Steps 0–11 + Infrastructure done**
+Last updated: 2026-03-10 | Branch: `claude/enhance-interview-logic-gpiNZ` | **Steps 0–11 + Infrastructure done + Enhanced Interview Logic**
 
 ---
 
@@ -46,11 +46,34 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
   - Affected: `tests/admin/admin.test.js`, `tests/admin/analytics.test.js`, `tests/conversation/conversation.test.js`, `tests/core/recommendation.test.js`, `tests/core/stateMachines.test.js`
   - Fix: either mock `base44Client.js` in tests, or set `BASE44_APP_ID=test` in test runner env
 
+**Enhanced Interview Logic (2026-03-10):**
+- **Three-Chapter Interview Structure**: Interview is now divided into 3 chapters:
+  - Chapter 1 (ch1_intro): Getting to know the user — employment status, job role, workplace type, team size
+  - Chapter 2 (ch2_barriers): Barrier exploration — 13 barriers, adapted to user's specific workplace
+  - Chapter 3 (ch3_recommendations): Recommendations with interactive review — user can request changes
+- **Conversation History Fix**: `buildLLMHistory([])` bug fixed — LLM now receives actual conversation history (last 20 messages from store)
+- **Message Persistence**: All inbound/outbound messages are now saved to Base44 via `saveMessage()`
+- **Enhanced System Prompt**: Added three-chapter structure, gender-neutral Hebrew rule, interview conversation style guide, workplace-specific question instructions
+- **Enriched Context Block**: LLM now receives: currentChapter, currentQuestion, progress, clusterTransition, chapterTransition, detectedSignalsSummary, userProfile data
+- **Profile Extraction**: LLM returns `profileUpdates` JSON field with structured data (employmentStatus, workplaceType, jobRole, teamSize, timeInRole)
+- **Content-Aware Question Selection**: `getNextQuestion()` supports chapter filtering and `mentionedTopics` for natural follow-ups
+- **Warm Transitions**: First question after onboarding consent is now LLM-generated with warm bridge instruction
+- **Gender-Neutral Hebrew**: All hardcoded Hebrew text updated to use plural/infinitive forms instead of slash constructions
+- **Admin Panel**: New endpoints — `GET /admin/content/chapters`, `PUT /admin/content/chapters`, `GET /admin/sessions/chapter-progress`
+- **Session Model**: New fields — `interviewChapter`, `recommendationSubState`, `userProfile`, `answeredQuestionIds`
+
 **What is still missing:**
 - Fix test suite: guard `base44Client.js` import so it doesn't throw during tests (use `process.env.NODE_ENV === 'test'` guard or env mock)
 - Content Editor write support: allow saving edits to onboarding messages and question bank (currently read-only)
 - E2E integration tests with live WhatsApp (Meta Cloud API)
 - Permanent Meta access token for production (use System User — see Infrastructure section)
+- Base44 admin panel: create ContentConfig entity for `chapter_config` key (setup prompt below)
+
+**Base44 Admin Panel Setup — Chapter Config:**
+In the Base44 dashboard, create a new ContentConfig record with:
+- configKey: `chapter_config`
+- chapters: (see `/admin/content/chapters` endpoint for default structure)
+This enables admin-editable chapter definitions and transition rules.
 
 ---
 

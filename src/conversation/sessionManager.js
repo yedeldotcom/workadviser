@@ -61,7 +61,7 @@ export async function resumeSession(session) {
   const answeredIds = await getAnsweredQuestionIds(resumed);
   const progress = await estimateProgress(answeredIds);
 
-  const contextMessage = `${RESUME_REMINDER}\n\n_התקדמות: ${progress}% מהשאלות ענית/ה._`;
+  const contextMessage = `${RESUME_REMINDER}\n\n_התקדמות: ${progress}% מהשאלות._`;
   return { session: resumed, message: contextMessage };
 }
 
@@ -354,10 +354,14 @@ export function buildLLMHistory(messageRecords) {
  * Get next question for the current session state.
  * @param {import('../core/models/interviewSession.js').InterviewSession} session
  * @param {string[]} answeredQuestionIds
+ * @param {{ mentionedTopics?: string[] }} [opts]
  * @returns {Promise<import('../conversation/interviewer.js').QUESTION_BANK[0] | null>}
  */
-export async function getNextInterviewQuestion(session, answeredQuestionIds = []) {
-  return getNextQuestion(answeredQuestionIds, session.detectedBarrierIds);
+export async function getNextInterviewQuestion(session, answeredQuestionIds = [], opts = {}) {
+  return getNextQuestion(answeredQuestionIds, session.detectedBarrierIds, {
+    chapter: session.interviewChapter ?? 'ch1_intro',
+    mentionedTopics: opts.mentionedTopics ?? [],
+  });
 }
 
 /**
