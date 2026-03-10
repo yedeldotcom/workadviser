@@ -554,10 +554,7 @@ router.post('/knowledge/:itemId/promote',
 router.get('/content/onboarding',
   requireCapability('view_all_cases'),
   async (req, res) => {
-    let config = await getContentConfig('onboarding_messages');
-    if (!config?.messages?.length) {
-      config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    }
+    const config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
     res.json(config.messages);
   }
 );
@@ -572,10 +569,7 @@ router.put('/content/onboarding/:id',
       return res.status(400).json({ error: 'text is required and must be a string' });
     }
 
-    let config = await getContentConfig('onboarding_messages');
-    if (!config?.messages?.length) {
-      config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    }
+    const config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
     const messages = config.messages.map(m => ({ ...m }));
     const msg = messages.find(m => m.id === id);
     if (!msg) {
@@ -595,10 +589,8 @@ router.put('/content/onboarding/:id',
  * Helper: get the canonical question bank from Base44, seeding if needed.
  */
 async function _getCanonicalQuestionBank() {
-  let config = await getContentConfig('question_bank');
-  if (!config?.questions?.length) {
-    config = await ensureQuestionBankSeeded(QUESTION_BANK);
-  }
+  // Always go through ensureQuestionBankSeeded so version checks run
+  const config = await ensureQuestionBankSeeded(QUESTION_BANK);
   return config.questions;
 }
 

@@ -15,7 +15,7 @@
  */
 
 import { BARRIER_IDS } from '../engines/intake/index.js';
-import { getContentConfig, ensureQuestionBankSeeded } from '../admin/base44Store.js';
+import { ensureQuestionBankSeeded } from '../admin/base44Store.js';
 
 // ─── Intensity levels ──────────────────────────────────────────────────────────
 
@@ -241,18 +241,9 @@ export const QUESTION_BANK = [
  */
 export async function getEffectiveQuestionBank() {
   try {
-    const config = await getContentConfig('question_bank');
-    if (config?.questions?.length > 0) {
-      return config.questions.filter(q => q.enabled !== false);
-    }
-  } catch {
-    // Fall through to seed/fallback
-  }
-
-  // Seed from hardcoded defaults on first access (or if Base44 is unavailable)
-  try {
-    const seeded = await ensureQuestionBankSeeded(QUESTION_BANK);
-    return (seeded?.questions ?? QUESTION_BANK).filter(q => q.enabled !== false);
+    // Always go through ensureQuestionBankSeeded so version checks run
+    const result = await ensureQuestionBankSeeded(QUESTION_BANK);
+    return (result?.questions ?? QUESTION_BANK).filter(q => q.enabled !== false);
   } catch {
     // Final fallback: use hardcoded bank directly
     return QUESTION_BANK.map(q => ({ ...q }));

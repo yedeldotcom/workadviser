@@ -14,7 +14,7 @@
  * 7. Pause/skip/stop instructions
  */
 
-import { getContentConfig, ensureOnboardingSeeded } from '../admin/base44Store.js';
+import { ensureOnboardingSeeded } from '../admin/base44Store.js';
 
 // ─── Onboarding message sequence (Hebrew) ────────────────────────────────────
 
@@ -72,17 +72,9 @@ export function shouldShowResumeReminder(session) {
  */
 export async function getOnboardingScript() {
   try {
-    const config = await getContentConfig('onboarding_messages');
-    if (config?.messages?.length > 0) {
-      return config.messages;
-    }
-  } catch {
-    // Fall through to seed/fallback
-  }
-
-  try {
-    const seeded = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    return seeded?.messages ?? ONBOARDING_MESSAGES.map(m => ({ ...m }));
+    // Always go through ensureOnboardingSeeded so version checks run
+    const result = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
+    return result?.messages ?? ONBOARDING_MESSAGES.map(m => ({ ...m }));
   } catch {
     return ONBOARDING_MESSAGES.map(m => ({ ...m }));
   }
