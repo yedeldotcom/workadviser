@@ -138,28 +138,23 @@ See `.env.example` for all required variables. Key ones:
 
 ### Required prompt format:
 
-When a Base44 update is needed, output a clearly marked block like this:
+When a Base44 update is needed, output **one single copy-pastable code block** containing the entire prompt. The user must be able to select the full block and paste it directly into Base44's AI editor without any editing, rearranging, or combining of separate sections. Do NOT split the prompt across multiple code blocks — everything goes in ONE block.
 
 ```
-═══════════════════════════════════════════════════════════════
-BASE44 ADMIN PANEL UPDATE — [Brief description of what changed]
-═══════════════════════════════════════════════════════════════
-
 📋 PASTE THIS INTO BASE44 AI EDITOR:
-─────────────────────────────────────
 
-[Full prompt here with:]
+[Full prompt here — everything the AI editor needs in a single block:]
 1. Entity/table definitions (field names, types, defaults)
 2. UI layout instructions (what pages, what components, what data to show)
 3. Backend logic (any server-side functions, computed fields, validations)
 4. Relationships between entities
 5. Any permissions or visibility rules
 
-─────────────────────────────────────
 WHY: [1-2 sentence explanation of why this update is needed]
 AFFECTED CODE: [which src/ files connect to this Base44 change]
-═══════════════════════════════════════════════════════════════
 ```
+
+**Critical rule:** The entire prompt MUST be in ONE code block. Never split it into multiple blocks, sections, or steps that require manual assembly.
 
 ### Current Base44 entities (must stay in sync):
 User, UserProfile, InterviewSession, Message, NormalizedSignal, Report, Lead, Approval, AuditLog, PipelineResult, ChangeEvent, FollowUpCheckin, KnowledgeItem, RecommendationTemplate, RecommendationFeedback, ContentConfig
