@@ -29,41 +29,41 @@ beforeEach(() => resetStore());
 // ─── findOrCreateUser ────────────────────────────────────────────────────────
 
 describe('findOrCreateUser', () => {
-  test('creates a new user for an unknown phone number', () => {
-    const { user, isNew } = findOrCreateUser('+972501234567');
+  test('creates a new user for an unknown phone number', async () => {
+    const { user, isNew } = await findOrCreateUser('+972501234567');
     assert.ok(isNew);
     assert.equal(user.phoneNumber, '+972501234567');
     assert.equal(user.channel, 'whatsapp');
     assert.equal(user.consentState, 'pending');
   });
 
-  test('also creates a UserProfile for new users', () => {
-    const { user } = findOrCreateUser('+972501234567');
+  test('also creates a UserProfile for new users', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
     const profile = getProfile(user.id);
     assert.ok(profile);
     assert.equal(profile.userId, user.id);
   });
 
-  test('returns existing user for a known phone number', () => {
-    const { user: first } = findOrCreateUser('+972501234567');
-    const { user: second, isNew } = findOrCreateUser('+972501234567');
+  test('returns existing user for a known phone number', async () => {
+    const { user: first } = await findOrCreateUser('+972501234567');
+    const { user: second, isNew } = await findOrCreateUser('+972501234567');
     assert.equal(isNew, false);
     assert.equal(second.id, first.id);
   });
 
-  test('different phone numbers produce different users', () => {
-    const { user: u1 } = findOrCreateUser('+972501111111');
-    const { user: u2 } = findOrCreateUser('+972502222222');
+  test('different phone numbers produce different users', async () => {
+    const { user: u1 } = await findOrCreateUser('+972501111111');
+    const { user: u2 } = await findOrCreateUser('+972502222222');
     assert.notEqual(u1.id, u2.id);
   });
 
-  test('partnerSource is stored on the new user', () => {
-    const { user } = findOrCreateUser('+972501234567', { partnerSource: 'nato-org' });
+  test('partnerSource is stored on the new user', async () => {
+    const { user } = await findOrCreateUser('+972501234567', { partnerSource: 'nato-org' });
     assert.equal(user.partnerSource, 'nato-org');
   });
 
-  test('getUserByPhone lookup works after creation', () => {
-    const { user } = findOrCreateUser('+972509999999');
+  test('getUserByPhone lookup works after creation', async () => {
+    const { user } = await findOrCreateUser('+972509999999');
     const found = getUserByPhone('+972509999999');
     assert.ok(found);
     assert.equal(found.id, user.id);
@@ -73,45 +73,45 @@ describe('findOrCreateUser', () => {
 // ─── findOrCreateSession ──────────────────────────────────────────────────────
 
 describe('findOrCreateSession', () => {
-  test('creates a new session when none exists', () => {
-    const { user } = findOrCreateUser('+972501234567');
-    const { session, isNew } = findOrCreateSession(user.id);
+  test('creates a new session when none exists', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
+    const { session, isNew } = await findOrCreateSession(user.id);
     assert.ok(isNew);
     assert.ok(session.id);
     assert.equal(session.userId, user.id);
   });
 
-  test('returns existing in-progress session', () => {
-    const { user } = findOrCreateUser('+972501234567');
-    const { session: first } = findOrCreateSession(user.id);
-    const { session: second, isNew } = findOrCreateSession(user.id);
+  test('returns existing in-progress session', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
+    const { session: first } = await findOrCreateSession(user.id);
+    const { session: second, isNew } = await findOrCreateSession(user.id);
     assert.equal(isNew, false);
     assert.equal(second.id, first.id);
   });
 
-  test('creates a new session when only completed sessions exist', () => {
-    const { user } = findOrCreateUser('+972501234567');
+  test('creates a new session when only completed sessions exist', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
     // Manually save a completed session
     const done = createInterviewSession({ userId: user.id, state: 'complete' });
     saveSession(done);
-    const { session, isNew } = findOrCreateSession(user.id);
+    const { session, isNew } = await findOrCreateSession(user.id);
     assert.ok(isNew);
     assert.notEqual(session.id, done.id);
   });
 
-  test('creates a new session when only dropped sessions exist', () => {
-    const { user } = findOrCreateUser('+972501234567');
+  test('creates a new session when only dropped sessions exist', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
     const dropped = createInterviewSession({ userId: user.id, state: 'dropped_silent' });
     saveSession(dropped);
-    const { isNew } = findOrCreateSession(user.id);
+    const { isNew } = await findOrCreateSession(user.id);
     assert.ok(isNew);
   });
 
-  test('prefers onboarding/active session over newly created', () => {
-    const { user } = findOrCreateUser('+972501234567');
+  test('prefers onboarding/active session over newly created', async () => {
+    const { user } = await findOrCreateUser('+972501234567');
     const active = createInterviewSession({ userId: user.id, state: 'active' });
     saveSession(active);
-    const { session, isNew } = findOrCreateSession(user.id);
+    const { session, isNew } = await findOrCreateSession(user.id);
     assert.equal(isNew, false);
     assert.equal(session.id, active.id);
   });

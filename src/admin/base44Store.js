@@ -4,6 +4,10 @@
  * Implements the same interface as store.js but all functions are async.
  * Data is stored in Base44 entities and survives server restarts.
  *
+ * When BASE44_APP_ID is not set (test environments, local dev without credentials),
+ * all functions automatically delegate to the in-memory store.js implementation.
+ * This means tests never need to mock Base44 calls.
+ *
  * Entity mapping:
  *   User                  ← _users
  *   UserProfile           ← _profiles
@@ -26,6 +30,10 @@
  */
 
 import { db } from './base44Client.js';
+import * as mem from './store.js';
+
+// When BASE44_APP_ID is absent, use in-memory store (for tests and local dev).
+const USE_IN_MEMORY = !process.env.BASE44_APP_ID;
 
 // ─── In-process fallback cache ─────────────────────────────────────────────────
 // Used when Base44 filter queries fail (e.g. misconfigured schema or network issues).
@@ -33,6 +41,9 @@ import { db } from './base44Client.js';
 const _userByPhone  = new Map(); // phoneNumber → User
 const _sessionById  = new Map(); // sessionId  → InterviewSession
 const _sessionsByUserId = new Map(); // userId → sessionId[]
+
+// In-memory content config store (used when USE_IN_MEMORY is true).
+const _contentConfig = new Map(); // configKey → config object
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -124,6 +135,7 @@ async function safeFilter(entity, ...args) {
  * Direct REST updates to User are blocked by the platform; we only create.
  */
 export async function saveUser(user) {
+  if (USE_IN_MEMORY) return mem.saveUser(user);
   const phone = user.phoneNumber ?? user.id;
   const payload = {
     id:        user.id,
@@ -159,11 +171,13 @@ function normalizeUser(raw) {
 }
 
 export async function getUser(userId) {
+  if (USE_IN_MEMORY) return mem.getUser(userId);
   const raw = await safeGet(db.User, userId);
   return raw ? normalizeUser(raw) : null;
 }
 
 export async function getAllUsers() {
+  if (USE_IN_MEMORY) return mem.getAllUsers();
   const raws = await safeList(db.User);
   return raws.map(normalizeUser);
 }
@@ -174,6 +188,7 @@ export async function getAllUsers() {
  * On cache miss, lists all User records and scans data.phoneNumber (pilot-scale only).
  */
 export async function getUserByPhone(phoneNumber) {
+  if (USE_IN_MEMORY) return mem.getUserByPhone(phoneNumber);
   if (_userByPhone.has(phoneNumber)) return _userByPhone.get(phoneNumber);
 
   // Rebuild cache from DB (handles server restarts)
@@ -189,22 +204,26 @@ export async function getUserByPhone(phoneNumber) {
 // ─── Profiles ─────────────────────────────────────────────────────────────────
 
 export async function saveProfile(profile) {
+  if (USE_IN_MEMORY) return mem.saveProfile(profile);
   return upsert(db.UserProfile, profile.userId, profile);
 }
 
 export async function getProfile(userId) {
+  if (USE_IN_MEMORY) return mem.getProfile(userId);
   // Profile uses userId as its primary lookup key (not a separate id)
   const results = await safeFilter(db.UserProfile, { userId }, null, 1, 0);
   return results[0] ?? null;
 }
 
 export async function getAllProfiles() {
+  if (USE_IN_MEMORY) return mem.getAllProfiles();
   return safeList(db.UserProfile);
 }
 
 // ─── Sessions ─────────────────────────────────────────────────────────────────
 
 export async function saveSession(session) {
+  if (USE_IN_MEMORY) return mem.saveSession(session);
   _sessionById.set(session.id, session);
   const ids = _sessionsByUserId.get(session.userId) ?? [];
   if (!ids.includes(session.id)) {
@@ -214,14 +233,17 @@ export async function saveSession(session) {
 }
 
 export async function getSession(sessionId) {
+  if (USE_IN_MEMORY) return mem.getSession(sessionId);
   return safeGet(db.InterviewSession, sessionId);
 }
 
 export async function getAllSessions() {
+  if (USE_IN_MEMORY) return mem.getAllSessions();
   return safeList(db.InterviewSession);
 }
 
 export async function getSessionsForUser(userId) {
+  if (USE_IN_MEMORY) return mem.getSessionsForUser(userId);
   const dbResults = await safeFilter(db.InterviewSession, { userId });
   if (dbResults.length > 0) {
     dbResults.forEach(s => {
@@ -239,70 +261,85 @@ export async function getSessionsForUser(userId) {
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
 export async function saveMessage(message) {
+  if (USE_IN_MEMORY) return mem.saveMessage(message);
   return upsert(db.Message, message.id, message);
 }
 
 export async function getMessage(messageId) {
+  if (USE_IN_MEMORY) return mem.getMessage(messageId);
   return safeGet(db.Message, messageId);
 }
 
 export async function getMessagesForSession(sessionId) {
+  if (USE_IN_MEMORY) return mem.getAllMessages().filter(m => m.sessionId === sessionId);
   return safeFilter(db.Message, { sessionId });
 }
 
 // ─── Signals ──────────────────────────────────────────────────────────────────
 
 export async function saveSignal(signal) {
+  if (USE_IN_MEMORY) return mem.saveSignal(signal);
   return upsert(db.NormalizedSignal, signal.id, signal);
 }
 
 export async function getSignal(signalId) {
+  if (USE_IN_MEMORY) return mem.getSignal(signalId);
   return safeGet(db.NormalizedSignal, signalId);
 }
 
 // ─── Reports ──────────────────────────────────────────────────────────────────
 
 export async function saveReport(report) {
+  if (USE_IN_MEMORY) return mem.saveReport(report);
   return upsert(db.Report, report.id, report);
 }
 
 export async function getReport(reportId) {
+  if (USE_IN_MEMORY) return mem.getReport(reportId);
   return safeGet(db.Report, reportId);
 }
 
 export async function getAllReports() {
+  if (USE_IN_MEMORY) return mem.getAllReports();
   return safeList(db.Report);
 }
 
 export async function getReportsForCase(caseId) {
+  if (USE_IN_MEMORY) return mem.getReportsForCase(caseId);
   return safeFilter(db.Report, { caseId });
 }
 
 // ─── Leads ────────────────────────────────────────────────────────────────────
 
 export async function saveLead(lead) {
+  if (USE_IN_MEMORY) return mem.saveLead(lead);
   return upsert(db.Lead, lead.id, lead);
 }
 
 export async function getLead(leadId) {
+  if (USE_IN_MEMORY) return mem.getLead(leadId);
   return safeGet(db.Lead, leadId);
 }
 
 export async function getAllLeads() {
+  if (USE_IN_MEMORY) return mem.getAllLeads();
   return safeList(db.Lead);
 }
 
 // ─── Approvals ────────────────────────────────────────────────────────────────
 
 export async function saveApproval(approval) {
+  if (USE_IN_MEMORY) return mem.saveApproval(approval);
   return upsert(db.Approval, approval.id, approval);
 }
 
 export async function getApproval(approvalId) {
+  if (USE_IN_MEMORY) return mem.getApproval(approvalId);
   return safeGet(db.Approval, approvalId);
 }
 
 export async function getApprovalsForReport(reportId) {
+  if (USE_IN_MEMORY) return mem.getApprovalsForReport(reportId);
   return safeFilter(db.Approval, { reportId });
 }
 
@@ -316,6 +353,7 @@ export async function getApprovalsForReport(reportId) {
  * @returns {Promise<object | null>}
  */
 export async function appendAuditLog(entry) {
+  if (USE_IN_MEMORY) return mem.appendAuditLog(entry);
   try {
     return await db.AuditLog.create(entry);
   } catch (err) {
@@ -325,16 +363,19 @@ export async function appendAuditLog(entry) {
 }
 
 export async function getAllAuditLogs() {
+  if (USE_IN_MEMORY) return mem.getAllAuditLogs();
   return safeList(db.AuditLog);
 }
 
 export async function getAuditLogForEntity(entityType, entityId) {
+  if (USE_IN_MEMORY) return mem.getAuditLogForEntity(entityType, entityId);
   return safeFilter(db.AuditLog, { entityType, entityId });
 }
 
 // ─── Pipeline Results ─────────────────────────────────────────────────────────
 
 export async function savePipelineResult(sessionId, result) {
+  if (USE_IN_MEMORY) return mem.savePipelineResult(sessionId, result);
   const record = { sessionId, result };
   const existing = await safeFilter(db.PipelineResult, { sessionId }, null, 1, 0);
   if (existing[0]) {
@@ -344,6 +385,7 @@ export async function savePipelineResult(sessionId, result) {
 }
 
 export async function getPipelineResult(sessionId) {
+  if (USE_IN_MEMORY) return mem.getPipelineResult(sessionId);
   const results = await safeFilter(db.PipelineResult, { sessionId }, null, 1, 0);
   return results[0]?.result ?? null;
 }
@@ -351,78 +393,95 @@ export async function getPipelineResult(sessionId) {
 // ─── Change Events ────────────────────────────────────────────────────────────
 
 export async function saveChangeEvent(event) {
+  if (USE_IN_MEMORY) return mem.saveChangeEvent(event);
   return upsert(db.ChangeEvent, event.id, event);
 }
 
 export async function getChangeEvent(eventId) {
+  if (USE_IN_MEMORY) return mem.getChangeEvent(eventId);
   return safeGet(db.ChangeEvent, eventId);
 }
 
 export async function getAllChangeEvents() {
+  if (USE_IN_MEMORY) return mem.getAllChangeEvents();
   return safeList(db.ChangeEvent);
 }
 
 export async function getChangeEventsForUser(userId) {
+  if (USE_IN_MEMORY) return mem.getChangeEventsForUser(userId);
   return safeFilter(db.ChangeEvent, { userId });
 }
 
 // ─── Follow-Up Check-ins ──────────────────────────────────────────────────────
 
 export async function saveFollowUpCheckin(checkin) {
+  if (USE_IN_MEMORY) return mem.saveFollowUpCheckin(checkin);
   return upsert(db.FollowUpCheckin, checkin.id, checkin);
 }
 
 export async function getFollowUpCheckin(id) {
+  if (USE_IN_MEMORY) return mem.getFollowUpCheckin(id);
   return safeGet(db.FollowUpCheckin, id);
 }
 
 export async function getAllFollowUpCheckins() {
+  if (USE_IN_MEMORY) return mem.getAllFollowUpCheckins();
   return safeList(db.FollowUpCheckin);
 }
 
 export async function getCheckinsForUser(userId) {
+  if (USE_IN_MEMORY) return mem.getCheckinsForUser(userId);
   return safeFilter(db.FollowUpCheckin, { userId });
 }
 
 // ─── Knowledge Items ──────────────────────────────────────────────────────────
 
 export async function saveKnowledgeItem(item) {
+  if (USE_IN_MEMORY) return mem.saveKnowledgeItem(item);
   return upsert(db.KnowledgeItem, item.id, item);
 }
 
 export async function getKnowledgeItem(id) {
+  if (USE_IN_MEMORY) return mem.getKnowledgeItem(id);
   return safeGet(db.KnowledgeItem, id);
 }
 
 export async function getAllKnowledgeItems() {
+  if (USE_IN_MEMORY) return mem.getAllKnowledgeItems();
   return safeList(db.KnowledgeItem);
 }
 
 // ─── Recommendation Templates ─────────────────────────────────────────────────
 
 export async function saveRecommendationTemplate(tmpl) {
+  if (USE_IN_MEMORY) return mem.saveRecommendationTemplate(tmpl);
   return upsert(db.RecommendationTemplate, tmpl.id, tmpl);
 }
 
 export async function getRecommendationTemplate(id) {
+  if (USE_IN_MEMORY) return mem.getRecommendationTemplate(id);
   return safeGet(db.RecommendationTemplate, id);
 }
 
 export async function getAllRecommendationTemplates() {
+  if (USE_IN_MEMORY) return mem.getAllRecommendationTemplates();
   return safeList(db.RecommendationTemplate);
 }
 
 // ─── Recommendation Feedback ──────────────────────────────────────────────────
 
 export async function saveFeedback(fb) {
+  if (USE_IN_MEMORY) return mem.saveFeedback(fb);
   return upsert(db.RecommendationFeedback, fb.id, fb);
 }
 
 export async function getFeedback(id) {
+  if (USE_IN_MEMORY) return mem.getFeedback(id);
   return safeGet(db.RecommendationFeedback, id);
 }
 
 export async function getAllFeedback() {
+  if (USE_IN_MEMORY) return mem.getAllFeedback();
   return safeList(db.RecommendationFeedback);
 }
 
@@ -434,6 +493,7 @@ export async function getAllFeedback() {
  * @returns {Promise<object|null>}
  */
 export async function getContentConfig(configKey) {
+  if (USE_IN_MEMORY) return _contentConfig.get(configKey) ?? null;
   const results = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
   return results[0] ?? null;
 }
@@ -445,6 +505,11 @@ export async function getContentConfig(configKey) {
  * @returns {Promise<object>}
  */
 export async function saveContentConfig(configKey, data) {
+  if (USE_IN_MEMORY) {
+    const record = { configKey, ...data };
+    _contentConfig.set(configKey, record);
+    return record;
+  }
   const existing = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
   if (existing[0]) {
     return db.ContentConfig.update(existing[0].id, { configKey, ...data });
@@ -467,6 +532,9 @@ export async function saveContentConfig(configKey, data) {
 const QUESTION_BANK_VERSION = 2;
 
 export async function ensureQuestionBankSeeded(hardcodedBank) {
+  if (USE_IN_MEMORY) {
+    return { questions: hardcodedBank.map(q => ({ ...q, enabled: true })), version: QUESTION_BANK_VERSION };
+  }
   const existing = await getContentConfig('question_bank');
 
   if (existing?.questions?.length > 0) {
@@ -512,6 +580,9 @@ export async function ensureQuestionBankSeeded(hardcodedBank) {
 const ONBOARDING_VERSION = 2;
 
 export async function ensureOnboardingSeeded(hardcodedMessages) {
+  if (USE_IN_MEMORY) {
+    return { messages: hardcodedMessages.map(m => ({ ...m })), version: ONBOARDING_VERSION };
+  }
   const existing = await getContentConfig('onboarding_messages');
 
   if (existing?.messages?.length > 0) {
@@ -535,12 +606,21 @@ export async function ensureOnboardingSeeded(hardcodedMessages) {
 
 /**
  * Reset all entities — for tests only.
- * Deletes every record from every entity in Base44.
- * Safe to use because Base44 test environments are isolated.
+ * In in-memory mode, clears the in-memory store.
+ * In Base44 mode, deletes every record from every entity.
  */
 export async function resetStore() {
   if (process.env.NODE_ENV !== 'test') {
     throw new Error('resetStore() can only be called in NODE_ENV=test');
+  }
+
+  if (USE_IN_MEMORY) {
+    mem.resetStore();
+    _userByPhone.clear();
+    _sessionById.clear();
+    _sessionsByUserId.clear();
+    _contentConfig.clear();
+    return;
   }
 
   const entities = [
@@ -560,6 +640,7 @@ export async function resetStore() {
 
 /** Returns entity counts for the health check endpoint. */
 export async function getStoreCounts() {
+  if (USE_IN_MEMORY) return mem.getStoreCounts();
   const [users, sessions, reports, leads, auditLogs] = await Promise.all([
     safeList(db.User),
     safeList(db.InterviewSession),

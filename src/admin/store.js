@@ -79,6 +79,7 @@ export function getFeedback(id)                      { return _feedback.get(id) 
 export function getAllUsers()          { return [..._users.values()]; }
 export function getAllProfiles()       { return [..._profiles.values()]; }
 export function getAllSessions()       { return [..._sessions.values()]; }
+export function getAllMessages()       { return [..._messages.values()]; }
 export function getAllReports()        { return [..._reports.values()]; }
 export function getAllLeads()          { return [..._leads.values()]; }
 export function getAllAuditLogs()      { return [..._auditLog.values()]; }
