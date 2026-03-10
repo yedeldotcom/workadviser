@@ -23,7 +23,7 @@ import { createUser } from '../core/models/user.js';
 import { createUserProfile } from '../core/models/userProfile.js';
 import {
   saveUser, saveProfile, saveSession, saveMessage, getSessionsForUser,
-  getUserByPhone,
+  getUserByPhone, getMessagesForSession,
 } from '../admin/base44Store.js';
 import {
   createSession,
@@ -117,12 +117,16 @@ export async function routeMessage(session, text, context = {}) {
   // Record inbound
   const { session: s1, message: inMsg, action } = recordInboundMessage(session, text);
 
+  // Persist inbound message to store
+  saveMessage(inMsg).catch(err => console.error('[userRouter] saveMessage(inbound) failed:', err?.message));
+
   if (action === 'stop') {
     const { session: dropped } = dropSession(s1, 'intentional');
     const { session: s2, message: outMsg } = recordOutboundMessage(
-      dropped, 'בסדר, עצרנו. אם תרצה/י לחזור בעתיד, פשוט שלח/י הודעה.'
+      dropped, 'בסדר, עצרנו. אפשר לחזור בעתיד, פשוט לשלוח הודעה.'
     );
     await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'stop' };
   }
 
@@ -130,6 +134,7 @@ export async function routeMessage(session, text, context = {}) {
     const { session: paused, message: pauseMsg } = pauseSession(s1);
     const { session: s2, message: outMsg } = recordOutboundMessage(paused, pauseMsg);
     await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'pause' };
   }
 
@@ -137,6 +142,7 @@ export async function routeMessage(session, text, context = {}) {
     const { session: held, message: distressMsg } = handleDistress(s1);
     const { session: s2, message: outMsg } = recordOutboundMessage(held, distressMsg);
     await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'distress' };
   }
 
@@ -176,11 +182,8 @@ export async function routeMessage(session, text, context = {}) {
  * Uses the question bank directly — no LLM call — so the script doesn't jump ahead.
  */
 async function _handleFirstQuestion(session) {
-  const nextQ = getNextInterviewQuestion(session, []);
-  const questionText = nextQ?.prompt ?? 'ספר/י לי קצת על סביבת העבודה שלך.';
-  const { session: s2, message: outMsg } = recordOutboundMessage(session, questionText, nextQ?.id ?? null);
-  await saveSession(s2);
-  return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
+  // Delegate to LLM with firstQuestion flag so it generates a warm bridge
+  return _handleActiveInterview(session, '', { firstQuestion: true, currentChapter: 'ch1_intro' });
 }
 
 /**
@@ -196,6 +199,7 @@ async function _handleOnboarding(session, action, context) {
     const updatedSession = { ...session, onboardingStep: step };
     const { session: s2, message: outMsg } = recordOutboundMessage(updatedSession, msg);
     await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
   }
 
@@ -204,6 +208,7 @@ async function _handleOnboarding(session, action, context) {
     const nudge = 'כשרוצים להתחיל — כותבים "כן". אם לא עכשיו — "עצור".';
     const { session: s2, message: outMsg } = recordOutboundMessage(session, nudge);
     await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
   }
 
@@ -216,42 +221,113 @@ async function _handleOnboarding(session, action, context) {
  * Falls back to a scripted question if the LLM call fails.
  */
 async function _handleActiveInterview(session, text, context) {
-  // Check if we have enough data to complete
-  if (hasMinimumData(session) && text === '') {
-    return _handleCompletion(session);
+  const chapter = session.interviewChapter ?? 'ch1_intro';
+
+  // Check chapter transitions
+  if (chapter === 'ch2_barriers' && hasMinimumData(session) && text === '') {
+    // Transition to Chapter 3 — recommendations
+    const updated = { ...session, interviewChapter: 'ch3_recommendations', recommendationSubState: 'draft' };
+    return _handleCompletion(updated);
   }
 
-  // Build history for LLM (simplified — real history comes from message store)
-  const history = buildLLMHistory([]); // Empty for now; full history requires message store lookup
+  // Build history for LLM from persisted messages (capped at last 20)
+  let storedMessages = [];
+  try {
+    const allMessages = await getMessagesForSession(session.id);
+    storedMessages = allMessages
+      .sort((a, b) => new Date(a.createdAt ?? 0) - new Date(b.createdAt ?? 0))
+      .slice(-20)
+      .map(m => ({ direction: m.direction, text: m.transcribedContent ?? m.rawContent }));
+  } catch (err) {
+    console.error('[userRouter] getMessagesForSession failed, using empty history:', err?.message);
+  }
+  const history = buildLLMHistory(storedMessages);
   if (text) history.push({ role: 'user', content: text });
+
+  // Get next question for the current chapter
+  const answeredIds = session.answeredQuestionIds ?? [];
+  const nextQ = await getNextInterviewQuestion(session, answeredIds);
+
+  // Detect cluster transition
+  const lastQuestionId = answeredIds[answeredIds.length - 1];
+  const clusterTransition = nextQ && lastQuestionId
+    ? nextQ.cluster !== undefined // simplified — the LLM context block handles the detail
+    : false;
 
   let llmResult;
   try {
     llmResult = await runInterviewTurn(history, {
       phase: session.phase,
       answeredBarrierIds: session.detectedBarrierIds,
-      workplaceType: context.workplaceType,
+      workplaceType: session.userProfile?.workplaceType ?? context.workplaceType,
+      jobRole: session.userProfile?.jobRole,
+      employmentStatus: session.userProfile?.employmentStatus,
       orgSize: context.orgSize,
       resuming: context.resuming ?? false,
+      currentChapter: chapter,
+      currentQuestion: nextQ ? { id: nextQ.id, prompt: nextQ.prompt, cluster: nextQ.cluster, scoringHint: nextQ.scoringHint, profileField: nextQ.profileField } : null,
+      progress: `${answeredIds.length}/${chapter === 'ch1_intro' ? 5 : 14} questions`,
+      clusterTransition,
+      chapterTransition: context.chapterTransition ?? false,
+      firstQuestion: context.firstQuestion ?? false,
+      detectedSignalsSummary: _buildSignalsSummary(session),
     });
   } catch {
     // Fallback: use scripted question bank
-    const answeredIds = session.detectedBarrierIds.map(id => `q-${id}`);
-    const nextQ = await getNextInterviewQuestion(session, answeredIds);
-    const fallbackText = nextQ?.text_he ?? 'איך הולך לך בעבודה? אפשר לספר קצת?';
-    llmResult = { nextMessage: fallbackText, detectedSignals: [], confidenceLevel: 'low', shouldEscalate: false, questionId: null };
+    const fallbackText = nextQ?.prompt ?? 'איך הולך בעבודה? אפשר לספר קצת?';
+    llmResult = { nextMessage: fallbackText, detectedSignals: [], confidenceLevel: 'low', shouldEscalate: false, questionId: null, profileUpdates: null };
   }
 
   // Merge LLM-detected signals into session
-  const { session: updatedSession } = mergeSignals(session, llmResult.detectedSignals);
+  const { session: signalUpdated } = mergeSignals(session, llmResult.detectedSignals);
+
+  // Merge profile updates from LLM (Chapter 1)
+  let updatedSession = signalUpdated;
+  if (llmResult.profileUpdates) {
+    updatedSession = {
+      ...updatedSession,
+      userProfile: { ...(updatedSession.userProfile ?? {}), ...llmResult.profileUpdates },
+    };
+  }
+
+  // Track answered question
+  if (llmResult.questionId && !updatedSession.answeredQuestionIds.includes(llmResult.questionId)) {
+    updatedSession = {
+      ...updatedSession,
+      answeredQuestionIds: [...updatedSession.answeredQuestionIds, llmResult.questionId],
+    };
+  }
+
+  // Check Chapter 1 → 2 transition
+  if (chapter === 'ch1_intro') {
+    const profile = updatedSession.userProfile ?? {};
+    if (profile.employmentStatus && profile.workplaceType && profile.jobRole) {
+      updatedSession = { ...updatedSession, interviewChapter: 'ch2_barriers' };
+    }
+  }
+
+  // Check Chapter 2 → 3 transition
+  if (updatedSession.interviewChapter === 'ch2_barriers' && hasMinimumData(updatedSession)) {
+    updatedSession = { ...updatedSession, interviewChapter: 'ch3_recommendations', recommendationSubState: 'draft' };
+  }
 
   const { session: s2, message: outMsg } = recordOutboundMessage(
     updatedSession, llmResult.nextMessage, llmResult.questionId
   );
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
 
   const outcome = llmResult.shouldEscalate ? 'distress' : 'continue';
   return { outboundTexts: [outMsg.rawContent], session: s2, outcome };
+}
+
+/**
+ * Build a brief summary of detected signals for the LLM context.
+ */
+function _buildSignalsSummary(session) {
+  const barriers = session.detectedBarrierIds ?? [];
+  if (barriers.length === 0) return 'No barriers detected yet.';
+  return `Detected barriers: ${barriers.join(', ')}`;
 }
 
 /**
@@ -260,8 +336,8 @@ async function _handleActiveInterview(session, text, context) {
 async function _handlePaused(session, context) {
   const { session: resumed, message: resumeMsg } = await resumeSession(session);
   const { session: s2, message: outMsg } = recordOutboundMessage(resumed, resumeMsg);
-  // Then send first question
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
   const next = await _handleActiveInterview(s2, '', context);
   return {
     outboundTexts: [outMsg.rawContent, ...next.outboundTexts],
@@ -275,9 +351,10 @@ async function _handlePaused(session, context) {
  */
 async function _handleDistressHold(session, text) {
   // Simple containment — not resuming automatically
-  const msg = 'אנחנו כאן. לא צריך/ה לענות כרגע. אפשר לכתוב "המשך" כשמוכן/ה, או "עצור" לסיום.';
+  const msg = 'אנחנו כאן. אין צורך לענות כרגע. אפשר לכתוב "המשך" כשמרגישים מוכנים, או "עצור" לסיום.';
   const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
   return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'distress' };
 }
 
@@ -285,9 +362,10 @@ async function _handleDistressHold(session, text) {
  * Handle a completed session — offer summary or follow-up.
  */
 async function _handleComplete(session) {
-  const msg = 'השיחה שלנו הסתיימה. הדוח שלך נמצא בהכנה ויישלח בקרוב. אם משהו השתנה, ניתן לכתוב "התחל מחדש".';
+  const msg = 'השיחה שלנו הסתיימה. הדוח נמצא בהכנה ויישלח בקרוב. אם משהו השתנה, אפשר לכתוב "התחל מחדש".';
   const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
   return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'complete' };
 }
 
@@ -295,9 +373,10 @@ async function _handleComplete(session) {
  * Handle dropped sessions — invite restart.
  */
 async function _handleDropped(session) {
-  const msg = 'אם תרצה/י להתחיל מחדש, פשוט כתוב/י "התחל".';
+  const msg = 'אפשר להתחיל מחדש בכל עת, פשוט לכתוב "התחל".';
   const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
   return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'stop' };
 }
 
@@ -306,8 +385,9 @@ async function _handleDropped(session) {
  */
 async function _handleCompletion(session) {
   const { session: completed, pipelineResult } = completeSession(session, {});
-  const msg = 'תודה שענית על כל השאלות. הדוח שלך בהכנה ויישלח עם תיאום אנושי.';
+  const msg = 'תודה על כל התשובות. הדוח בהכנה ויישלח בקרוב עם תיאום אנושי.';
   const { session: s2, message: outMsg } = recordOutboundMessage(completed, msg);
-  saveSession(s2);
+  await saveSession(s2);
+  saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
   return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'complete' };
 }

@@ -87,6 +87,57 @@ Your interview logic should help collect:
 - implementation feasibility
 - change events over time
 
+THREE-CHAPTER INTERVIEW STRUCTURE
+The interview has three chapters. You MUST follow the current chapter's goal as indicated in the session context.
+
+CHAPTER 1 — GETTING TO KNOW YOU (תיאום ציפיות)
+Goal: Learn who the user is and their work situation. Be warm, curious, conversational.
+FIRST QUESTION must be about employment status: "קודם כל, מה המצב התעסוקתי כרגע? עובדים, מחפשים עבודה, בחל"ת, במילואים?"
+- This determines framing: current workplace vs. past experience vs. preparing to return
+Then collect: job role, workplace type (office/factory/field/remote/hybrid), team size, time in role.
+Do NOT ask about barriers yet. This chapter builds trust and context.
+IMPORTANT: Process every answer through context. If the user says "אני עובד במפעל רועש ולא נותנים לי הפסקות" — extract workplaceType=factory AND note early signals (sensory_discomfort, fatigue) in detectedSignals. Never ignore emotional content even in technical answers.
+Return extracted profile fields in the "profileUpdates" JSON field.
+Transition to Chapter 2 with: "תודה, עכשיו שאני מבינה יותר את המצב, אני רוצה לשאול כמה שאלות על האתגרים היומיומיים..."
+
+CHAPTER 2 — UNDERSTANDING BARRIERS (הבנת חסמים)
+Goal: Explore the user's specific workplace barriers. Use the workplace context from Chapter 1 to ask SPECIFIC questions, not generic ones.
+- If user works in an open office: ask about noise, interruptions, visual distractions specifically
+- If user works from home: ask about isolation, boundaries, routine specifically
+- If user works in a factory/field: ask about physical demands, safety, shift patterns specifically
+- Never ask generic questions like "איך הסביבה הפיזית משפיעה?" — always specify WHICH environment based on what you know
+- Use the currentQuestion from session context as a guide for the topic, but phrase the question naturally and specifically for this user's workplace
+
+CHAPTER 3 — RECOMMENDATIONS & CLOSING (המלצות וסיכום)
+Goal: Present findings and recommendations, then let the user review and request changes.
+Flow:
+1. Present summary of what was learned + top 3 recommendations
+2. Ask: "מה דעתך? יש משהו שרוצים לשנות, לנסח אחרת, או להוסיף?"
+3. If user requests changes → apply them, present updated version, ask again
+4. If user approves → finalize and store
+Tone shifts from exploratory to supportive/action-oriented.
+Handle change requests naturally: acknowledge the feedback, explain what changed, show the updated section.
+
+GENDER-NEUTRAL HEBREW LANGUAGE RULE
+CRITICAL: All Hebrew text must use gender-neutral phrasing. NEVER use slash constructions (את/ה, עובד/ת, מוכן/ה).
+Instead:
+- Use plural forms where natural (ספרו, רוצים, עובדים)
+- Use infinitive constructions (אפשר לספר, כדאי לבדוק)
+- Use "אנשים" or impersonal phrasing (הרבה אנשים מספרים ש...)
+- Rephrase to avoid gendered forms entirely
+- The system persona speaks in female form (אני מבינה, שמעתי) — this is consistent, not gendered toward the user
+
+INTERVIEW CONVERSATION STYLE
+- Always start your response by briefly acknowledging what the user just shared. One short sentence is enough. Examples: "שמעתי, זה מובן" or "תודה ששיתפתם אותי".
+- Never repeat the user's words back verbatim — paraphrase briefly or validate the feeling.
+- When transitioning to a new topic, use a natural bridge. Examples: "עוד דבר שאני רוצה לשאול עליו..." or "קצת בכיוון אחר..." or "הזכרתם משהו שמזכיר לי לשאול..."
+- If the user mentioned something related to the next question topic, reference it: "הזכרתם קודם ש... — אני רוצה לשאול על זה קצת יותר"
+- Do NOT repeat the question prompt verbatim from the question bank. Use it as a guide for the topic, but phrase it naturally in your own words, as if you are a caring professional in a conversation.
+- Vary your question style — sometimes ask directly, sometimes share a normalizing observation first ("הרבה אנשים מספרים ש..."), sometimes use a softer framing ("אני שואלת כי זה עוזר לי להבין...").
+- Keep messages short. 2-4 sentences maximum. This is WhatsApp, not email.
+- When the user gives a brief answer, it is okay to ask a short follow-up before moving on — but do not press. One follow-up at most.
+- Use the scoring hint from the current question context to guide what information you need, but never expose the scoring system to the user.
+
 DISTRESS-SAFE BEHAVIOR
 - Start with lower-intensity questions
 - Move gradually
@@ -209,10 +260,18 @@ When generating an interview turn, always respond with valid JSON in this exact 
       "confidence": <0.0-1.0>
     }
   ],
+  "profileUpdates": {
+    "employmentStatus": "<employed|job_seeking|leave|military_reserve or null>",
+    "workplaceType": "<office|open_office|factory|field|remote|hybrid or null>",
+    "jobRole": "<string or null>",
+    "teamSize": "<string or null>",
+    "timeInRole": "<string or null>"
+  },
   "confidenceLevel": "<high|medium|low>",
   "shouldEscalate": <boolean>,
   "questionId": "<question_id or null>"
-}`;
+}
+The "profileUpdates" field is optional. Include it only when you extract profile information from the user's response (mainly in Chapter 1). Omit null fields.`;
 
 // ─── Client Factory ───────────────────────────────────────────────────────────
 
@@ -270,18 +329,52 @@ export async function runInterviewTurn(messages, context = {}) {
  * Build a plain-text context block injected into the interview turn prompt.
  * Only includes fields that are set — empty context produces an empty string.
  *
- * @param {{ phase?: string, workplaceType?: string, orgSize?: string, answeredBarrierIds?: string[], resuming?: boolean }} context
+ * @param {Object} context
  * @returns {string}
  */
 function buildContextBlock(context) {
   const lines = [];
-  if (context.phase) lines.push(`Employment phase: ${context.phase}`);
+
+  // Chapter info
+  if (context.currentChapter) lines.push(`Current chapter: ${context.currentChapter}`);
+  if (context.progress) lines.push(`Progress: ${context.progress}`);
+
+  // User profile from Chapter 1
+  if (context.employmentStatus) lines.push(`Employment status: ${context.employmentStatus}`);
+  if (context.jobRole) lines.push(`Job role: ${context.jobRole}`);
   if (context.workplaceType) lines.push(`Workplace type: ${context.workplaceType}`);
   if (context.orgSize) lines.push(`Org size: ${context.orgSize}`);
+  if (context.phase) lines.push(`Employment phase: ${context.phase}`);
+
+  // Barrier detection state
   if (context.answeredBarrierIds?.length) {
     lines.push(`Already captured barriers: ${context.answeredBarrierIds.join(', ')}`);
   }
+  if (context.detectedSignalsSummary) {
+    lines.push(`Signals summary: ${context.detectedSignalsSummary}`);
+  }
+
+  // Current question guidance
+  if (context.currentQuestion) {
+    const q = context.currentQuestion;
+    lines.push(`\nCurrent question topic: ${q.prompt}`);
+    if (q.cluster) lines.push(`Topic cluster: ${q.cluster}`);
+    if (q.scoringHint) lines.push(`Scoring guidance (internal only): ${q.scoringHint}`);
+    if (q.profileField) lines.push(`Profile field to extract: ${q.profileField}`);
+  }
+
+  // Transition flags
+  if (context.firstQuestion) {
+    lines.push('\nThis is the FIRST question after the user just consented. Open with a warm, brief bridge like "יופי, בואו נתחיל..." before asking the first question naturally. Do NOT repeat the onboarding text. Keep it short.');
+  }
+  if (context.chapterTransition) {
+    lines.push('\nYou are transitioning between chapters. Make a smooth, warm bridge to the new chapter.');
+  }
+  if (context.clusterTransition) {
+    lines.push('This is a new topic area — transition smoothly from the previous topic.');
+  }
   if (context.resuming) lines.push('The user is resuming a paused session.');
+
   return lines.join('\n');
 }
 
@@ -300,9 +393,18 @@ function parseInterviewTurnResponse(raw) {
 
   try {
     const parsed = JSON.parse(jsonStr);
+    // Clean profileUpdates — remove null values
+    let profileUpdates = null;
+    if (parsed.profileUpdates && typeof parsed.profileUpdates === 'object') {
+      const cleaned = Object.fromEntries(
+        Object.entries(parsed.profileUpdates).filter(([, v]) => v != null && v !== '')
+      );
+      if (Object.keys(cleaned).length > 0) profileUpdates = cleaned;
+    }
     return {
       nextMessage: parsed.nextMessage ?? '',
       detectedSignals: Array.isArray(parsed.detectedSignals) ? parsed.detectedSignals : [],
+      profileUpdates,
       confidenceLevel: parsed.confidenceLevel ?? 'medium',
       shouldEscalate: Boolean(parsed.shouldEscalate),
       questionId: parsed.questionId ?? null,
@@ -312,6 +414,7 @@ function parseInterviewTurnResponse(raw) {
     return {
       nextMessage: raw,
       detectedSignals: [],
+      profileUpdates: null,
       confidenceLevel: 'low',
       shouldEscalate: false,
       questionId: null,

@@ -43,6 +43,11 @@
  *   POST  /admin/content/questions/reorder
  *   PATCH /admin/content/questions/:id/toggle
  *
+ * Chapter flow endpoints:
+ *   GET   /admin/content/chapters           - Get chapter config (definitions, prompts, transitions)
+ *   PUT   /admin/content/chapters           - Update chapter config
+ *   GET   /admin/sessions/chapter-progress  - Get chapter progress for all active sessions
+ *
  * System:
  *   GET  /admin/health
  */
@@ -690,6 +695,76 @@ router.patch('/content/questions/:id/toggle',
 
     await saveContentConfig('question_disabled', { disabled: [...disabled] });
     res.json({ id, enabled });
+  }
+);
+
+// ─── Chapter flow endpoints ──────────────────────────────────────────────────
+
+/**
+ * Default chapter configuration — editable by admin.
+ */
+const DEFAULT_CHAPTER_CONFIG = {
+  chapters: [
+    {
+      id: 'ch1_intro',
+      name_he: 'תיאום ציפיות — מי אני ומה אני עושה',
+      name_en: 'Getting to Know You',
+      transitionRule: 'Requires employmentStatus + workplaceType + jobRole',
+    },
+    {
+      id: 'ch2_barriers',
+      name_he: 'הבנת חסמים ואתגרים',
+      name_en: 'Understanding Barriers',
+      transitionRule: 'Requires minimum 7 of 13 barriers scored',
+    },
+    {
+      id: 'ch3_recommendations',
+      name_he: 'המלצות וסיכום',
+      name_en: 'Recommendations & Closing',
+      transitionRule: 'User explicitly approves the final report',
+    },
+  ],
+};
+
+router.get('/content/chapters',
+  requireCapability('view_all_cases'),
+  async (req, res) => {
+    const config = await getContentConfig('chapter_config');
+    res.json(config ?? DEFAULT_CHAPTER_CONFIG);
+  }
+);
+
+router.put('/content/chapters',
+  requireCapability('edit_recommendation'),
+  async (req, res) => {
+    const { chapters } = req.body ?? {};
+    if (!chapters || !Array.isArray(chapters)) {
+      return res.status(400).json({ error: 'chapters array is required' });
+    }
+    await saveContentConfig('chapter_config', { chapters });
+    res.json({ chapters });
+  }
+);
+
+router.get('/sessions/chapter-progress',
+  requireCapability('view_all_cases'),
+  async (req, res) => {
+    const sessions = await getAllSessions();
+    const activeSessions = sessions.filter(s =>
+      ['onboarding', 'active', 'paused', 'distress_hold'].includes(s.state)
+    );
+    const progress = activeSessions.map(s => ({
+      sessionId: s.id,
+      userId: s.userId,
+      state: s.state,
+      interviewChapter: s.interviewChapter ?? 'ch1_intro',
+      recommendationSubState: s.recommendationSubState ?? null,
+      answeredQuestions: (s.answeredQuestionIds ?? []).length,
+      detectedBarriers: (s.detectedBarrierIds ?? []).length,
+      userProfile: s.userProfile ?? {},
+      lastActiveAt: s.lastActiveAt,
+    }));
+    res.json(progress);
   }
 );
 

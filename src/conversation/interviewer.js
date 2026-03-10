@@ -32,14 +32,72 @@ export const INTENSITY = {
 // The 'scoringHint' guides signal normalization from the user's response.
 
 export const QUESTION_BANK = [
-  // ─ LOW intensity — environment & logistics ─
+  // ─ INTRO — Chapter 1: getting to know the user ─
+  {
+    id: 'Q-INTRO-00',
+    barrierIds: [],
+    intensity: INTENSITY.LOW,
+    cluster: 'intro',
+    chapter: 'ch1_intro',
+    prompt: 'קודם כל, מה המצב התעסוקתי כרגע? עובדים, מחפשים עבודה, בחל"ת, במילואים?',
+    followUp: null,
+    scoringHint: 'Extract employment status: employed, job_seeking, leave, military_reserve',
+    profileField: 'employmentStatus',
+  },
+  {
+    id: 'Q-INTRO-01',
+    barrierIds: [],
+    intensity: INTENSITY.LOW,
+    cluster: 'intro',
+    chapter: 'ch1_intro',
+    prompt: 'ספרו לי קצת — מה עושים בעבודה?',
+    followUp: 'מה התפקיד העיקרי?',
+    scoringHint: 'Extract job role and responsibilities',
+    profileField: 'jobRole',
+  },
+  {
+    id: 'Q-INTRO-02',
+    barrierIds: [],
+    intensity: INTENSITY.LOW,
+    cluster: 'intro',
+    chapter: 'ch1_intro',
+    prompt: 'איפה מקום העבודה? משרד, מפעל, שטח, מהבית, משולב?',
+    followUp: null,
+    scoringHint: 'Extract workplace type: office, open_office, factory, field, remote, hybrid',
+    profileField: 'workplaceType',
+  },
+  {
+    id: 'Q-INTRO-03',
+    barrierIds: [],
+    intensity: INTENSITY.LOW,
+    cluster: 'intro',
+    chapter: 'ch1_intro',
+    prompt: 'כמה זמן בתפקיד הנוכחי?',
+    followUp: null,
+    scoringHint: 'Extract time in role',
+    profileField: 'timeInRole',
+  },
+  {
+    id: 'Q-INTRO-04',
+    barrierIds: [],
+    intensity: INTENSITY.LOW,
+    cluster: 'intro',
+    chapter: 'ch1_intro',
+    prompt: 'יש צוות סביב, או שעובדים יותר עצמאית?',
+    followUp: null,
+    scoringHint: 'Extract team size / work style',
+    profileField: 'teamSize',
+  },
+
+  // ─ LOW intensity — environment & logistics (Chapter 2: barriers) ─
   {
     id: 'Q-ENV-01',
     barrierIds: [BARRIER_IDS.SENSORY_DISCOMFORT],
     intensity: INTENSITY.LOW,
     cluster: 'environmental',
-    prompt: 'איך הסביבה הפיזית בעבודה משפיעה עליך? (רעשים, תאורה, צפיפות, פתיחות החלל)',
-    followUp: 'יש מקומות או שעות שבהן זה יותר קשה?',
+    chapter: 'ch2_barriers',
+    prompt: 'איך הסביבה הפיזית בעבודה משפיעה? (רעשים, תאורה, צפיפות, פתיחות החלל)',
+    followUp: 'יש מקומות או שעות שבהם זה יותר קשה?',
     scoringHint: 'Higher distress about noise/light/crowds → higher score',
   },
   {
@@ -47,7 +105,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.MORNING_FUNCTIONING],
     intensity: INTENSITY.LOW,
     cluster: 'physical_functional',
-    prompt: 'איך הבקרים מסתדרים עבורך? קל לך להגיע בזמן ולהתחיל לעבוד?',
+    chapter: 'ch2_barriers',
+    prompt: 'איך הבקרים מסתדרים? קל להגיע בזמן ולהתחיל לעבוד?',
     followUp: 'כמה פעמים בשבוע זה מרגיש קשה?',
     scoringHint: 'Difficulty getting up/starting work → morning_functioning score',
   },
@@ -56,8 +115,9 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.FATIGUE],
     intensity: INTENSITY.LOW,
     cluster: 'physical_functional',
-    prompt: 'עייפות — כמה זה משפיע על יכולת העבודה שלך ביום-יום?',
-    followUp: 'האם יש חלק מסוים ביום שהעייפות הכי חזקה בו?',
+    chapter: 'ch2_barriers',
+    prompt: 'עייפות — כמה זה משפיע על יכולת העבודה ביום-יום?',
+    followUp: 'יש חלק מסוים ביום שהעייפות הכי חזקה בו?',
     scoringHint: 'Persistent fatigue affecting work → fatigue score',
   },
   {
@@ -65,6 +125,7 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.AVOIDANCE],
     intensity: INTENSITY.LOW,
     cluster: 'avoidance_social',
+    chapter: 'ch2_barriers',
     prompt: 'יש ימים שקשה לצאת מהבית לעבודה? איך זה מרגיש?',
     followUp: 'כמה ימים בחודש האחרון זה קרה בערך?',
     scoringHint: 'Difficulty leaving home/showing up → avoidance score',
@@ -76,6 +137,7 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.PROCRASTINATION],
     intensity: INTENSITY.MEDIUM,
     cluster: 'self_regulation',
+    chapter: 'ch2_barriers',
     prompt: 'דחיינות או קושי להתארגן — זה משהו שמופיע בעבודה?',
     followUp: 'מה בדרך כלל קשה — להתחיל משימות, לסיים אותן, או לתעדף?',
     scoringHint: 'Difficulty starting/organizing/prioritizing → procrastination score',
@@ -85,7 +147,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.TIME_MANAGEMENT],
     intensity: INTENSITY.MEDIUM,
     cluster: 'self_regulation',
-    prompt: 'ניהול זמן בעבודה — כמה זה אתגר עבורך? (לוחות זמנים, עמידה בדדליינים)',
+    chapter: 'ch2_barriers',
+    prompt: 'ניהול זמן בעבודה — כמה זה אתגר? (לוחות זמנים, עמידה בדדליינים)',
     followUp: 'יש סוג ספציפי של משימות שיותר קשה לנהל?',
     scoringHint: 'Difficulty with time/deadline management → time_management score',
   },
@@ -94,6 +157,7 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.MOTIVATION],
     intensity: INTENSITY.MEDIUM,
     cluster: 'self_regulation',
+    chapter: 'ch2_barriers',
     prompt: 'מוטיבציה — איך זה עם החשק והמניע לעבוד בתקופה האחרונה?',
     followUp: 'זה תמידי, או יש ימים שזה מרגיש שונה?',
     scoringHint: 'Low drive/interest in work → motivation score',
@@ -103,7 +167,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.CONCENTRATION],
     intensity: INTENSITY.MEDIUM,
     cluster: 'cognitive',
-    prompt: 'ריכוז בעבודה — כמה קשה לך להתרכז ולהישאר ממוקד/ת?',
+    chapter: 'ch2_barriers',
+    prompt: 'ריכוז בעבודה — כמה קשה להתרכז ולהישאר ממוקדים?',
     followUp: 'מה בדרך כלל מפזר — רעש חיצוני, מחשבות, או משהו אחר?',
     scoringHint: 'Difficulty sustaining focus → concentration score',
   },
@@ -114,8 +179,9 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.IRRITABILITY],
     intensity: INTENSITY.HIGH,
     cluster: 'relational',
-    prompt: 'רגזנות או תגובות חזקות בעבודה — זה משהו שקורה לך?',
-    followUp: 'מה בדרך כלל מוציא אותך מהאיזון במצב עבודה?',
+    chapter: 'ch2_barriers',
+    prompt: 'רגזנות או תגובות חזקות בעבודה — זה משהו שקורה?',
+    followUp: 'מה בדרך כלל מוציא מהאיזון במצב עבודה?',
     scoringHint: 'Strong/frequent irritable reactions → irritability score',
     distressCheckIn: true,
   },
@@ -124,7 +190,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.AUTHORITY],
     intensity: INTENSITY.HIGH,
     cluster: 'relational',
-    prompt: 'יחסים עם דמויות סמכות (מנהל/ת, ממונה) — כמה זה מאתגר עבורך?',
+    chapter: 'ch2_barriers',
+    prompt: 'יחסים עם דמויות סמכות (ממונים, מנהלים) — כמה זה מאתגר?',
     followUp: 'מה בדרך כלל קשה — שיחות אישיות, ביקורת, הנחיות?',
     scoringHint: 'Difficulty with managers/authority figures → authority score',
     distressCheckIn: true,
@@ -134,7 +201,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.EMOTIONAL_REGULATION],
     intensity: INTENSITY.HIGH,
     cluster: 'psychological',
-    prompt: 'ויסות רגשי בעבודה — האם קשה לך לנהל את הרגשות בסביבה מקצועית?',
+    chapter: 'ch2_barriers',
+    prompt: 'ויסות רגשי בעבודה — כמה קשה לנהל את הרגשות בסביבה מקצועית?',
     followUp: 'מה קורה כשקשה — נסיגה, פריקה, או משהו אחר?',
     scoringHint: 'Difficulty managing emotions at work → emotional_regulation score',
     distressCheckIn: true,
@@ -144,7 +212,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.ANXIETY_ATTACKS],
     intensity: INTENSITY.HIGH,
     cluster: 'psychological',
-    prompt: 'התקפי חרדה — האם זה משהו שקורה לך, גם בסביבת עבודה?',
+    chapter: 'ch2_barriers',
+    prompt: 'התקפי חרדה — זה משהו שקורה, גם בסביבת עבודה?',
     followUp: 'אם כן — יש מצבים שמפעילים את זה יותר?',
     scoringHint: 'Occurrence of anxiety attacks, especially at work → anxiety_attacks score',
     distressCheckIn: true,
@@ -154,7 +223,8 @@ export const QUESTION_BANK = [
     barrierIds: [BARRIER_IDS.SELF_WORTH],
     intensity: INTENSITY.HIGH,
     cluster: 'psychological',
-    prompt: 'ערך עצמי בהקשר של עבודה — איך אתה/את מרגיש/ה לגבי עצמך בתפקיד?',
+    chapter: 'ch2_barriers',
+    prompt: 'ערך עצמי בהקשר של עבודה — מה ההרגשה לגבי עצמכם בתפקיד?',
     followUp: 'יש מצבים שבהם הספק העצמי מחריף?',
     scoringHint: 'Low self-worth related to work role → self_worth score',
     distressCheckIn: true,
@@ -234,14 +304,14 @@ export function isDistressSignal(text) {
  * @returns {string} Hebrew containment message
  */
 export function getDistressResponse() {
-  return `אני שומע/ת שהדברים האלה קשים. תודה שחלקת/שחלקת איתי.
+  return `אני שומעת שהדברים האלה קשים. תודה ששיתפתם אותי.
 
-נעצור כאן לרגע. לא צריך/ה לענות על שום דבר עכשיו.
+נעצור כאן לרגע. אין צורך לענות על שום דבר עכשיו.
 
-אם אתה/את רוצה להמשיך מאוחר יותר — כל מה שנאמר כבר נשמר.
-אם אתה/את במצוקה עכשיו, כדאי לפנות למישהו שאתה/את סומך/ת עליו, או להתקשר לקו חירום רגשי.
+אם רוצים להמשיך מאוחר יותר — כל מה שנאמר כבר נשמר.
+אם יש מצוקה עכשיו, כדאי לפנות למישהו קרוב, או להתקשר לקו חירום רגשי.
 
-אפשר לחזור כשנכון לך. אני כאן. 💙`;
+אפשר לחזור כשמרגישים מוכנים. אני כאן. 💙`;
 }
 
 /**
@@ -249,7 +319,7 @@ export function getDistressResponse() {
  * @returns {string}
  */
 export function getDistressCheckIn() {
-  return 'רגע קטן — האם אתה/את מרגיש/ה בסדר להמשיך? (כן / אני צריך/ה להפסיק)';
+  return 'רגע קטן — מרגישים בסדר להמשיך? (כן / צריכים להפסיק)';
 }
 
 // ─── Adaptive sequencing ──────────────────────────────────────────────────────
@@ -258,40 +328,65 @@ export function getDistressCheckIn() {
  * Get the next question to ask, given barriers already answered.
  *
  * Strategy:
- * 1. Always start with LOW intensity questions
- * 2. After at least 3 LOW answers, allow MEDIUM intensity
- * 3. After at least 2 MEDIUM answers, allow HIGH intensity
- * 4. Never repeat a question already answered
- * 5. Prioritize questions for barriers not yet scored
+ * 1. Filter by chapter (intro questions for ch1, barrier questions for ch2)
+ * 2. Always start with LOW intensity questions
+ * 3. After at least 3 LOW barrier answers, allow MEDIUM intensity
+ * 4. After at least 2 MEDIUM answers, allow HIGH intensity
+ * 5. Never repeat a question already answered
+ * 6. Prioritize questions for barriers not yet scored
+ * 7. If mentionedTopics provided, prefer questions matching those barrier IDs (natural follow-ups)
  *
  * @param {string[]} answeredQuestionIds
  * @param {string[]} answeredBarrierIds
- * @returns {Promise<typeof QUESTION_BANK[0] | null>} Next question, or null if interview is complete
+ * @param {{ chapter?: string, mentionedTopics?: string[] }} [opts]
+ * @returns {Promise<typeof QUESTION_BANK[0] | null>} Next question, or null if chapter is complete
  */
-export async function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = []) {
+export async function getNextQuestion(answeredQuestionIds = [], answeredBarrierIds = [], opts = {}) {
+  const { chapter, mentionedTopics = [] } = opts;
   const effectiveBank = await getEffectiveQuestionBank();
   const answered = new Set(answeredQuestionIds);
   const covered = new Set(answeredBarrierIds);
 
-  const lowAnswered   = effectiveBank.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
-  const mediumAnswered = effectiveBank.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
+  // Filter by chapter if specified
+  const chapterBank = chapter
+    ? effectiveBank.filter(q => (q.chapter ?? 'ch2_barriers') === chapter)
+    : effectiveBank;
+
+  // Intensity gating only applies to barrier questions (ch2)
+  const barrierQuestions = effectiveBank.filter(q => (q.chapter ?? 'ch2_barriers') === 'ch2_barriers');
+  const lowAnswered   = barrierQuestions.filter(q => q.intensity === INTENSITY.LOW    && answered.has(q.id)).length;
+  const mediumAnswered = barrierQuestions.filter(q => q.intensity === INTENSITY.MEDIUM && answered.has(q.id)).length;
 
   const allowMedium = lowAnswered >= 3;
   const allowHigh   = mediumAnswered >= 2;
 
-  // Find candidates: unanswered + allowed intensity + uncovered barrier (preferred)
-  const candidates = effectiveBank.filter(q => {
+  // Find candidates: unanswered + allowed intensity
+  const candidates = chapterBank.filter(q => {
     if (answered.has(q.id)) return false;
-    if (q.intensity === INTENSITY.MEDIUM && !allowMedium) return false;
-    if (q.intensity === INTENSITY.HIGH   && !allowHigh)   return false;
+    // Intensity gating only for barrier questions
+    if ((q.chapter ?? 'ch2_barriers') === 'ch2_barriers') {
+      if (q.intensity === INTENSITY.MEDIUM && !allowMedium) return false;
+      if (q.intensity === INTENSITY.HIGH   && !allowHigh)   return false;
+    }
     return true;
   });
 
   if (candidates.length === 0) return null;
 
-  // Prefer questions that cover uncovered barriers
-  const prioritized = candidates.filter(q => q.barrierIds.some(id => !covered.has(id)));
-  const pool = prioritized.length > 0 ? prioritized : candidates;
+  // For barrier questions: prefer questions that cover uncovered barriers
+  const prioritized = candidates.filter(q =>
+    q.barrierIds.length === 0 || q.barrierIds.some(id => !covered.has(id))
+  );
+  let pool = prioritized.length > 0 ? prioritized : candidates;
+
+  // If user mentioned topics organically, prefer questions that match those barrier IDs
+  if (mentionedTopics.length > 0) {
+    const mentioned = new Set(mentionedTopics);
+    const topicMatches = pool.filter(q => q.barrierIds.some(id => mentioned.has(id)));
+    if (topicMatches.length > 0) {
+      pool = topicMatches;
+    }
+  }
 
   // Return the lowest-intensity candidate first
   return pool.sort((a, b) => a.intensity - b.intensity)[0];

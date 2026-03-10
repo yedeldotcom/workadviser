@@ -964,14 +964,51 @@ Below is pilot-facing product copy direction. Keep it natural, Israeli, practica
 
 ### 7.3 WhatsApp onboarding message
 ```text
-היי, אני כאן כדי לעזור לך להבין מה מקשה עליך בעבודה ומה יכול לעזור.
+היי, אני WorkAdviser.
 
-נלך שלב-שלב, בצורה קצרה וברורה.
-אפשר לענות בטקסט, בהודעה קולית, ולפעמים גם לבחור תשובה מוכנה.
-אפשר גם לעצור בכל רגע.
+אני כאן לעזור להבין מה מקשה בעבודה — ומה אפשר לעשות.
 
-בסוף תקבל/י סיכום עם המלצות עבורך, ואפשרות להחליט אם ליצור גם מסמך למעסיק.
+אנחנו בפיילוט מותאם טראומה: פרויקט של נט"ל וירון אדל שמלווה אנשים עם טראומה להצליח בעבודה.
+
+בסוף השיחה אפשר לקבל:
+• רעיונות מותאמים אישית למצב
+• כלים לשיחה עם המעסיק — למי שרוצה
+
+המידע שמור ומאובטח. ואפשר לעצור, לדלג או לקחת הפסקה בכל שלב.
+
+מתחילים?
 ```
+
+### 7.3.1 Three-Chapter Interview Structure
+
+The interview is divided into three distinct chapters, each with a clear goal:
+
+**Chapter 1 — Getting to Know You (תיאום ציפיות)**
+- First question: employment status (working / looking for work / חל"ת / מילואים)
+- Collect: job role, workplace type, team size, time in role
+- All answers processed by LLM in context — even technical answers may contain emotional signals
+- Ends when: employment status + workplace type + job role collected
+- Transition: "תודה, עכשיו שאני מבינה יותר את המצב, אני רוצה לשאול כמה שאלות על האתגרים היומיומיים..."
+
+**Chapter 2 — Understanding Barriers (הבנת חסמים ואתגרים)**
+- Guided exploration of the 13 PTSD employment barriers
+- Questions adapted to user's specific workplace (from Chapter 1)
+- Intensity gating: LOW → MEDIUM → HIGH progression
+- Content-aware selection: follows topics user mentioned organically
+- Ends when: minimum 7 of 13 barriers scored
+
+**Chapter 3 — Recommendations & Closing (המלצות וסיכום)**
+- Summary of findings + top 3 personalized recommendations
+- Interactive report review: user can request changes, system regenerates
+- Disclosure preferences and employer conversation preparation
+- Sub-states: draft → review → approved
+- Ends when: user explicitly approves the final report
+
+### 7.3.2 Gender-Neutral Hebrew Language Rule
+All Hebrew text uses gender-neutral phrasing. No slash constructions (את/ה, עובד/ת).
+- Plural forms: ספרו, רוצים, עובדים
+- Infinitive constructions: אפשר לספר, כדאי לבדוק
+- System persona speaks in female form (אני מבינה) — consistent, not gendered toward user
 
 ### 7.4 User report tone example
 ```text
