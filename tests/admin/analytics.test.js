@@ -461,10 +461,10 @@ describe('markTemplateStale', () => {
 // ─── promoteKnowledgeItem ─────────────────────────────────────────────────────
 
 describe('promoteKnowledgeItem', () => {
-  test('advances promotionState one step', () => {
+  test('advances promotionState one step', async () => {
     const item = makeKnowledgeItem({ promotionState: 'case_only' });
     saveKnowledgeItem(item);
-    const { item: promoted } = promoteKnowledgeItem(item, {
+    const { item: promoted } = await promoteKnowledgeItem(item, {
       promotedBy: 'admin_operator',
       scope: 'global',
       sourceCaseIds: ['case-001'],
@@ -472,13 +472,13 @@ describe('promoteKnowledgeItem', () => {
     assert.equal(promoted.promotionState, 'candidate_pattern');
   });
 
-  test('advances through all states in order', () => {
+  test('advances through all states in order', async () => {
     const states = ['case_only', 'candidate_pattern', 'validated', 'rule_update_candidate'];
     let item = makeKnowledgeItem({ promotionState: 'case_only' });
     saveKnowledgeItem(item);
 
     for (let i = 0; i < states.length - 1; i++) {
-      const { item: next } = promoteKnowledgeItem(item, {
+      const { item: next } = await promoteKnowledgeItem(item, {
         promotedBy: 'system_owner',
         scope: 'global',
         sourceCaseIds: ['c-001'],
@@ -489,19 +489,19 @@ describe('promoteKnowledgeItem', () => {
     }
   });
 
-  test('throws when already at maximum state', () => {
+  test('throws when already at maximum state', async () => {
     const item = makeKnowledgeItem({ promotionState: 'rule_update_candidate' });
     saveKnowledgeItem(item);
-    assert.throws(
-      () => promoteKnowledgeItem(item, { promotedBy: 'admin', scope: 'global', sourceCaseIds: ['c-001'] }),
+    await assert.rejects(
+      async () => await promoteKnowledgeItem(item, { promotedBy: 'admin', scope: 'global', sourceCaseIds: ['c-001'] }),
       /already at maximum/
     );
   });
 
-  test('writes audit log with fromState and toState', () => {
+  test('writes audit log with fromState and toState', async () => {
     const item = makeKnowledgeItem({ promotionState: 'case_only' });
     saveKnowledgeItem(item);
-    const { log } = promoteKnowledgeItem(item, {
+    const { log } = await promoteKnowledgeItem(item, {
       promotedBy: 'system_owner',
       scope: 'campaign',
       sourceCaseIds: ['c-123'],
@@ -514,10 +514,10 @@ describe('promoteKnowledgeItem', () => {
     assert.deepEqual(log.diff.sourceCaseIds, ['c-123']);
   });
 
-  test('record includes all metadata fields', () => {
+  test('record includes all metadata fields', async () => {
     const item = makeKnowledgeItem({ promotionState: 'case_only' });
     saveKnowledgeItem(item);
-    const { record } = promoteKnowledgeItem(item, {
+    const { record } = await promoteKnowledgeItem(item, {
       promotedBy: 'admin_operator',
       scope: 'segment',
       sourceCaseIds: ['c-001', 'c-002'],

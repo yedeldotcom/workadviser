@@ -184,11 +184,11 @@ describe('getQueueSummary', () => {
 describe('buildCaseWorkspace', () => {
   beforeEach(() => resetStore());
 
-  it('returns null for unknown userId', () => {
-    assert.equal(buildCaseWorkspace('nonexistent'), null);
+  it('returns null for unknown userId', async () => {
+    assert.equal(await buildCaseWorkspace('nonexistent'), null);
   });
 
-  it('builds workspace for a basic case', () => {
+  it('builds workspace for a basic case', async () => {
     const user = makeUser();
     const profile = createUserProfile({ userId: user.id });
     const session = makeSession(user.id, 'complete');
@@ -199,7 +199,7 @@ describe('buildCaseWorkspace', () => {
     saveSession(session);
     saveReport(report);
 
-    const ws = buildCaseWorkspace(user.id);
+    const ws = await buildCaseWorkspace(user.id);
     assert.ok(ws);
     assert.equal(ws.caseId, user.id);
     assert.ok(ws.user);
@@ -209,14 +209,14 @@ describe('buildCaseWorkspace', () => {
     assert.ok(ws.summary);
   });
 
-  it('omits phoneNumber from sanitized user', () => {
+  it('omits phoneNumber from sanitized user', async () => {
     const user = makeUser({ phoneNumber: '+972501234567' });
     saveUser(user);
-    const ws = buildCaseWorkspace(user.id);
+    const ws = await buildCaseWorkspace(user.id);
     assert.equal(ws.user.phoneNumber, undefined);
   });
 
-  it('summary reflects correct state', () => {
+  it('summary reflects correct state', async () => {
     const user = makeUser();
     const session = makeSession(user.id, 'paused', {
       detectedBarrierIds: ['fatigue', 'concentration', 'anxiety_attacks'],
@@ -224,7 +224,7 @@ describe('buildCaseWorkspace', () => {
     saveUser(user);
     saveSession(session);
 
-    const ws = buildCaseWorkspace(user.id);
+    const ws = await buildCaseWorkspace(user.id);
     assert.equal(ws.summary.currentSessionState, 'paused');
     assert.equal(ws.summary.barriersCaptured, 3);
   });
@@ -275,14 +275,14 @@ describe('buildLogicMap', () => {
 describe('approveReport', () => {
   beforeEach(() => resetStore());
 
-  it('transitions report to admin_approved', () => {
+  it('transitions report to admin_approved', async () => {
     const user = makeUser();
     const report = makeReport(user.id, 'admin_review_required');
     saveUser(user);
     saveReport(report);
     saveProfile(createUserProfile({ userId: user.id }));
 
-    const { report: updated, approval, log } = approveReport(report.id, 'admin-1', 'looks good');
+    const { report: updated, approval, log } = await approveReport(report.id, 'admin-1', 'looks good');
     assert.equal(updated.state, 'admin_approved');
     assert.ok(updated.adminReviewedAt);
     assert.equal(approval.decision, 'approved');
@@ -290,41 +290,41 @@ describe('approveReport', () => {
     assert.equal(log.changedBy, 'admin-1');
   });
 
-  it('throws for unknown report', () => {
-    assert.throws(() => approveReport('nonexistent', 'admin-1'), /Report not found/);
+  it('throws for unknown report', async () => {
+    await assert.rejects(async () => await approveReport('nonexistent', 'admin-1'), /Report not found/);
   });
 });
 
 describe('rejectReport', () => {
   beforeEach(() => resetStore());
 
-  it('transitions report to withheld', () => {
+  it('transitions report to withheld', async () => {
     const user = makeUser();
     const report = makeReport(user.id, 'admin_review_required');
     saveUser(user);
     saveReport(report);
 
-    const { report: updated, approval } = rejectReport(report.id, 'admin-1', 'needs revision');
+    const { report: updated, approval } = await rejectReport(report.id, 'admin-1', 'needs revision');
     assert.equal(updated.state, 'withheld');
     assert.equal(approval.decision, 'rejected');
   });
 
-  it('requires rejection reason', () => {
-    assert.throws(() => rejectReport('r-1', 'admin-1', ''), /reason is required/);
+  it('requires rejection reason', async () => {
+    await assert.rejects(async () => await rejectReport('r-1', 'admin-1', ''), /reason is required/);
   });
 });
 
 describe('editRecommendation', () => {
   beforeEach(() => resetStore());
 
-  it('applies edit and logs it', () => {
+  it('applies edit and logs it', async () => {
     const user = makeUser();
     const report = makeReport(user.id, 'admin_review_required');
     report.sections = { recommendations: [{ id: 'rec-1', action_he: 'original text' }] };
     saveUser(user);
     saveReport(report);
 
-    const { report: updated, log } = editRecommendation(
+    const { report: updated, log } = await editRecommendation(
       report.id, 'rec-1', 'updated text', 'admin-1',
       { meaningChanged: false, reason: 'clarity improvement' }
     );
@@ -336,14 +336,14 @@ describe('editRecommendation', () => {
     assert.ok(updated.sections.recommendations[0].edited);
   });
 
-  it('logs meaningChanged=true for substantive edits', () => {
+  it('logs meaningChanged=true for substantive edits', async () => {
     const user = makeUser();
     const report = makeReport(user.id, 'draft_generated');
     report.sections = {};
     saveUser(user);
     saveReport(report);
 
-    const { log } = editRecommendation(report.id, 'rec-x', 'new text', 'admin-1', { meaningChanged: true });
+    const { log } = await editRecommendation(report.id, 'rec-x', 'new text', 'admin-1', { meaningChanged: true });
     assert.equal(log.meaningChanged, true);
   });
 });
@@ -351,33 +351,33 @@ describe('editRecommendation', () => {
 describe('addCaseNote', () => {
   beforeEach(() => resetStore());
 
-  it('appends note to profile and logs it', () => {
+  it('appends note to profile and logs it', async () => {
     const user = makeUser();
     const profile = createUserProfile({ userId: user.id });
     saveUser(user);
     saveProfile(profile);
 
-    const { profile: updated, log } = addCaseNote(user.id, 'Follow up next week', 'admin-1');
+    const { profile: updated, log } = await addCaseNote(user.id, 'Follow up next week', 'admin-1');
     assert.equal(updated.adminNotes.length, 1);
     assert.equal(updated.adminNotes[0].text, 'Follow up next week');
     assert.equal(log.action, 'note_added');
   });
 
-  it('throws for unknown profile', () => {
-    assert.throws(() => addCaseNote('unknown', 'note', 'admin-1'), /Profile not found/);
+  it('throws for unknown profile', async () => {
+    await assert.rejects(async () => await addCaseNote('unknown', 'note', 'admin-1'), /Profile not found/);
   });
 });
 
 describe('markFollowUp', () => {
   beforeEach(() => resetStore());
 
-  it('marks follow-up with reason and logs it', () => {
+  it('marks follow-up with reason and logs it', async () => {
     const user = makeUser();
     const profile = createUserProfile({ userId: user.id });
     saveUser(user);
     saveProfile(profile);
 
-    const { profile: updated, log } = markFollowUp(user.id, { reason: 're-check distress', dueAt: '2026-04-01' }, 'admin-1');
+    const { profile: updated, log } = await markFollowUp(user.id, { reason: 're-check distress', dueAt: '2026-04-01' }, 'admin-1');
     assert.ok(updated.pendingFollowUp);
     assert.equal(updated.pendingFollowUp.reason, 're-check distress');
     assert.equal(updated.pendingFollowUp.dueAt, '2026-04-01');
@@ -388,13 +388,13 @@ describe('markFollowUp', () => {
 describe('markReportReadyForDelivery', () => {
   beforeEach(() => resetStore());
 
-  it('transitions admin_approved → user_delivery_ready', () => {
+  it('transitions admin_approved → user_delivery_ready', async () => {
     const user = makeUser();
     const report = makeReport(user.id, 'admin_approved');
     saveUser(user);
     saveReport(report);
 
-    const { report: updated } = markReportReadyForDelivery(report.id, 'admin-1');
+    const { report: updated } = await markReportReadyForDelivery(report.id, 'admin-1');
     assert.equal(updated.state, 'user_delivery_ready');
   });
 });
@@ -404,7 +404,7 @@ describe('markReportReadyForDelivery', () => {
 describe('Audit log', () => {
   beforeEach(() => resetStore());
 
-  it('accumulates entries across multiple actions', () => {
+  it('accumulates entries across multiple actions', async () => {
     const user = makeUser();
     const profile = createUserProfile({ userId: user.id });
     const report = makeReport(user.id, 'admin_review_required');
@@ -412,9 +412,9 @@ describe('Audit log', () => {
     saveProfile(profile);
     saveReport(report);
 
-    approveReport(report.id, 'admin-1');
-    addCaseNote(user.id, 'note 1', 'admin-1');
-    addCaseNote(user.id, 'note 2', 'admin-2');
+    await approveReport(report.id, 'admin-1');
+    await addCaseNote(user.id, 'note 1', 'admin-1');
+    await addCaseNote(user.id, 'note 2', 'admin-2');
 
     const logs = getAllAuditLogs();
     assert.ok(logs.length >= 3);

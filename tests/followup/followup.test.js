@@ -68,71 +68,71 @@ beforeEach(() => resetStore());
 // ─── recordChangeEvent ────────────────────────────────────────────────────────
 
 describe('recordChangeEvent', () => {
-  test('saves event and returns it with correct revalidationLevel', () => {
+  test('saves event and returns it with correct revalidationLevel', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'new_boss');
+    const { event } = await recordChangeEvent('user-001', 'new_boss');
     assert.equal(event.userId, 'user-001');
     assert.equal(event.eventType, 'new_boss');
     assert.equal(event.revalidationLevel, 'partial_revalidation');
     assert.equal(event.revalidationRequired, true);
   });
 
-  test('full_reassessment events: hired, fired, leave, return, resigned, new_role', () => {
+  test('full_reassessment events: hired, fired, leave, return, resigned, new_role', async () => {
     makeProfile();
     for (const et of ['hired', 'fired', 'leave', 'return', 'resigned', 'new_role']) {
-      const { event } = recordChangeEvent('user-001', et);
+      const { event } = await recordChangeEvent('user-001', et);
       assert.equal(event.revalidationLevel, 'full_reassessment', `${et} should be full_reassessment`);
     }
   });
 
-  test('light_refresh events: schedule_change, hybrid_change, commute_change, team_change', () => {
+  test('light_refresh events: schedule_change, hybrid_change, commute_change, team_change', async () => {
     makeProfile();
     for (const et of ['schedule_change', 'hybrid_change', 'commute_change', 'team_change']) {
-      const { event } = recordChangeEvent('user-001', et);
+      const { event } = await recordChangeEvent('user-001', et);
       assert.equal(event.revalidationLevel, 'light_refresh', `${et} should be light_refresh`);
     }
   });
 
-  test('links event ID into profile.changeEventIds', () => {
+  test('links event ID into profile.changeEventIds', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'promotion');
+    const { event } = await recordChangeEvent('user-001', 'promotion');
     const profile = getProfile('user-001');
     assert.ok(profile.changeEventIds.includes(event.id));
   });
 
-  test('stores event in store — retrievable via getChangeEventsForUser', () => {
+  test('stores event in store — retrievable via getChangeEventsForUser', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'team_change');
+    const { event } = await recordChangeEvent('user-001', 'team_change');
     const events = getChangeEventsForUser('user-001');
     assert.ok(events.some(e => e.id === event.id));
   });
 
-  test('writes audit log entry', () => {
+  test('writes audit log entry', async () => {
     makeProfile();
-    const { event, log } = recordChangeEvent('user-001', 'new_boss', { notes: 'New manager from HQ' });
+    const { event, log } = await recordChangeEvent('user-001', 'new_boss', { notes: 'New manager from HQ' });
     assert.equal(log.action, 'change_event_recorded');
     assert.equal(log.entityId, 'user-001');
     assert.ok(log.reason.includes('new_boss'));
   });
 
-  test('throws for unknown eventType', () => {
+  test('throws for unknown eventType', async () => {
     makeProfile();
-    assert.throws(
-      () => recordChangeEvent('user-001', 'lottery_win'),
+    await assert.rejects(
+      async () => await recordChangeEvent('user-001', 'lottery_win'),
       /Unknown eventType/
     );
   });
 
-  test('throws when profile not found', () => {
-    assert.throws(
-      () => recordChangeEvent('nonexistent', 'hired'),
+  test('throws when profile not found', async () => {
+    await assert.rejects(
+      async () => await recordChangeEvent('nonexistent', 'hired'),
       /Profile not found/
     );
   });
 
-  test('accepts custom occurredAt and notes', () => {
+  test('accepts custom occurredAt and notes', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'relocated', {
+    const { event } = await recordChangeEvent('user-001', 'relocated', {
       occurredAt: '2025-01-01T00:00:00.000Z',
       notes: 'Moved to Tel Aviv office',
     });
@@ -144,25 +144,25 @@ describe('recordChangeEvent', () => {
 // ─── resolveChangeEvent ───────────────────────────────────────────────────────
 
 describe('resolveChangeEvent', () => {
-  test('marks event revalidationRequired = false', () => {
+  test('marks event revalidationRequired = false', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'promotion');
-    const { event: resolved } = resolveChangeEvent(event.id, 'admin_operator');
+    const { event } = await recordChangeEvent('user-001', 'promotion');
+    const { event: resolved } = await resolveChangeEvent(event.id, 'admin_operator');
     assert.equal(resolved.revalidationRequired, false);
     assert.ok(resolved.resolvedAt);
   });
 
-  test('writes audit log', () => {
+  test('writes audit log', async () => {
     makeProfile();
-    const { event } = recordChangeEvent('user-001', 'team_change');
-    const { log } = resolveChangeEvent(event.id, 'admin_operator');
+    const { event } = await recordChangeEvent('user-001', 'team_change');
+    const { log } = await resolveChangeEvent(event.id, 'admin_operator');
     assert.equal(log.action, 'change_event_resolved');
     assert.equal(log.entityId, event.id);
   });
 
-  test('throws for unknown event ID', () => {
-    assert.throws(
-      () => resolveChangeEvent('does-not-exist', 'admin'),
+  test('throws for unknown event ID', async () => {
+    await assert.rejects(
+      async () => await resolveChangeEvent('does-not-exist', 'admin'),
       /Change event not found/
     );
   });
@@ -288,10 +288,10 @@ describe('assessStaleness', () => {
 // ─── Scheduler ────────────────────────────────────────────────────────────────
 
 describe('scheduleInitialFollowUp', () => {
-  test('creates pending check-in ~14 days from delivery', () => {
+  test('creates pending check-in ~14 days from delivery', async () => {
     makeProfile();
     const now = new Date();
-    const { checkin } = scheduleInitialFollowUp('user-001', { scheduledBy: 'system' });
+    const { checkin } = await scheduleInitialFollowUp('user-001', { scheduledBy: 'system' });
     assert.equal(checkin.type, 'initial_followup');
     assert.equal(checkin.state, 'pending');
     const scheduled = new Date(checkin.scheduledFor);
@@ -299,43 +299,43 @@ describe('scheduleInitialFollowUp', () => {
     assert.ok(diffDays >= 13 && diffDays <= 15, `Expected ~14 days, got ${diffDays}`);
   });
 
-  test('message is a non-empty Hebrew string', () => {
+  test('message is a non-empty Hebrew string', async () => {
     makeProfile();
-    const { checkin } = scheduleInitialFollowUp('user-001');
+    const { checkin } = await scheduleInitialFollowUp('user-001');
     assert.ok(typeof checkin.message === 'string');
     assert.ok(checkin.message.length > 20);
     // Should contain the user's first name (שרה)
     assert.ok(checkin.message.includes('שרה'));
   });
 
-  test('check-in is saved to store', () => {
+  test('check-in is saved to store', async () => {
     makeProfile();
-    const { checkin } = scheduleInitialFollowUp('user-001');
+    const { checkin } = await scheduleInitialFollowUp('user-001');
     const stored = getCheckinsForUser('user-001');
     assert.ok(stored.some(c => c.id === checkin.id));
   });
 
-  test('audit log is written', () => {
+  test('audit log is written', async () => {
     makeProfile();
-    const { log } = scheduleInitialFollowUp('user-001');
+    const { log } = await scheduleInitialFollowUp('user-001');
     assert.equal(log.action, 'followup_scheduled');
     assert.ok(log.diff.type === 'initial_followup');
   });
 });
 
 describe('schedulePeriodicCheckin', () => {
-  test('cadence matches employment stage (active_employment = 30 days)', () => {
+  test('cadence matches employment stage (active_employment = 30 days)', async () => {
     makeProfile({ employmentContext: { employmentStage: 'active_employment' } });
-    const { checkin } = schedulePeriodicCheckin('user-001');
+    const { checkin } = await schedulePeriodicCheckin('user-001');
     const diffDays = Math.round(
       (new Date(checkin.scheduledFor) - new Date()) / 86_400_000
     );
     assert.ok(diffDays >= 29 && diffDays <= 31, `Expected ~30 days, got ${diffDays}`);
   });
 
-  test('cadence matches job_seeking stage (14 days)', () => {
+  test('cadence matches job_seeking stage (14 days)', async () => {
     makeProfile({ employmentContext: { employmentStage: 'job_seeking' } });
-    const { checkin } = schedulePeriodicCheckin('user-001');
+    const { checkin } = await schedulePeriodicCheckin('user-001');
     const diffDays = Math.round(
       (new Date(checkin.scheduledFor) - new Date()) / 86_400_000
     );
@@ -344,9 +344,9 @@ describe('schedulePeriodicCheckin', () => {
 });
 
 describe('scheduleEventTriggeredCheckin', () => {
-  test('creates event-triggered check-in ~3 days out', () => {
+  test('creates event-triggered check-in ~3 days out', async () => {
     makeProfile();
-    const { checkin } = scheduleEventTriggeredCheckin('user-001', 'new_boss', 'evt-001');
+    const { checkin } = await scheduleEventTriggeredCheckin('user-001', 'new_boss', 'evt-001');
     assert.equal(checkin.type, 'event_triggered');
     assert.equal(checkin.triggerEventType, 'new_boss');
     assert.equal(checkin.triggerEventId, 'evt-001');
@@ -356,26 +356,26 @@ describe('scheduleEventTriggeredCheckin', () => {
     assert.ok(diffDays >= 2 && diffDays <= 4, `Expected ~3 days, got ${diffDays}`);
   });
 
-  test('message references the event type in Hebrew', () => {
+  test('message references the event type in Hebrew', async () => {
     makeProfile();
-    const { checkin } = scheduleEventTriggeredCheckin('user-001', 'new_boss', 'evt-001');
+    const { checkin } = await scheduleEventTriggeredCheckin('user-001', 'new_boss', 'evt-001');
     assert.ok(checkin.message.includes('מנהל'));
   });
 });
 
 describe('scheduleRevalidation', () => {
-  test('scheduled immediately (now)', () => {
+  test('scheduled immediately (now)', async () => {
     makeProfile();
     const before = new Date();
-    const { checkin } = scheduleRevalidation('user-001');
+    const { checkin } = await scheduleRevalidation('user-001');
     const after = new Date();
     const scheduled = new Date(checkin.scheduledFor);
     assert.ok(scheduled >= before && scheduled <= after);
   });
 
-  test('message asks user if they want to refresh', () => {
+  test('message asks user if they want to refresh', async () => {
     makeProfile();
-    const { checkin } = scheduleRevalidation('user-001');
+    const { checkin } = await scheduleRevalidation('user-001');
     assert.ok(checkin.message.includes('רענן'));
   });
 });
@@ -383,39 +383,39 @@ describe('scheduleRevalidation', () => {
 // ─── Check-in state transitions ───────────────────────────────────────────────
 
 describe('markCheckinSent / markCheckinResponded', () => {
-  test('markCheckinSent transitions to sent and stamps sentAt', () => {
+  test('markCheckinSent transitions to sent and stamps sentAt', async () => {
     makeProfile();
-    const { checkin } = scheduleInitialFollowUp('user-001');
-    const updated = markCheckinSent(checkin.id);
+    const { checkin } = await scheduleInitialFollowUp('user-001');
+    const updated = await markCheckinSent(checkin.id);
     assert.equal(updated.state, 'sent');
     assert.ok(updated.sentAt);
   });
 
-  test('markCheckinResponded transitions to responded and stamps respondedAt', () => {
+  test('markCheckinResponded transitions to responded and stamps respondedAt', async () => {
     makeProfile();
-    const { checkin } = scheduleInitialFollowUp('user-001');
-    markCheckinSent(checkin.id);
-    const responded = markCheckinResponded(checkin.id);
+    const { checkin } = await scheduleInitialFollowUp('user-001');
+    await markCheckinSent(checkin.id);
+    const responded = await markCheckinResponded(checkin.id);
     assert.equal(responded.state, 'responded');
     assert.ok(responded.respondedAt);
   });
 
-  test('throws for unknown checkinId', () => {
-    assert.throws(() => markCheckinSent('bad-id'), /Check-in not found/);
-    assert.throws(() => markCheckinResponded('bad-id'), /Check-in not found/);
+  test('throws for unknown checkinId', async () => {
+    await assert.rejects(async () => await markCheckinSent('bad-id'), /Check-in not found/);
+    await assert.rejects(async () => await markCheckinResponded('bad-id'), /Check-in not found/);
   });
 });
 
 // ─── getDueCheckins ───────────────────────────────────────────────────────────
 
 describe('getDueCheckins', () => {
-  test('returns empty when no check-ins are due', () => {
+  test('returns empty when no check-ins are due', async () => {
     makeProfile();
-    scheduleInitialFollowUp('user-001'); // 14 days out
-    assert.deepEqual(getDueCheckins('user-001'), []);
+    await scheduleInitialFollowUp('user-001'); // 14 days out
+    assert.deepEqual(await getDueCheckins('user-001'), []);
   });
 
-  test('returns only pending check-ins whose scheduledFor is now or past', () => {
+  test('returns only pending check-ins whose scheduledFor is now or past', async () => {
     makeProfile();
     // Insert a past-due check-in directly
     const pastDate = new Date();
@@ -435,7 +435,7 @@ describe('getDueCheckins', () => {
     };
     saveFollowUpCheckin(dueCheckin);
 
-    const due = getDueCheckins('user-001');
+    const due = await getDueCheckins('user-001');
     assert.ok(due.some(c => c.id === dueCheckin.id));
     for (const c of due) {
       assert.equal(c.state, 'pending');
@@ -447,14 +447,14 @@ describe('getDueCheckins', () => {
 // ─── expirePendingCheckins ────────────────────────────────────────────────────
 
 describe('expirePendingCheckins', () => {
-  test('returns empty array when all check-ins are in the future', () => {
+  test('returns empty array when all check-ins are in the future', async () => {
     makeProfile();
-    scheduleInitialFollowUp('user-001'); // 14 days out — not expired
-    const expired = expirePendingCheckins('user-001');
+    await scheduleInitialFollowUp('user-001'); // 14 days out — not expired
+    const expired = await expirePendingCheckins('user-001');
     assert.deepEqual(expired, []);
   });
 
-  test('expires check-ins whose scheduledFor is in the past', () => {
+  test('expires check-ins whose scheduledFor is in the past', async () => {
     makeProfile();
     const pastDate = new Date();
     pastDate.setDate(pastDate.getDate() - 5);
@@ -472,7 +472,7 @@ describe('expirePendingCheckins', () => {
       createdAt: pastDate.toISOString(),
     };
     saveFollowUpCheckin(staleCheckin);
-    const expired = expirePendingCheckins('user-001');
+    const expired = await expirePendingCheckins('user-001');
     assert.ok(expired.includes(staleCheckin.id));
     const stored = getCheckinsForUser('user-001').find(c => c.id === staleCheckin.id);
     assert.equal(stored.state, 'expired');
@@ -482,42 +482,42 @@ describe('expirePendingCheckins', () => {
 // ─── runScheduler ─────────────────────────────────────────────────────────────
 
 describe('runScheduler', () => {
-  test('returns null for fresh case with no events', () => {
+  test('returns null for fresh case with no events', async () => {
     const profile = makeProfile();
-    const result = runScheduler('user-001', [], {
+    const result = await runScheduler('user-001', [], {
       lastAssessedAt: new Date().toISOString(),
     });
     assert.equal(result, null);
   });
 
-  test('schedules event-triggered check-in for full_reassessment event', () => {
+  test('schedules event-triggered check-in for full_reassessment event', async () => {
     makeProfile();
     const events = [
       oldEvent({ eventType: 'hired', revalidationLevel: 'full_reassessment', id: 'evt-x' }, 0),
     ];
-    const result = runScheduler('user-001', events, {
+    const result = await runScheduler('user-001', events, {
       lastAssessedAt: new Date().toISOString(),
     });
     assert.ok(result !== null);
     assert.equal(result.checkin.type, 'event_triggered');
   });
 
-  test('schedules revalidation for time-based staleness', () => {
+  test('schedules revalidation for time-based staleness', async () => {
     const profile = makeProfile();
     const longAgo = new Date();
     longAgo.setDate(longAgo.getDate() - 200);
-    const result = runScheduler('user-001', [], {
+    const result = await runScheduler('user-001', [], {
       lastAssessedAt: longAgo.toISOString(),
     });
     assert.ok(result !== null);
     assert.equal(result.checkin.type, 'revalidation');
   });
 
-  test('returns null if a pending check-in already exists', () => {
+  test('returns null if a pending check-in already exists', async () => {
     makeProfile();
-    scheduleInitialFollowUp('user-001'); // creates a pending check-in
+    await scheduleInitialFollowUp('user-001'); // creates a pending check-in
     const events = [oldEvent({ revalidationLevel: 'full_reassessment' }, 0)];
-    const result = runScheduler('user-001', events, {
+    const result = await runScheduler('user-001', events, {
       lastAssessedAt: new Date().toISOString(),
     });
     assert.equal(result, null); // already pending — skip

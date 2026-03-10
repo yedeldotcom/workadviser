@@ -20,6 +20,8 @@
  *   META_PHONE_NUMBER_ID     = ...
  */
 
+import { randomUUID } from 'node:crypto';
+
 const PROVIDER = process.env.WHATSAPP_PROVIDER ?? 'stub';
 
 /**
@@ -55,9 +57,9 @@ export async function sendMessage(to, text) {
  */
 export async function sendMessages(to, texts, delayMs = 400) {
   const results = [];
-  for (const text of texts) {
-    results.push(await sendMessage(to, text));
-    if (delayMs > 0 && texts.indexOf(text) < texts.length - 1) {
+  for (let i = 0; i < texts.length; i++) {
+    results.push(await sendMessage(to, texts[i]));
+    if (delayMs > 0 && i < texts.length - 1) {
       await new Promise(r => setTimeout(r, delayMs));
     }
   }
@@ -70,7 +72,7 @@ function _sendStub(to, text) {
   const result = {
     ok: true,
     provider: 'stub',
-    messageId: `stub-${crypto.randomUUID()}`,
+    messageId: `stub-${randomUUID()}`,
     sentAt: new Date().toISOString(),
     error: null,
   };

@@ -1,6 +1,6 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-10 | Branch: `claude/enhance-interview-logic-gpiNZ` | **Steps 0–11 + Infrastructure done + Enhanced Interview Logic**
+Last updated: 2026-03-10 | Branch: `claude/codebase-review-refactor-KNYnZ` | **Steps 0–11 + Infrastructure done + Enhanced Interview Logic + Codebase Review**
 
 ---
 
@@ -41,10 +41,9 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 - **Base44 data envelope fix** (2026-03-08): User custom fields (`phoneNumber`, `channel`, `consentState`, etc.) are stored inside a nested `data` object on the raw User record, not as top-level columns.
 
 **Test status (as of 2026-03-08):**
-- 26 of 36 test suites passing
-- 10 test suites failing due to `BASE44_APP_ID` env var not set in test environment
-  - Affected: `tests/admin/admin.test.js`, `tests/admin/analytics.test.js`, `tests/conversation/conversation.test.js`, `tests/core/recommendation.test.js`, `tests/core/stateMachines.test.js`
-  - Fix: either mock `base44Client.js` in tests, or set `BASE44_APP_ID=test` in test runner env
+- Core tests pass (engines 1–5, pipeline, reports rendering, conversation, recommendation)
+- 26 subtests still fail — pre-existing architectural mismatch: tests written for old in-memory store but production code uses async Base44 store. Affected: `buildCaseWorkspace`, `approveReport`/`rejectReport`/`editRecommendation`/`addCaseNote`/`markFollowUp`/`markReportReadyForDelivery`, `promoteKnowledgeItem`, lead exporter, change-event detector, follow-up scheduler, `findOrCreateUser`/`findOrCreateSession`
+- Fix: mock `base44Store.js` in test environments (see below)
 
 **Enhanced Interview Logic (2026-03-10):**
 - **Three-Chapter Interview Structure**: Interview is now divided into 3 chapters:
@@ -62,8 +61,16 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 - **Admin Panel**: New endpoints — `GET /admin/content/chapters`, `PUT /admin/content/chapters`, `GET /admin/sessions/chapter-progress`
 - **Session Model**: New fields — `interviewChapter`, `recommendationSubState`, `userProfile`, `answeredQuestionIds`
 
+**Codebase Review & Refactor (2026-03-10):**
+- **Bug fix — sender.js**: Added missing `import { randomUUID } from 'node:crypto'`; removed use of undeclared `crypto` global. Fixes `ReferenceError` in stub/test mode (Node.js ≤ 20).
+- **Bug fix — base44Client.js**: Moved env var validation (`BASE44_APP_ID`, `BASE44_API_KEY`) from module load time into `request()`. Module can now be imported in test environments without crashing.
+- **Bug fix — sendMessages loop**: Replaced `texts.indexOf(text)` with indexed `for` loop to correctly handle duplicate message strings and avoid O(n) scan.
+- **Test alignment — onboarding**: Updated 3 stale tests that expected 7 onboarding messages (old design) to match the current 1-message combined design (covers all FPP §2.5 elements).
+- **JSDoc — base44Store.js**: Added `@param` and `@returns` annotations to `safeList` and `safeFilter`.
+- **JSDoc — framing.js**: Added full `@param`/`@returns` to `generateFraming`; added JSDoc to private `buildNarrative`. Fixed undefined `FramingReport` return type to an inline shape definition.
+- **No dead code found**: All exports are used; no unreachable branches or commented-out code found.
+
 **What is still missing:**
-- Fix test suite: guard `base44Client.js` import so it doesn't throw during tests (use `process.env.NODE_ENV === 'test'` guard or env mock)
 - Content Editor write support: allow saving edits to onboarding messages and question bank (currently read-only)
 - E2E integration tests with live WhatsApp (Meta Cloud API)
 - Permanent Meta access token for production (use System User — see Infrastructure section)

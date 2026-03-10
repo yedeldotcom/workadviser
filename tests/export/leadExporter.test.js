@@ -35,13 +35,13 @@ function makeDetectedLead(overrides = {}) {
   });
 }
 
-function advanceToReadyForExport(lead) {
+async function advanceToReadyForExport(lead) {
   // Advance lead through: detected → lead_created → ready_for_export
   // with consent given
   saveLead(lead);
-  const { lead: confirmed } = confirmLead(lead.id, 'admin_operator');
+  const { lead: confirmed } = await confirmLead(lead.id, 'admin_operator');
   saveLead({ ...confirmed, consentStatus: 'given' });
-  const { lead: ready } = markLeadReadyForExport(lead.id, 'admin_operator');
+  const { lead: ready } = await markLeadReadyForExport(lead.id, 'admin_operator');
   saveLead(ready);
   return ready;
 }
@@ -96,54 +96,54 @@ describe('buildExportPayload', () => {
 // ─── confirmLead ─────────────────────────────────────────────────────────────
 
 describe('confirmLead', () => {
-  test('transitions lead from detected to lead_created', () => {
+  test('transitions lead from detected to lead_created', async () => {
     const lead = makeDetectedLead();
     saveLead(lead);
-    const { lead: updated, log } = confirmLead(lead.id, 'admin_operator');
+    const { lead: updated, log } = await confirmLead(lead.id, 'admin_operator');
     assert.equal(updated.exportState, 'lead_created');
     assert.equal(log.action, 'lead_confirmed');
     assert.equal(log.entityId, lead.id);
   });
 
-  test('saves updated lead to store', () => {
+  test('saves updated lead to store', async () => {
     const lead = makeDetectedLead();
     saveLead(lead);
-    confirmLead(lead.id, 'admin_operator');
+    await confirmLead(lead.id, 'admin_operator');
     assert.equal(getLead(lead.id).exportState, 'lead_created');
   });
 
-  test('throws for unknown leadId', () => {
-    assert.throws(() => confirmLead('nonexistent', 'admin_operator'), /Lead not found/);
+  test('throws for unknown leadId', async () => {
+    await assert.rejects(async () => await confirmLead('nonexistent', 'admin_operator'), /Lead not found/);
   });
 
-  test('throws for invalid transition (already lead_created)', () => {
+  test('throws for invalid transition (already lead_created)', async () => {
     const lead = makeDetectedLead({ exportState: 'lead_created' });
     saveLead(lead);
     // lead_created → lead_created is not a valid transition
-    assert.throws(() => confirmLead(lead.id, 'admin_operator'), /Invalid lead transition/);
+    await assert.rejects(async () => await confirmLead(lead.id, 'admin_operator'), /Invalid lead transition/);
   });
 });
 
 // ─── markLeadReadyForExport ───────────────────────────────────────────────────
 
 describe('markLeadReadyForExport', () => {
-  test('transitions from lead_created to ready_for_export', () => {
+  test('transitions from lead_created to ready_for_export', async () => {
     const lead = makeDetectedLead({ exportState: 'lead_created' });
     saveLead(lead);
-    const { lead: updated } = markLeadReadyForExport(lead.id, 'admin_operator');
+    const { lead: updated } = await markLeadReadyForExport(lead.id, 'admin_operator');
     assert.equal(updated.exportState, 'ready_for_export');
   });
 
-  test('writes audit log with consent basis', () => {
+  test('writes audit log with consent basis', async () => {
     const lead = makeDetectedLead({ exportState: 'lead_created' });
     saveLead(lead);
-    const { log } = markLeadReadyForExport(lead.id, 'admin_operator', { consentBasis: 'Phone call 2026-03-08' });
+    const { log } = await markLeadReadyForExport(lead.id, 'admin_operator', { consentBasis: 'Phone call 2026-03-08' });
     assert.ok(log.reason.includes('Phone call'));
     assert.equal(log.action, 'marked_ready_for_export');
   });
 
-  test('throws for non-existent lead', () => {
-    assert.throws(() => markLeadReadyForExport('bad-id', 'admin_operator'), /Lead not found/);
+  test('throws for non-existent lead', async () => {
+    await assert.rejects(async () => await markLeadReadyForExport('bad-id', 'admin_operator'), /Lead not found/);
   });
 });
 
@@ -152,7 +152,7 @@ describe('markLeadReadyForExport', () => {
 describe('exportLead', () => {
   test('successfully exports a ready_for_export lead with given consent', async () => {
     const lead = makeDetectedLead();
-    advanceToReadyForExport(lead);
+    await advanceToReadyForExport(lead);
 
     const { lead: exported, payload, log } = await exportLead(lead.id, 'admin_operator', {
       target: 'internal',
@@ -169,7 +169,7 @@ describe('exportLead', () => {
 
   test('stamps exportTimestamp on the lead in store', async () => {
     const lead = makeDetectedLead();
-    advanceToReadyForExport(lead);
+    await advanceToReadyForExport(lead);
     await exportLead(lead.id, 'admin_operator');
     const stored = getLead(lead.id);
     assert.equal(stored.exportState, 'exported');
@@ -178,7 +178,7 @@ describe('exportLead', () => {
 
   test('writes audit log entry', async () => {
     const lead = makeDetectedLead();
-    advanceToReadyForExport(lead);
+    await advanceToReadyForExport(lead);
     await exportLead(lead.id, 'admin_operator');
     const logs = getAllAuditLogs().filter(l => l.entityId === lead.id && l.action === 'exported');
     assert.equal(logs.length, 1);
@@ -186,7 +186,7 @@ describe('exportLead', () => {
 
   test('audit log diff includes payloadFields and target', async () => {
     const lead = makeDetectedLead();
-    advanceToReadyForExport(lead);
+    await advanceToReadyForExport(lead);
     const { log } = await exportLead(lead.id, 'admin_operator', { target: 'internal' });
     assert.ok(Array.isArray(log.diff.payloadFields));
     assert.ok(!log.diff.payloadFields.includes('caseId'));
@@ -238,7 +238,7 @@ describe('exportLead', () => {
 
   test('throws when target is crm_webhook but webhookUrl is missing', async () => {
     const lead = makeDetectedLead();
-    advanceToReadyForExport(lead);
+    await advanceToReadyForExport(lead);
     await assert.rejects(
       () => exportLead(lead.id, 'admin_operator', { target: 'crm_webhook' }),
       /webhookUrl is required/
@@ -249,41 +249,41 @@ describe('exportLead', () => {
 // ─── archiveLead ─────────────────────────────────────────────────────────────
 
 describe('archiveLead', () => {
-  test('archives a detected lead', () => {
+  test('archives a detected lead', async () => {
     const lead = makeDetectedLead({ exportState: 'lead_created' });
     saveLead(lead);
-    const { lead: archived, log } = archiveLead(lead.id, 'admin_operator', 'No longer relevant');
+    const { lead: archived, log } = await archiveLead(lead.id, 'admin_operator', 'No longer relevant');
     assert.equal(archived.exportState, 'archived');
     assert.equal(log.reason, 'No longer relevant');
     assert.equal(log.action, 'lead_archived');
   });
 
-  test('archives an exported lead (post-export cleanup)', () => {
+  test('archives an exported lead (post-export cleanup)', async () => {
     const lead = makeDetectedLead({ exportState: 'exported' });
     saveLead(lead);
-    const { lead: archived } = archiveLead(lead.id, 'admin_operator', 'Exported and closed');
+    const { lead: archived } = await archiveLead(lead.id, 'admin_operator', 'Exported and closed');
     assert.equal(archived.exportState, 'archived');
   });
 
-  test('saves archived state to store', () => {
+  test('saves archived state to store', async () => {
     const lead = makeDetectedLead({ exportState: 'lead_created' });
     saveLead(lead);
-    archiveLead(lead.id, 'admin_operator', 'Duplicate lead');
+    await archiveLead(lead.id, 'admin_operator', 'Duplicate lead');
     assert.equal(getLead(lead.id).exportState, 'archived');
   });
 
-  test('throws for unknown leadId', () => {
-    assert.throws(
-      () => archiveLead('bad-id', 'admin_operator', 'reason'),
+  test('throws for unknown leadId', async () => {
+    await assert.rejects(
+      async () => await archiveLead('bad-id', 'admin_operator', 'reason'),
       /Lead not found/
     );
   });
 
-  test('throws for invalid transition (archived → archived)', () => {
+  test('throws for invalid transition (archived → archived)', async () => {
     const lead = makeDetectedLead({ exportState: 'archived' });
     saveLead(lead);
-    assert.throws(
-      () => archiveLead(lead.id, 'admin_operator', 'reason'),
+    await assert.rejects(
+      async () => await archiveLead(lead.id, 'admin_operator', 'reason'),
       /Invalid lead transition/
     );
   });
@@ -297,12 +297,12 @@ describe('full lead lifecycle', () => {
     saveLead(lead);
 
     // 1. Confirm
-    const { lead: l1 } = confirmLead(lead.id, 'admin_operator');
+    const { lead: l1 } = await confirmLead(lead.id, 'admin_operator');
     assert.equal(l1.exportState, 'lead_created');
 
     // 2. Update consent and mark ready
     saveLead({ ...l1, consentStatus: 'given' });
-    const { lead: l2 } = markLeadReadyForExport(lead.id, 'admin_operator');
+    const { lead: l2 } = await markLeadReadyForExport(lead.id, 'admin_operator');
     assert.equal(l2.exportState, 'ready_for_export');
 
     // 3. Export
@@ -311,7 +311,7 @@ describe('full lead lifecycle', () => {
     assert.ok(l3.exportTimestamp);
 
     // 4. Archive post-export
-    const { lead: l4 } = archiveLead(lead.id, 'admin_operator', 'Done');
+    const { lead: l4 } = await archiveLead(lead.id, 'admin_operator', 'Done');
     assert.equal(l4.exportState, 'archived');
 
     // 5. Verify audit trail has all actions
@@ -339,7 +339,7 @@ describe('full lead lifecycle', () => {
     saveLead({ ...getLead(lead.id), exportState: 'failed' });
 
     // Retry: transition failed → ready_for_export
-    const { lead: retried } = markLeadReadyForExport(lead.id, 'admin_operator');
+    const { lead: retried } = await markLeadReadyForExport(lead.id, 'admin_operator');
     assert.equal(retried.exportState, 'ready_for_export');
 
     // Now export successfully

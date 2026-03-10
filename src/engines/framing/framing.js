@@ -101,9 +101,18 @@ export const NATAL_PILLARS = [
 
 /**
  * Generate framed communication for a specific audience based on the implementation plan.
- * @param {ImplementationPlan} plan - from Engine 4
- * @param {string} audience - key from AUDIENCE_TYPES
- * @returns {FramingReport}
+ * @param {object} plan - ImplementationPlan from Engine 4
+ * @param {string} [audience='hr'] - Key from AUDIENCE_TYPES ('c_level'|'hr'|'direct_manager'|'team')
+ * @returns {{
+ *   audience: object,
+ *   coreMessages: Array,
+ *   narrative: object,
+ *   objectionResponses: Array,
+ *   audienceModules: Array,
+ *   natalPillars: Array,
+ *   plan: object,
+ *   timestamp: string
+ * }}
  */
 export function generateFraming(plan, audience = 'hr') {
   const { translation } = plan;
@@ -143,6 +152,14 @@ export function generateFraming(plan, audience = 'hr') {
   };
 }
 
+/**
+ * Build a 4-section narrative for employer-facing communication.
+ * Sections: what_happens → heres_why → what_works → monday_morning.
+ * @param {object} plan - ImplementationPlan from Engine 4
+ * @param {string} audience - Key from AUDIENCE_TYPES
+ * @param {object} profile - IntakeProfile from Engine 1
+ * @returns {{ what_happens: object, heres_why: object, what_works: object, monday_morning: object }}
+ */
 function buildNarrative(plan, audience, profile) {
   const sections = {};
 
