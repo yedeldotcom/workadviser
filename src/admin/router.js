@@ -104,7 +104,7 @@ import {
   retrievalFrequency, inclusionFrequency, approvalRate, staleRate,
   templateSummary, promoteKnowledgeItem, createFeedback,
 } from './recommendationAnalytics.js';
-import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getContentConfig, saveContentConfig } from './base44Store.js';
+import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getContentConfig, saveContentConfig, ensureQuestionBankSeeded, ensureOnboardingSeeded } from './base44Store.js';
 import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
 import { QUESTION_BANK } from '../conversation/interviewer.js';
 
@@ -549,21 +549,16 @@ router.post('/knowledge/:itemId/promote',
 
 // ─── Content editor endpoints ─────────────────────────────────────────────────
 
-// — Onboarding messages —
+// — Onboarding messages (Base44 is source of truth) —
 
 router.get('/content/onboarding',
   requireCapability('view_all_cases'),
   async (req, res) => {
-    const messages = ONBOARDING_MESSAGES.map(m => ({ ...m }));
-    const config = await getContentConfig('onboarding_overrides');
-    if (config?.overrides) {
-      for (const msg of messages) {
-        if (config.overrides[msg.id]?.text) {
-          msg.text = config.overrides[msg.id].text;
-        }
-      }
+    let config = await getContentConfig('onboarding_messages');
+    if (!config?.messages?.length) {
+      config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
     }
-    res.json(messages);
+    res.json(config.messages);
   }
 );
 
@@ -573,63 +568,44 @@ router.put('/content/onboarding/:id',
     const { id } = req.params;
     const { text } = req.body ?? {};
 
-    if (!ONBOARDING_MESSAGES.find(m => m.id === id)) {
-      return res.status(404).json({ error: `Onboarding message "${id}" not found` });
-    }
     if (!text || typeof text !== 'string') {
       return res.status(400).json({ error: 'text is required and must be a string' });
     }
 
-    const config = await getContentConfig('onboarding_overrides') ?? {};
-    const overrides = config.overrides ?? {};
-    overrides[id] = { text };
-    await saveContentConfig('onboarding_overrides', { overrides });
+    let config = await getContentConfig('onboarding_messages');
+    if (!config?.messages?.length) {
+      config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
+    }
+    const messages = config.messages.map(m => ({ ...m }));
+    const msg = messages.find(m => m.id === id);
+    if (!msg) {
+      return res.status(404).json({ error: `Onboarding message "${id}" not found` });
+    }
+    msg.text = text;
+    await saveContentConfig('onboarding_messages', { messages });
     res.json({ id, text });
   }
 );
 
 // — Question bank —
 
+// — Question bank (Base44 is source of truth) —
+
+/**
+ * Helper: get the canonical question bank from Base44, seeding if needed.
+ */
+async function _getCanonicalQuestionBank() {
+  let config = await getContentConfig('question_bank');
+  if (!config?.questions?.length) {
+    config = await ensureQuestionBankSeeded(QUESTION_BANK);
+  }
+  return config.questions;
+}
+
 router.get('/content/questions',
   requireCapability('view_all_cases'),
   async (req, res) => {
-    let questions = QUESTION_BANK.map(q => ({ ...q, enabled: true }));
-
-    const [overrides, orderConfig, disabledConfig] = await Promise.all([
-      getContentConfig('question_overrides'),
-      getContentConfig('question_order'),
-      getContentConfig('question_disabled'),
-    ]);
-
-    // Apply text overrides
-    if (overrides?.overrides) {
-      for (const q of questions) {
-        const ov = overrides.overrides[q.id];
-        if (ov) {
-          if (ov.prompt)   q.prompt   = ov.prompt;
-          if (ov.followUp) q.followUp = ov.followUp;
-        }
-      }
-    }
-
-    // Apply custom order
-    if (orderConfig?.order && Array.isArray(orderConfig.order)) {
-      const orderMap = new Map(orderConfig.order.map((id, i) => [id, i]));
-      questions.sort((a, b) => {
-        const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
-        const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
-        return ai - bi;
-      });
-    }
-
-    // Mark disabled questions
-    if (disabledConfig?.disabled && Array.isArray(disabledConfig.disabled)) {
-      const disabledSet = new Set(disabledConfig.disabled);
-      for (const q of questions) {
-        if (disabledSet.has(q.id)) q.enabled = false;
-      }
-    }
-
+    const questions = await _getCanonicalQuestionBank();
     res.json(questions);
   }
 );
@@ -640,20 +616,19 @@ router.put('/content/questions/:id',
     const { id } = req.params;
     const { prompt, followUp } = req.body ?? {};
 
-    if (!QUESTION_BANK.find(q => q.id === id)) {
-      return res.status(404).json({ error: `Question "${id}" not found` });
-    }
     if (!prompt && !followUp) {
       return res.status(400).json({ error: 'At least one of prompt or followUp is required' });
     }
 
-    const config = await getContentConfig('question_overrides') ?? {};
-    const overrides = config.overrides ?? {};
-    overrides[id] = { ...overrides[id] };
-    if (prompt)   overrides[id].prompt   = prompt;
-    if (followUp) overrides[id].followUp = followUp;
-    await saveContentConfig('question_overrides', { overrides });
-    res.json({ id, ...overrides[id] });
+    const questions = (await _getCanonicalQuestionBank()).map(q => ({ ...q }));
+    const q = questions.find(q => q.id === id);
+    if (!q) {
+      return res.status(404).json({ error: `Question "${id}" not found` });
+    }
+    if (prompt)   q.prompt   = prompt;
+    if (followUp) q.followUp = followUp;
+    await saveContentConfig('question_bank', { questions });
+    res.json({ id, prompt: q.prompt, followUp: q.followUp });
   }
 );
 
@@ -666,7 +641,14 @@ router.post('/content/questions/reorder',
       return res.status(400).json({ error: 'order must be a non-empty array of question IDs' });
     }
 
-    await saveContentConfig('question_order', { order });
+    const questions = await _getCanonicalQuestionBank();
+    const orderMap = new Map(order.map((id, i) => [id, i]));
+    const reordered = [...questions].sort((a, b) => {
+      const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
+      const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
+      return ai - bi;
+    });
+    await saveContentConfig('question_bank', { questions: reordered });
     res.json({ order });
   }
 );
@@ -677,24 +659,27 @@ router.patch('/content/questions/:id/toggle',
     const { id } = req.params;
     const { enabled } = req.body ?? {};
 
-    if (!QUESTION_BANK.find(q => q.id === id)) {
-      return res.status(404).json({ error: `Question "${id}" not found` });
-    }
     if (typeof enabled !== 'boolean') {
       return res.status(400).json({ error: 'enabled must be a boolean' });
     }
 
-    const config = await getContentConfig('question_disabled') ?? {};
-    const disabled = new Set(config.disabled ?? []);
-
-    if (enabled) {
-      disabled.delete(id);
-    } else {
-      disabled.add(id);
+    const questions = (await _getCanonicalQuestionBank()).map(q => ({ ...q }));
+    const q = questions.find(q => q.id === id);
+    if (!q) {
+      return res.status(404).json({ error: `Question "${id}" not found` });
     }
-
-    await saveContentConfig('question_disabled', { disabled: [...disabled] });
+    q.enabled = enabled;
+    await saveContentConfig('question_bank', { questions });
     res.json({ id, enabled });
+  }
+);
+
+router.post('/content/questions/seed',
+  requireCapability('edit_recommendation'),
+  async (req, res) => {
+    const questions = QUESTION_BANK.map(q => ({ ...q, enabled: true }));
+    await saveContentConfig('question_bank', { questions });
+    res.json({ seeded: questions.length, questions });
   }
 );
 

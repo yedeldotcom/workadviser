@@ -436,6 +436,40 @@ export async function saveContentConfig(configKey, data) {
   return db.ContentConfig.create({ configKey, ...data });
 }
 
+// ─── Content seeding (source-of-truth helpers) ──────────────────────────────
+
+/**
+ * Ensure the canonical question bank exists in Base44.
+ * If `question_bank` already has data, return it.
+ * Otherwise seed from the hardcoded bank and return.
+ * @param {object[]} hardcodedBank - the QUESTION_BANK array from interviewer.js
+ * @returns {Promise<{questions: object[]}>}
+ */
+export async function ensureQuestionBankSeeded(hardcodedBank) {
+  const existing = await getContentConfig('question_bank');
+  if (existing?.questions?.length > 0) return existing;
+
+  const questions = hardcodedBank.map(q => ({ ...q, enabled: true }));
+  await saveContentConfig('question_bank', { questions });
+  console.log(`[base44Store] Seeded question_bank with ${questions.length} questions`);
+  return { questions };
+}
+
+/**
+ * Ensure the canonical onboarding messages exist in Base44.
+ * @param {object[]} hardcodedMessages - the ONBOARDING_MESSAGES array from onboarding.js
+ * @returns {Promise<{messages: object[]}>}
+ */
+export async function ensureOnboardingSeeded(hardcodedMessages) {
+  const existing = await getContentConfig('onboarding_messages');
+  if (existing?.messages?.length > 0) return existing;
+
+  const messages = hardcodedMessages.map(m => ({ ...m }));
+  await saveContentConfig('onboarding_messages', { messages });
+  console.log(`[base44Store] Seeded onboarding_messages with ${messages.length} messages`);
+  return { messages };
+}
+
 // ─── Test helpers ─────────────────────────────────────────────────────────────
 
 /**
