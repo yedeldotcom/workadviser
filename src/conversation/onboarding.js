@@ -15,19 +15,21 @@
  */
 
 import { ensureOnboardingSeeded } from '../admin/base44Store.js';
+import { interpolateTemplate, getTemplateVariables } from './templateInterpolation.js';
 
 // ─── Onboarding message sequence (Hebrew) ────────────────────────────────────
+// Uses {{variable}} placeholders — resolved at send-time from Base44 config.
 
 export const ONBOARDING_MESSAGES = [
   {
     id: 'onb-01',
     step: 1,
     type: 'greeting',
-    text: `היי, אני WorkAdviser.
+    text: `היי, אני {{bot_name}}.
 
 אני כאן לעזור להבין מה מקשה בעבודה — ומה אפשר לעשות.
 
-אנחנו בפיילוט *מותאם טראומה*: פרויקט של נט"ל וירון אדל שמלווה אנשים עם טראומה להצליח בעבודה.
+אנחנו בפיילוט *מותאם טראומה*: {{project_description}}.
 
 בסוף השיחה אפשר לקבל:
 • רעיונות מותאמים אישית למצב
@@ -74,7 +76,10 @@ export async function getOnboardingScript() {
   try {
     // Always go through ensureOnboardingSeeded so version checks run
     const result = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    return result?.messages ?? ONBOARDING_MESSAGES.map(m => ({ ...m }));
+    const messages = result?.messages ?? ONBOARDING_MESSAGES.map(m => ({ ...m }));
+    // Interpolate {{variable}} placeholders at send-time
+    const variables = await getTemplateVariables();
+    return messages.map(m => ({ ...m, text: interpolateTemplate(m.text, variables) }));
   } catch {
     return ONBOARDING_MESSAGES.map(m => ({ ...m }));
   }
@@ -125,6 +130,28 @@ export function isPauseResponse(text) {
   if (!text) return false;
   const normalized = text.trim().toLowerCase();
   return PAUSE_PATTERNS.some(p => normalized.includes(p.toLowerCase()));
+}
+
+/**
+ * Restart command patterns — detected during active interview.
+ */
+export const RESTART_PATTERNS = ['התחל', 'מתחילים', 'התחל מחדש', 'start', 'restart'];
+
+export function isRestartResponse(text) {
+  if (!text) return false;
+  const normalized = text.trim().toLowerCase();
+  return RESTART_PATTERNS.some(p => normalized.includes(p.toLowerCase()));
+}
+
+/**
+ * Restart confirmation patterns — user chose to restart (not continue).
+ */
+export const RESTART_CONFIRM_PATTERNS = ['מחדש', 'חדש', 'התחל מחדש', 'restart', 'כן'];
+
+export function isRestartConfirmResponse(text) {
+  if (!text) return false;
+  const normalized = text.trim().toLowerCase();
+  return RESTART_CONFIRM_PATTERNS.some(p => normalized.includes(p.toLowerCase()));
 }
 
 /**

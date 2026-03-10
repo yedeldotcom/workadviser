@@ -12,13 +12,13 @@
  *   WHISPER_MODEL                           — model name (default: 'whisper-1')
  */
 
-import OpenAI from 'openai';
-import { toFile } from 'openai';
-
-// Lazy-initialised client — only created when first needed
+// Lazy-initialised OpenAI client — only imported and created when first needed.
+// This avoids crashing in environments where the 'openai' package is not installed
+// (e.g. test environments that don't use voice transcription).
 let _whisperClient = null;
-function getWhisperClient() {
+async function getWhisperClient() {
   if (!_whisperClient) {
+    const { default: OpenAI } = await import('openai');
     _whisperClient = new OpenAI({ apiKey: process.env.WHISPER_API_KEY });
   }
   return _whisperClient;
@@ -58,7 +58,7 @@ const MIME_TO_EXT = {
 export async function transcribeVoiceNote(audioBuffer, mimeType = 'audio/ogg', languageHint = 'he') {
   if (process.env.VOICE_TRANSCRIPTION_ENABLED !== 'true' || !process.env.WHISPER_API_KEY) {
     return {
-      text: '[הודעה קולית — תמלול לא זמין כרגע. אנא ענה/י בטקסט.]',
+      text: '[הודעה קולית — תמלול לא זמין כרגע. אפשר לכתוב בטקסט.]',
       provider: 'stub',
       confidence: 0.0,
       languageDetected: null,
@@ -70,8 +70,10 @@ export async function transcribeVoiceNote(audioBuffer, mimeType = 'audio/ogg', l
   const filename = `voice.${ext}`;
   const model = process.env.WHISPER_MODEL ?? 'whisper-1';
 
+  const { toFile } = await import('openai');
   const file = await toFile(audioBuffer, filename, { type: mimeType });
-  const transcription = await getWhisperClient().audio.transcriptions.create({
+  const client = await getWhisperClient();
+  const transcription = await client.audio.transcriptions.create({
     model,
     file,
     language: languageHint,
@@ -100,5 +102,40 @@ export function isVoiceTranscriptionAvailable() {
  * @returns {string}
  */
 export function getVoiceUnavailableMessage() {
-  return 'תודה על ההודעה הקולית! כרגע אני יכול/ה לקרוא טקסט בלבד. האם תוכל/י לכתוב את תשובתך בקצרה?';
+  return 'תודה על ההודעה הקולית! כרגע אפשר לקרוא טקסט בלבד. אפשר לכתוב את התשובה בקצרה?';
+}
+
+/**
+ * Download a media file from Meta Cloud API using its media ID.
+ *
+ * Two-step process:
+ *   1. GET https://graph.facebook.com/v19.0/{mediaId} → { url }
+ *   2. GET {url} → binary audio data
+ *
+ * Uses META_ACCESS_TOKEN env var for authorization.
+ *
+ * @param {string} mediaId - Meta media object ID from the webhook payload
+ * @returns {Promise<Buffer | null>}
+ */
+export async function downloadMediaFromMeta(mediaId) {
+  const token = process.env.META_ACCESS_TOKEN;
+  if (!token || !mediaId) return null;
+
+  // Step 1: Get the media download URL
+  const metaResp = await fetch(`https://graph.facebook.com/v19.0/${encodeURIComponent(mediaId)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!metaResp.ok) {
+    throw new Error(`Meta media lookup failed: ${metaResp.status} ${metaResp.statusText}`);
+  }
+  const { url } = await metaResp.json();
+
+  // Step 2: Download the binary audio data
+  const audioResp = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!audioResp.ok) {
+    throw new Error(`Meta media download failed: ${audioResp.status} ${audioResp.statusText}`);
+  }
+  return Buffer.from(await audioResp.arrayBuffer());
 }
