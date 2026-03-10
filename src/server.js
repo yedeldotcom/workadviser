@@ -22,6 +22,7 @@ import cors from 'cors';
 import adminRouter from './admin/router.js';
 import webhookRouter from './whatsapp/webhook.js';
 import { landingPageHandler } from './whatsapp/landingPage.js';
+import { ensureTemplateVariablesSeeded } from './conversation/templateInterpolation.js';
 export function createApp() {
   const app = express();
 
@@ -84,5 +85,10 @@ if (process.argv[1]?.endsWith('server.js')) {
     console.log(`  Landing page : http://localhost:${PORT}/`);
     console.log(`  WhatsApp     : http://localhost:${PORT}/whatsapp/webhook`);
     console.log(`  Admin API    : http://localhost:${PORT}/admin`);
+
+    // Seed template variables (once, non-destructive)
+    ensureTemplateVariablesSeeded().catch(err =>
+      console.error('[server] ensureTemplateVariablesSeeded failed:', err?.message ?? err)
+    );
   });
 }

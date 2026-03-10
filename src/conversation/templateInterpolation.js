@@ -45,6 +45,8 @@ export function interpolateTemplate(text, variables) {
 export async function getTemplateVariables() {
   try {
     const config = await getContentConfig('template_variables');
+    console.log(`[templateInterpolation] getContentConfig('template_variables') returned:`,
+      config ? `messages=${config.messages?.length ?? 'undefined'}, version=${config.version}` : 'null');
     // Primary path: decode from messages[0].text (JSON-encoded variables)
     if (Array.isArray(config?.messages) && config.messages.length > 0) {
       const msg = config.messages[0];
@@ -69,8 +71,9 @@ export async function getTemplateVariables() {
     if (config?.variables && typeof config.variables === 'object') {
       return { ...DEFAULT_VARIABLES, ...config.variables };
     }
-    // No usable record — seed defaults so admin can see them in Content Editor
-    await _saveVariablesAsMessage(DEFAULT_VARIABLES);
+    // No usable record — return defaults but do NOT overwrite Base44.
+    // Seeding is done only via ensureTemplateVariablesSeeded() at server startup.
+    console.warn('[templateInterpolation] No template_variables found in Base44, returning defaults');
   } catch (err) {
     console.error('[templateInterpolation] getTemplateVariables failed:', err?.message ?? err);
   }
@@ -98,6 +101,24 @@ async function _saveVariablesAsMessage(variables) {
     text: JSON.stringify(variables),
   }];
   await saveContentConfig('template_variables', { messages, version: 1 });
+}
+
+/**
+ * Ensure template variables exist in Base44. Seeds defaults only if no record
+ * exists yet — never overwrites admin-saved values. Called once at server startup.
+ */
+export async function ensureTemplateVariablesSeeded() {
+  try {
+    const config = await getContentConfig('template_variables');
+    if (Array.isArray(config?.messages) && config.messages.length > 0) {
+      console.log('[templateInterpolation] template_variables already seeded, skipping');
+      return;
+    }
+    console.log('[templateInterpolation] Seeding default template_variables');
+    await _saveVariablesAsMessage(DEFAULT_VARIABLES);
+  } catch (err) {
+    console.error('[templateInterpolation] ensureTemplateVariablesSeeded failed:', err?.message ?? err);
+  }
 }
 
 /**

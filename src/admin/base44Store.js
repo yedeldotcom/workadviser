@@ -525,6 +525,22 @@ export async function saveContentConfig(configKey, data) {
     result = await db.ContentConfig.create(payload);
   }
   console.log(`[base44Store] saveContentConfig key=${configKey} response:`, JSON.stringify(result).slice(0, 300));
+
+  // Round-trip verification: re-read and check that messages persisted
+  try {
+    const verify = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
+    const saved = verify[0];
+    const sentCount = data.messages?.length ?? 0;
+    const savedCount = saved?.messages?.length ?? 0;
+    if (sentCount > 0 && savedCount === 0) {
+      console.error(`[base44Store] ROUND-TRIP FAILURE for key=${configKey}: sent ${sentCount} message(s) but read back ${savedCount}. Base44 may be dropping the messages field.`);
+    } else {
+      console.log(`[base44Store] Round-trip OK for key=${configKey}, messages: ${savedCount}`);
+    }
+  } catch (verifyErr) {
+    console.error(`[base44Store] Round-trip verification failed for key=${configKey}:`, verifyErr?.message ?? verifyErr);
+  }
+
   return result;
 }
 
