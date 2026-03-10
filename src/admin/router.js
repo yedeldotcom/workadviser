@@ -576,7 +576,7 @@ router.put('/content/onboarding/:id',
       return res.status(404).json({ error: `Onboarding message "${id}" not found` });
     }
     msg.text = text;
-    await saveContentConfig('onboarding_messages', { messages });
+    await saveContentConfig('onboarding_messages', { messages, version: config.version });
     res.json({ id, text });
   }
 );
@@ -588,17 +588,16 @@ router.put('/content/onboarding/:id',
 /**
  * Helper: get the canonical question bank from Base44, seeding if needed.
  */
-async function _getCanonicalQuestionBank() {
+async function _getCanonicalQuestionBankConfig() {
   // Always go through ensureQuestionBankSeeded so version checks run
-  const config = await ensureQuestionBankSeeded(QUESTION_BANK);
-  return config.questions;
+  return ensureQuestionBankSeeded(QUESTION_BANK);
 }
 
 router.get('/content/questions',
   requireCapability('view_all_cases'),
   async (req, res) => {
-    const questions = await _getCanonicalQuestionBank();
-    res.json(questions);
+    const config = await _getCanonicalQuestionBankConfig();
+    res.json(config.questions);
   }
 );
 
@@ -612,14 +611,15 @@ router.put('/content/questions/:id',
       return res.status(400).json({ error: 'At least one of prompt or followUp is required' });
     }
 
-    const questions = (await _getCanonicalQuestionBank()).map(q => ({ ...q }));
+    const config = await _getCanonicalQuestionBankConfig();
+    const questions = config.questions.map(q => ({ ...q }));
     const q = questions.find(q => q.id === id);
     if (!q) {
       return res.status(404).json({ error: `Question "${id}" not found` });
     }
     if (prompt)   q.prompt   = prompt;
     if (followUp) q.followUp = followUp;
-    await saveContentConfig('question_bank', { questions });
+    await saveContentConfig('question_bank', { questions, version: config.version });
     res.json({ id, prompt: q.prompt, followUp: q.followUp });
   }
 );
@@ -633,14 +633,14 @@ router.post('/content/questions/reorder',
       return res.status(400).json({ error: 'order must be a non-empty array of question IDs' });
     }
 
-    const questions = await _getCanonicalQuestionBank();
+    const config = await _getCanonicalQuestionBankConfig();
     const orderMap = new Map(order.map((id, i) => [id, i]));
-    const reordered = [...questions].sort((a, b) => {
+    const reordered = [...config.questions].sort((a, b) => {
       const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
       const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
       return ai - bi;
     });
-    await saveContentConfig('question_bank', { questions: reordered });
+    await saveContentConfig('question_bank', { questions: reordered, version: config.version });
     res.json({ order });
   }
 );
@@ -655,13 +655,14 @@ router.patch('/content/questions/:id/toggle',
       return res.status(400).json({ error: 'enabled must be a boolean' });
     }
 
-    const questions = (await _getCanonicalQuestionBank()).map(q => ({ ...q }));
+    const config = await _getCanonicalQuestionBankConfig();
+    const questions = config.questions.map(q => ({ ...q }));
     const q = questions.find(q => q.id === id);
     if (!q) {
       return res.status(404).json({ error: `Question "${id}" not found` });
     }
     q.enabled = enabled;
-    await saveContentConfig('question_bank', { questions });
+    await saveContentConfig('question_bank', { questions, version: config.version });
     res.json({ id, enabled });
   }
 );
