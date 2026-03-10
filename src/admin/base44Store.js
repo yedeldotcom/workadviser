@@ -436,6 +436,76 @@ export async function saveContentConfig(configKey, data) {
   return db.ContentConfig.create({ configKey, ...data });
 }
 
+// ─── Content seeding (source-of-truth helpers) ──────────────────────────────
+
+/**
+ * Ensure the canonical question bank exists in Base44.
+ * If `question_bank` already has data, return it.
+ * Otherwise seed from the hardcoded bank and return.
+ * @param {object[]} hardcodedBank - the QUESTION_BANK array from interviewer.js
+ * @returns {Promise<{questions: object[]}>}
+ */
+// Bump this version whenever the hardcoded QUESTION_BANK changes and you want
+// Base44 to auto-reseed (overwriting stale data).  Admin edits made after the
+// reseed are preserved; only the seed itself is replaced.
+const QUESTION_BANK_VERSION = 2;
+
+export async function ensureQuestionBankSeeded(hardcodedBank) {
+  const existing = await getContentConfig('question_bank');
+
+  if (existing?.questions?.length > 0) {
+    // Auto-reseed if the stored version is older than the code version
+    if ((existing.version ?? 0) < QUESTION_BANK_VERSION) {
+      console.log(`[base44Store] question_bank version ${existing.version ?? 0} < ${QUESTION_BANK_VERSION}, reseeding`);
+      const questions = hardcodedBank.map(q => ({ ...q, enabled: true }));
+      await saveContentConfig('question_bank', { questions, version: QUESTION_BANK_VERSION });
+      return { questions, version: QUESTION_BANK_VERSION };
+    }
+
+    // Check for missing questions (code added new ones since last seed)
+    const storedIds = new Set(existing.questions.map(q => q.id));
+    const missing = hardcodedBank.filter(q => !storedIds.has(q.id));
+    if (missing.length > 0) {
+      const questions = [...existing.questions, ...missing.map(q => ({ ...q, enabled: true }))];
+      await saveContentConfig('question_bank', { questions, version: QUESTION_BANK_VERSION });
+      console.log(`[base44Store] Merged ${missing.length} new question(s) into question_bank`);
+      return { questions, version: QUESTION_BANK_VERSION };
+    }
+    return existing;
+  }
+
+  const questions = hardcodedBank.map(q => ({ ...q, enabled: true }));
+  await saveContentConfig('question_bank', { questions, version: QUESTION_BANK_VERSION });
+  console.log(`[base44Store] Seeded question_bank with ${questions.length} questions`);
+  return { questions, version: QUESTION_BANK_VERSION };
+}
+
+/**
+ * Ensure the canonical onboarding messages exist in Base44.
+ * @param {object[]} hardcodedMessages - the ONBOARDING_MESSAGES array from onboarding.js
+ * @returns {Promise<{messages: object[]}>}
+ */
+const ONBOARDING_VERSION = 2;
+
+export async function ensureOnboardingSeeded(hardcodedMessages) {
+  const existing = await getContentConfig('onboarding_messages');
+
+  if (existing?.messages?.length > 0) {
+    if ((existing.version ?? 0) < ONBOARDING_VERSION) {
+      console.log(`[base44Store] onboarding_messages version ${existing.version ?? 0} < ${ONBOARDING_VERSION}, reseeding`);
+      const messages = hardcodedMessages.map(m => ({ ...m }));
+      await saveContentConfig('onboarding_messages', { messages, version: ONBOARDING_VERSION });
+      return { messages, version: ONBOARDING_VERSION };
+    }
+    return existing;
+  }
+
+  const messages = hardcodedMessages.map(m => ({ ...m }));
+  await saveContentConfig('onboarding_messages', { messages, version: ONBOARDING_VERSION });
+  console.log(`[base44Store] Seeded onboarding_messages with ${messages.length} messages`);
+  return { messages, version: ONBOARDING_VERSION };
+}
+
 // ─── Test helpers ─────────────────────────────────────────────────────────────
 
 /**

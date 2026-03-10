@@ -14,7 +14,7 @@
  * 7. Pause/skip/stop instructions
  */
 
-import { getContentConfig } from '../admin/base44Store.js';
+import { ensureOnboardingSeeded } from '../admin/base44Store.js';
 
 // ─── Onboarding message sequence (Hebrew) ────────────────────────────────────
 
@@ -65,24 +65,19 @@ export function shouldShowResumeReminder(session) {
 }
 
 /**
- * Returns the full ordered onboarding message sequence, with admin overrides applied.
+ * Returns the canonical onboarding message sequence from Base44.
+ * On first access, seeds Base44 from the hardcoded ONBOARDING_MESSAGES.
+ * After that, Base44 is the single source of truth.
  * @returns {Promise<typeof ONBOARDING_MESSAGES>}
  */
 export async function getOnboardingScript() {
-  const messages = ONBOARDING_MESSAGES.map(m => ({ ...m }));
   try {
-    const config = await getContentConfig('onboarding_overrides');
-    if (config?.overrides) {
-      for (const msg of messages) {
-        if (config.overrides[msg.id]?.text) {
-          msg.text = config.overrides[msg.id].text;
-        }
-      }
-    }
+    // Always go through ensureOnboardingSeeded so version checks run
+    const result = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
+    return result?.messages ?? ONBOARDING_MESSAGES.map(m => ({ ...m }));
   } catch {
-    // Fall back to defaults if Base44 is unavailable
+    return ONBOARDING_MESSAGES.map(m => ({ ...m }));
   }
-  return messages;
 }
 
 /**

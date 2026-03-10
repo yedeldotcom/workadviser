@@ -15,7 +15,7 @@
  */
 
 import { BARRIER_IDS } from '../engines/intake/index.js';
-import { getContentConfig } from '../admin/base44Store.js';
+import { ensureQuestionBankSeeded } from '../admin/base44Store.js';
 
 // ─── Intensity levels ──────────────────────────────────────────────────────────
 
@@ -231,52 +231,23 @@ export const QUESTION_BANK = [
   },
 ];
 
-// ─── Effective question bank (with admin overrides) ──────────────────────────
+// ─── Effective question bank (Base44 is source of truth) ─────────────────────
 
 /**
- * Returns the question bank with admin overrides, custom order, and disabled
- * questions filtered out.
+ * Returns the canonical question bank from Base44.
+ * On first access, seeds Base44 from the hardcoded QUESTION_BANK.
+ * After that, Base44 is the single source of truth.
  * @returns {Promise<typeof QUESTION_BANK>}
  */
 export async function getEffectiveQuestionBank() {
-  let questions = QUESTION_BANK.map(q => ({ ...q }));
   try {
-    const [overrides, orderConfig, disabledConfig] = await Promise.all([
-      getContentConfig('question_overrides'),
-      getContentConfig('question_order'),
-      getContentConfig('question_disabled'),
-    ]);
-
-    // Apply text overrides
-    if (overrides?.overrides) {
-      for (const q of questions) {
-        const ov = overrides.overrides[q.id];
-        if (ov) {
-          if (ov.prompt)   q.prompt   = ov.prompt;
-          if (ov.followUp) q.followUp = ov.followUp;
-        }
-      }
-    }
-
-    // Apply custom order
-    if (orderConfig?.order && Array.isArray(orderConfig.order)) {
-      const orderMap = new Map(orderConfig.order.map((id, i) => [id, i]));
-      questions.sort((a, b) => {
-        const ai = orderMap.has(a.id) ? orderMap.get(a.id) : Infinity;
-        const bi = orderMap.has(b.id) ? orderMap.get(b.id) : Infinity;
-        return ai - bi;
-      });
-    }
-
-    // Filter out disabled questions
-    if (disabledConfig?.disabled && Array.isArray(disabledConfig.disabled)) {
-      const disabledSet = new Set(disabledConfig.disabled);
-      questions = questions.filter(q => !disabledSet.has(q.id));
-    }
+    // Always go through ensureQuestionBankSeeded so version checks run
+    const result = await ensureQuestionBankSeeded(QUESTION_BANK);
+    return (result?.questions ?? QUESTION_BANK).filter(q => q.enabled !== false);
   } catch {
-    // Fall back to defaults if Base44 is unavailable
+    // Final fallback: use hardcoded bank directly
+    return QUESTION_BANK.map(q => ({ ...q }));
   }
-  return questions;
 }
 
 // ─── Distress detection ───────────────────────────────────────────────────────
