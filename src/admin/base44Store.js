@@ -500,6 +500,10 @@ export async function getContentConfig(configKey) {
 
 /**
  * Save (upsert) a content config record by key.
+ *
+ * IMPORTANT: Only use fields known to exist on the Base44 ContentConfig schema
+ * (configKey, messages, questions, version).  Unknown fields are silently dropped.
+ *
  * @param {string} configKey
  * @param {object} data - the payload to store alongside the key
  * @returns {Promise<object>}
@@ -510,11 +514,18 @@ export async function saveContentConfig(configKey, data) {
     _contentConfig.set(configKey, record);
     return record;
   }
+  const payload = { configKey, ...data };
+  console.log(`[base44Store] saveContentConfig key=${configKey} payload keys: [${Object.keys(payload).join(', ')}]`);
+
   const existing = await safeFilter(db.ContentConfig, { configKey }, null, 1, 0);
+  let result;
   if (existing[0]) {
-    return db.ContentConfig.update(existing[0].id, { configKey, ...data });
+    result = await db.ContentConfig.update(existing[0].id, payload);
+  } else {
+    result = await db.ContentConfig.create(payload);
   }
-  return db.ContentConfig.create({ configKey, ...data });
+  console.log(`[base44Store] saveContentConfig key=${configKey} response:`, JSON.stringify(result).slice(0, 300));
+  return result;
 }
 
 // ─── Content seeding (source-of-truth helpers) ──────────────────────────────

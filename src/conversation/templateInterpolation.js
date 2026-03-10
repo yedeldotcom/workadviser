@@ -34,28 +34,53 @@ export function interpolateTemplate(text, variables) {
 
 /**
  * Fetch template variables from Base44, falling back to hardcoded defaults.
+ *
+ * Storage: variables are encoded as a `messages` array of {key, value} objects
+ * inside ContentConfig.  The `messages` field is proven to persist in Base44;
+ * custom fields like `variables` and `data` may be silently dropped.
+ *
  * @returns {Promise<Record<string, string>>}
  */
 export async function getTemplateVariables() {
   try {
     const config = await getContentConfig('template_variables');
+    // Primary path: decode from messages array
+    if (Array.isArray(config?.messages) && config.messages.length > 0) {
+      const variables = {};
+      for (const item of config.messages) {
+        if (item?.key && item.value !== undefined) variables[item.key] = item.value;
+      }
+      if (Object.keys(variables).length > 0) {
+        return { ...DEFAULT_VARIABLES, ...variables };
+      }
+    }
+    // Legacy path: variables stored directly (may work if Base44 schema was updated)
     if (config?.variables && typeof config.variables === 'object') {
       return { ...DEFAULT_VARIABLES, ...config.variables };
     }
-    // No record found — seed defaults into Base44 so admin can edit them
-    await saveContentConfig('template_variables', { variables: { ...DEFAULT_VARIABLES } });
-  } catch {
-    // Fall back to defaults
+    // No usable record — seed defaults so admin can see them in Content Editor
+    await _saveVariablesAsMessages(DEFAULT_VARIABLES);
+  } catch (err) {
+    console.error('[templateInterpolation] getTemplateVariables failed:', err?.message ?? err);
   }
   return { ...DEFAULT_VARIABLES };
 }
 
 /**
- * Save template variables to Base44.
+ * Save template variables to Base44 (encoded as messages array).
  * @param {Record<string, string>} variables
  */
 export async function saveTemplateVariables(variables) {
-  await saveContentConfig('template_variables', { variables });
+  await _saveVariablesAsMessages(variables);
+}
+
+/**
+ * Internal: encode variables as messages array for Base44 persistence.
+ * Uses the `messages` field which is proven to persist on ContentConfig.
+ */
+async function _saveVariablesAsMessages(variables) {
+  const messages = Object.entries(variables).map(([key, value]) => ({ key, value }));
+  await saveContentConfig('template_variables', { messages, version: 1 });
 }
 
 /**
