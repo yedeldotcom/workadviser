@@ -106,7 +106,7 @@ import {
 } from './recommendationAnalytics.js';
 import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getContentConfig, saveContentConfig, ensureQuestionBankSeeded, ensureOnboardingSeeded } from './base44Store.js';
 import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
-import { getTemplateVariables, getTemplateVariablesList, saveTemplateVariables } from '../conversation/templateInterpolation.js';
+import { getTemplateVariables, saveTemplateVariables } from '../conversation/templateInterpolation.js';
 import { QUESTION_BANK } from '../conversation/interviewer.js';
 
 const router = Router();
@@ -556,8 +556,7 @@ router.get('/content/onboarding',
   requireCapability('view_all_cases'),
   async (req, res) => {
     const config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    const templateVariables = await getTemplateVariablesList();
-    res.json({ messages: config.messages, templateVariables });
+    res.json(config.messages);
   }
 );
 
@@ -588,8 +587,8 @@ router.put('/content/onboarding/:id',
 router.get('/content/template-variables',
   requireCapability('view_all_cases'),
   async (req, res) => {
-    const variables = await getTemplateVariablesList();
-    res.json(variables);
+    const variables = await getTemplateVariables();
+    res.json({ variables });
   }
 );
 
