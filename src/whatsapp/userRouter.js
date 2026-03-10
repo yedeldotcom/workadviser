@@ -39,8 +39,9 @@ import {
   mergeSignals,
   buildLLMHistory,
 } from '../conversation/sessionManager.js';
-import { getOnboardingScript, getOnboardingStep } from '../conversation/onboarding.js';
+import { getOnboardingScript, getOnboardingStep, isRestartResponse, isRestartConfirmResponse } from '../conversation/onboarding.js';
 import { runInterviewTurn } from '../conversation/llmClient.js';
+import { transcribeVoiceNote, isVoiceTranscriptionAvailable, getVoiceUnavailableMessage, downloadMediaFromMeta } from '../conversation/voiceHandler.js';
 
 // ─── User/session bootstrapping ────────────────────────────────────────────────
 
@@ -114,6 +115,56 @@ export async function findOrCreateSession(userId) {
  * @returns {Promise<RouteResult>}
  */
 export async function routeMessage(session, text, context = {}) {
+  // ── Voice message handling ──
+  if (context.mediaType?.startsWith('audio/') && context.mediaId) {
+    try {
+      if (isVoiceTranscriptionAvailable()) {
+        const audioBuffer = await downloadMediaFromMeta(context.mediaId);
+        if (audioBuffer) {
+          const result = await transcribeVoiceNote(audioBuffer, context.mediaType);
+          text = result.text;
+        } else {
+          const msg = getVoiceUnavailableMessage();
+          const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
+          await saveSession(s2);
+          saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
+          return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
+        }
+      } else {
+        const msg = getVoiceUnavailableMessage();
+        const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
+        await saveSession(s2);
+        saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
+        return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
+      }
+    } catch (err) {
+      console.error('[userRouter] voice transcription failed:', err?.message);
+      const msg = getVoiceUnavailableMessage();
+      const { session: s2, message: outMsg } = recordOutboundMessage(session, msg);
+      await saveSession(s2);
+      saveMessage(outMsg).catch(err2 => console.error('[userRouter] saveMessage failed:', err2?.message));
+      return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
+    }
+  }
+
+  // ── Restart choice follow-up ──
+  if (session.awaitingRestartChoice) {
+    if (isRestartConfirmResponse(text)) {
+      // User chose to restart — drop current session, caller will create new
+      const { session: dropped } = dropSession(session, 'restart');
+      await saveSession(dropped);
+      const newSession = createSession(session.userId ?? dropped.userId);
+      await saveSession(newSession);
+      // Run onboarding for the new session
+      return routeMessage(newSession, text, context);
+    }
+    // User chose to continue — clear the flag and proceed normally
+    const cleared = { ...session, awaitingRestartChoice: false };
+    text = text; // use the text as a regular message
+    // Fall through to normal routing below
+    session = cleared;
+  }
+
   // Record inbound
   const { session: s1, message: inMsg, action } = recordInboundMessage(session, text);
 
@@ -144,6 +195,16 @@ export async function routeMessage(session, text, context = {}) {
     await saveSession(s2);
     saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
     return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'distress' };
+  }
+
+  // ── Detect restart command during active interview ──
+  if (s1.state === 'active' && isRestartResponse(text)) {
+    const msg = 'אנחנו באמצע שיחה. אפשר להמשיך מאיפה שעצרנו, או להתחיל מחדש. מה עדיף?';
+    const flagged = { ...s1, awaitingRestartChoice: true };
+    const { session: s2, message: outMsg } = recordOutboundMessage(flagged, msg);
+    await saveSession(s2);
+    saveMessage(outMsg).catch(err => console.error('[userRouter] saveMessage failed:', err?.message));
+    return { outboundTexts: [outMsg.rawContent], session: s2, outcome: 'continue' };
   }
 
   // Special case: user just consented during onboarding → send first scripted question.

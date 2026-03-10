@@ -106,6 +106,7 @@ import {
 } from './recommendationAnalytics.js';
 import { saveFeedback, saveKnowledgeItem, getKnowledgeItem, getContentConfig, saveContentConfig, ensureQuestionBankSeeded, ensureOnboardingSeeded } from './base44Store.js';
 import { ONBOARDING_MESSAGES } from '../conversation/onboarding.js';
+import { getTemplateVariables, getTemplateVariablesList, saveTemplateVariables } from '../conversation/templateInterpolation.js';
 import { QUESTION_BANK } from '../conversation/interviewer.js';
 
 const router = Router();
@@ -555,7 +556,8 @@ router.get('/content/onboarding',
   requireCapability('view_all_cases'),
   async (req, res) => {
     const config = await ensureOnboardingSeeded(ONBOARDING_MESSAGES);
-    res.json(config.messages);
+    const templateVariables = await getTemplateVariablesList();
+    res.json({ messages: config.messages, templateVariables });
   }
 );
 
@@ -578,6 +580,28 @@ router.put('/content/onboarding/:id',
     msg.text = text;
     await saveContentConfig('onboarding_messages', { messages, version: config.version });
     res.json({ id, text });
+  }
+);
+
+// — Template variables (for {{variable}} placeholders in onboarding and other text) —
+
+router.get('/content/template-variables',
+  requireCapability('view_all_cases'),
+  async (req, res) => {
+    const variables = await getTemplateVariablesList();
+    res.json(variables);
+  }
+);
+
+router.put('/content/template-variables',
+  requireCapability('edit_recommendation'),
+  async (req, res) => {
+    const { variables } = req.body ?? {};
+    if (!variables || typeof variables !== 'object') {
+      return res.status(400).json({ error: 'variables object is required' });
+    }
+    await saveTemplateVariables(variables);
+    res.json({ ok: true, variables });
   }
 );
 

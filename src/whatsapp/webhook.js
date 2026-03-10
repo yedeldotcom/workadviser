@@ -80,8 +80,11 @@ router.post('/webhook', async (req, res) => {
     // 2. Find or create session
     const { session } = await findOrCreateSession(user.id);
 
-    // 3. Route message
-    const result = await routeMessage(session, text ?? '');
+    // 3. Route message (pass media info for voice/image handling)
+    const result = await routeMessage(session, text ?? '', {
+      mediaType: mediaType ?? null,
+      mediaId: parsed.mediaId ?? null,
+    });
 
     // 4. Persist updated session
     await saveSession(result.session);
@@ -115,7 +118,7 @@ router.post('/webhook', async (req, res) => {
  * Returns null for non-message events (delivery receipts, read confirmations, etc.).
  *
  * @param {import('express').Request} req
- * @returns {{ from: string, text: string | null, mediaType: string | null } | null}
+ * @returns {{ from: string, text: string | null, mediaType: string | null, mediaId: string | null } | null}
  */
 function parseInbound(req) {
   if (PROVIDER === 'twilio') return parseTwilio(req.body);
@@ -134,6 +137,7 @@ function parseTwilio(body) {
     from,
     text: body.Body ?? null,
     mediaType: body.MediaContentType0 ?? null,
+    mediaId: body.MediaUrl0 ?? null, // Twilio uses MediaUrl instead of mediaId
   };
 }
 
@@ -152,16 +156,16 @@ function parseMeta(body) {
   const e164From = from.startsWith('+') ? from : `+${from}`;
 
   if (message.type === 'text') {
-    return { from: e164From, text: message.text?.body ?? null, mediaType: null };
+    return { from: e164From, text: message.text?.body ?? null, mediaType: null, mediaId: null };
   }
   if (message.type === 'audio') {
-    return { from: e164From, text: null, mediaType: 'audio/ogg' };
+    return { from: e164From, text: null, mediaType: message.audio?.mime_type ?? 'audio/ogg', mediaId: message.audio?.id ?? null };
   }
   if (message.type === 'image') {
-    return { from: e164From, text: null, mediaType: 'image/jpeg' };
+    return { from: e164From, text: null, mediaType: 'image/jpeg', mediaId: message.image?.id ?? null };
   }
 
-  return { from: e164From, text: null, mediaType: message.type ?? null };
+  return { from: e164From, text: null, mediaType: message.type ?? null, mediaId: null };
 }
 
 /**
@@ -174,6 +178,7 @@ function parseStub(body) {
     from: body.from,
     text: body.text ?? body.body ?? null,
     mediaType: body.mediaType ?? null,
+    mediaId: body.mediaId ?? null,
   };
 }
 
