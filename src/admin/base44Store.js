@@ -78,6 +78,8 @@ async function safeGet(entity, id) {
 /**
  * Safe list: returns [] instead of throwing if Base44 API fails.
  * Logs the error so it appears in Railway deploy logs.
+ * @param {{ list: Function }} entity - Base44 entity handler (from db proxy)
+ * @returns {Promise<Array>}
  */
 async function safeList(entity) {
   try {
@@ -92,6 +94,9 @@ async function safeList(entity) {
  * Safe filter: always returns an array.
  * Normalises common Base44 envelope shapes: plain array, {data:[...]}, {items:[...]}, {results:[...]}.
  * Logs both the raw response and any errors so Railway logs show exactly what comes back.
+ * @param {{ filter: Function }} entity - Base44 entity handler (from db proxy)
+ * @param {...any} args - Arguments forwarded to entity.filter() (query, sort, limit, skip)
+ * @returns {Promise<Array>}
  */
 async function safeFilter(entity, ...args) {
   try {
@@ -304,8 +309,19 @@ export async function getApprovalsForReport(reportId) {
 // ─── Audit Log ────────────────────────────────────────────────────────────────
 
 /** Audit log entries are immutable — always create, never update. */
+/**
+ * Append an audit log entry. Silently drops the write when Base44 is unavailable
+ * (e.g. test environments) so callers don't need to guard every audit call.
+ * @param {object} entry
+ * @returns {Promise<object | null>}
+ */
 export async function appendAuditLog(entry) {
-  return db.AuditLog.create(entry);
+  try {
+    return await db.AuditLog.create(entry);
+  } catch (err) {
+    console.error(`[base44Store] appendAuditLog failed:`, err?.message ?? err);
+    return null;
+  }
 }
 
 export async function getAllAuditLogs() {

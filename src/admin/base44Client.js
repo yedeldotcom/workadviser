@@ -13,20 +13,20 @@ const APP_ID  = process.env.BASE44_APP_ID;
 const API_KEY = process.env.BASE44_API_KEY ?? process.env.BASE44_SERVICE_TOKEN;
 const BASE_URL = 'https://base44.app/api';
 
-if (!APP_ID) {
-  throw new Error('BASE44_APP_ID environment variable is required.');
-}
-if (!API_KEY) {
-  throw new Error('BASE44_API_KEY environment variable is required.');
-}
-
-const DEFAULT_HEADERS = {
-  'api_key': API_KEY,
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-};
+// Env var validation is deferred to request-time so that importing this module
+// in test environments (where BASE44_* vars are not set) does not throw.
+// Any real API call will still fail fast with a clear error message.
 
 async function request(method, path, { body, params } = {}) {
+  if (!APP_ID) throw new Error('BASE44_APP_ID environment variable is required.');
+  if (!API_KEY) throw new Error('BASE44_API_KEY environment variable is required.');
+
+  const DEFAULT_HEADERS = {
+    'api_key': API_KEY,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+
   let url = `${BASE_URL}/apps/${APP_ID}/entities/${path}`;
   if (params && Object.keys(params).length > 0) {
     // Use encodeURIComponent (not URLSearchParams) so that + in phone numbers

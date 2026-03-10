@@ -60,21 +60,23 @@ import { OPERATING_PROMPT } from '../../src/conversation/llmClient.js';
 // ─── Onboarding ───────────────────────────────────────────────────────────────
 
 describe('Onboarding', () => {
-  it('has 7 onboarding messages', () => {
-    assert.equal(ONBOARDING_MESSAGES.length, 7);
+  it('has 1 onboarding message (all FPP §2.5 elements combined)', () => {
+    // The onboarding was intentionally redesigned from 7 separate messages
+    // to a single combined message that covers all 7 FPP §2.5 elements.
+    assert.equal(ONBOARDING_MESSAGES.length, 1);
   });
 
-  it('getOnboardingScript returns all 7 messages in order', async () => {
+  it('getOnboardingScript returns the onboarding message sequence', async () => {
     const script = await getOnboardingScript();
-    assert.equal(script.length, 7);
-    script.forEach((msg, i) => assert.equal(msg.step, i + 1));
+    assert.equal(script.length, 1);
+    assert.equal(script[0].step, 1);
   });
 
   it('getOnboardingStep returns correct step', async () => {
-    const step3 = await getOnboardingStep(3);
-    assert.ok(step3);
-    assert.equal(step3.step, 3);
-    assert.equal(step3.type, 'output');
+    const step1 = await getOnboardingStep(1);
+    assert.ok(step1);
+    assert.equal(step1.step, 1);
+    assert.equal(step1.type, 'greeting');
   });
 
   it('getOnboardingStep returns null for invalid step', async () => {
@@ -145,7 +147,11 @@ describe('Question bank', () => {
     for (const q of QUESTION_BANK) {
       assert.ok(q.id, `Missing id`);
       assert.ok(q.prompt, `Missing prompt for ${q.id}`);
-      assert.ok(Array.isArray(q.barrierIds) && q.barrierIds.length > 0, `Missing barrierIds for ${q.id}`);
+      // Intro questions (cluster='intro') collect profile context, not barrier scores — allow empty barrierIds
+      assert.ok(Array.isArray(q.barrierIds), `barrierIds must be an array for ${q.id}`);
+      if (q.cluster !== 'intro') {
+        assert.ok(q.barrierIds.length > 0, `Missing barrierIds for non-intro question ${q.id}`);
+      }
       assert.ok([INTENSITY.LOW, INTENSITY.MEDIUM, INTENSITY.HIGH].includes(q.intensity), `Invalid intensity for ${q.id}`);
     }
   });
