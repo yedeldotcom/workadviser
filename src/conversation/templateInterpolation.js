@@ -42,6 +42,8 @@ export async function getTemplateVariables() {
     if (config?.variables && typeof config.variables === 'object') {
       return { ...DEFAULT_VARIABLES, ...config.variables };
     }
+    // No record found — seed defaults into Base44 so admin can edit them
+    await saveContentConfig('template_variables', { variables: { ...DEFAULT_VARIABLES } });
   } catch {
     // Fall back to defaults
   }
