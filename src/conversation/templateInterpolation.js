@@ -35,17 +35,28 @@ export function interpolateTemplate(text, variables) {
 /**
  * Fetch template variables from Base44, falling back to hardcoded defaults.
  *
- * Storage: variables are encoded as a `messages` array of {key, value} objects
- * inside ContentConfig.  The `messages` field is proven to persist in Base44;
- * custom fields like `variables` and `data` may be silently dropped.
+ * Storage: variables are encoded as a single message in the `messages` array
+ * with the same {id, step, type, text} structure used by onboarding messages
+ * (which is proven to persist in Base44).  The variables object is JSON-serialized
+ * inside the `text` field.
  *
  * @returns {Promise<Record<string, string>>}
  */
 export async function getTemplateVariables() {
   try {
     const config = await getContentConfig('template_variables');
-    // Primary path: decode from messages array
+    // Primary path: decode from messages[0].text (JSON-encoded variables)
     if (Array.isArray(config?.messages) && config.messages.length > 0) {
+      const msg = config.messages[0];
+      if (msg?.text) {
+        try {
+          const parsed = JSON.parse(msg.text);
+          if (parsed && typeof parsed === 'object') {
+            return { ...DEFAULT_VARIABLES, ...parsed };
+          }
+        } catch { /* text isn't JSON — try key/value fallback */ }
+      }
+      // Fallback: earlier {key, value} encoding attempt
       const variables = {};
       for (const item of config.messages) {
         if (item?.key && item.value !== undefined) variables[item.key] = item.value;
@@ -54,12 +65,12 @@ export async function getTemplateVariables() {
         return { ...DEFAULT_VARIABLES, ...variables };
       }
     }
-    // Legacy path: variables stored directly (may work if Base44 schema was updated)
+    // Legacy path: variables stored directly (if Base44 schema was updated)
     if (config?.variables && typeof config.variables === 'object') {
       return { ...DEFAULT_VARIABLES, ...config.variables };
     }
     // No usable record — seed defaults so admin can see them in Content Editor
-    await _saveVariablesAsMessages(DEFAULT_VARIABLES);
+    await _saveVariablesAsMessage(DEFAULT_VARIABLES);
   } catch (err) {
     console.error('[templateInterpolation] getTemplateVariables failed:', err?.message ?? err);
   }
@@ -67,19 +78,25 @@ export async function getTemplateVariables() {
 }
 
 /**
- * Save template variables to Base44 (encoded as messages array).
+ * Save template variables to Base44 (encoded inside a message's text field).
  * @param {Record<string, string>} variables
  */
 export async function saveTemplateVariables(variables) {
-  await _saveVariablesAsMessages(variables);
+  await _saveVariablesAsMessage(variables);
 }
 
 /**
- * Internal: encode variables as messages array for Base44 persistence.
- * Uses the `messages` field which is proven to persist on ContentConfig.
+ * Internal: encode variables using the same message structure ({id, step, type, text})
+ * that onboarding messages use — proven to persist in Base44 ContentConfig.
+ * The variables object is JSON-serialized in the text field.
  */
-async function _saveVariablesAsMessages(variables) {
-  const messages = Object.entries(variables).map(([key, value]) => ({ key, value }));
+async function _saveVariablesAsMessage(variables) {
+  const messages = [{
+    id: 'template-vars',
+    step: 0,
+    type: 'variables',
+    text: JSON.stringify(variables),
+  }];
   await saveContentConfig('template_variables', { messages, version: 1 });
 }
 
