@@ -454,10 +454,17 @@ export async function ensureQuestionBankSeeded(hardcodedBank) {
   const existing = await getContentConfig('question_bank');
 
   if (existing?.questions?.length > 0) {
-    // Auto-reseed if the stored version is older than the code version
     if ((existing.version ?? 0) < QUESTION_BANK_VERSION) {
-      console.log(`[base44Store] question_bank version ${existing.version ?? 0} < ${QUESTION_BANK_VERSION}, reseeding`);
-      const questions = hardcodedBank.map(q => ({ ...q, enabled: true }));
+      // Stamp version and merge missing questions WITHOUT overwriting admin edits
+      console.log(`[base44Store] question_bank version ${existing.version ?? 0} < ${QUESTION_BANK_VERSION}, stamping version`);
+      const storedIds = new Set(existing.questions.map(q => q.id));
+      const missing = hardcodedBank.filter(q => !storedIds.has(q.id));
+      const questions = missing.length > 0
+        ? [...existing.questions, ...missing.map(q => ({ ...q, enabled: true }))]
+        : existing.questions;
+      if (missing.length > 0) {
+        console.log(`[base44Store] Merged ${missing.length} new question(s) into question_bank`);
+      }
       await saveContentConfig('question_bank', { questions, version: QUESTION_BANK_VERSION });
       return { questions, version: QUESTION_BANK_VERSION };
     }
@@ -474,6 +481,7 @@ export async function ensureQuestionBankSeeded(hardcodedBank) {
     return existing;
   }
 
+  // Only seed from hardcoded when no record exists at all
   const questions = hardcodedBank.map(q => ({ ...q, enabled: true }));
   await saveContentConfig('question_bank', { questions, version: QUESTION_BANK_VERSION });
   console.log(`[base44Store] Seeded question_bank with ${questions.length} questions`);
@@ -492,14 +500,15 @@ export async function ensureOnboardingSeeded(hardcodedMessages) {
 
   if (existing?.messages?.length > 0) {
     if ((existing.version ?? 0) < ONBOARDING_VERSION) {
-      console.log(`[base44Store] onboarding_messages version ${existing.version ?? 0} < ${ONBOARDING_VERSION}, reseeding`);
-      const messages = hardcodedMessages.map(m => ({ ...m }));
-      await saveContentConfig('onboarding_messages', { messages, version: ONBOARDING_VERSION });
-      return { messages, version: ONBOARDING_VERSION };
+      // Stamp version on existing record WITHOUT overwriting admin edits
+      console.log(`[base44Store] onboarding_messages version ${existing.version ?? 0} < ${ONBOARDING_VERSION}, stamping version`);
+      await saveContentConfig('onboarding_messages', { messages: existing.messages, version: ONBOARDING_VERSION });
+      return { messages: existing.messages, version: ONBOARDING_VERSION };
     }
     return existing;
   }
 
+  // Only seed from hardcoded when no record exists at all
   const messages = hardcodedMessages.map(m => ({ ...m }));
   await saveContentConfig('onboarding_messages', { messages, version: ONBOARDING_VERSION });
   console.log(`[base44Store] Seeded onboarding_messages with ${messages.length} messages`);
