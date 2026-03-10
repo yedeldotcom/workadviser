@@ -678,7 +678,8 @@ router.post('/content/questions/seed',
   requireCapability('edit_recommendation'),
   async (req, res) => {
     const questions = QUESTION_BANK.map(q => ({ ...q, enabled: true }));
-    await saveContentConfig('question_bank', { questions });
+    // Force reseed: write with version=999 so auto-seed won't overwrite admin's reset
+    await saveContentConfig('question_bank', { questions, version: 999 });
     res.json({ seeded: questions.length, questions });
   }
 );
