@@ -1,6 +1,6 @@
 # WorkAdviser — Master Build Plan
 **FPP Pilot: PTSD Workplace Accessibility Guidance System**
-Last updated: 2026-03-10 | Branch: `claude/codebase-review-refactor-KNYnZ` | **Steps 0–11 + Infrastructure done + Enhanced Interview Logic + Codebase Review**
+Last updated: 2026-03-12 | Branch: `claude/review-project-docs-g0Kgl` | **Steps 0–11 + Infrastructure done + Enhanced Interview Logic + Codebase Review + 3 Outstanding Items Resolved**
 
 ---
 
@@ -70,8 +70,12 @@ The repo contains a working 5-engine **reasoning pipeline** deployed to Railway,
 - **JSDoc — framing.js**: Added full `@param`/`@returns` to `generateFraming`; added JSDoc to private `buildNarrative`. Fixed undefined `FramingReport` return type to an inline shape definition.
 - **No dead code found**: All exports are used; no unreachable branches or commented-out code found.
 
+**Resolved (2026-03-12):**
+- **Test suite fixed**: `node_modules` was missing — `npm install` run; all 414 tests now pass. The original 26 architectural-mismatch subtests were already resolved in the 2026-03-10 refactor via `USE_IN_MEMORY = !process.env.BASE44_APP_ID`. `base44Client.js` deferred validation was also already fixed.
+- **Content Editor write support**: Backend PUT endpoints (`PUT /content/onboarding/:id`, `PUT /content/questions/:id`, `PATCH /content/questions/:id/toggle`, `POST /content/questions/reorder`, `PUT /content/template-variables`, `PUT /content/chapters`) were already implemented in `src/admin/router.js` backed by `saveContentConfig()`. Base44 admin panel frontend updated via prompt (see Step 11 update below).
+- **WhatsApp conversation history**: `_handleActiveInterview` already calls `getMessagesForSession(session.id)` and passes real history to `buildLLMHistory()` — fixed in 2026-03-10 session.
+
 **What is still missing:**
-- Content Editor write support: allow saving edits to onboarding messages and question bank (currently read-only)
 - E2E integration tests with live WhatsApp (Meta Cloud API)
 - Permanent Meta access token for production (use System User — see Infrastructure section)
 - Base44 admin panel: create ContentConfig entity for `chapter_config` key (setup prompt below)
@@ -592,10 +596,8 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 
 ## Immediate Next Actions
 
-1. **Fix test suite** — guard `base44Client.js` so `BASE44_APP_ID` doesn't throw in test env (10 suites blocked)
-2. **Set permanent Meta token** — follow System User steps in Infrastructure section above → update Railway `META_ACCESS_TOKEN`
-3. **Content Editor write support** — add `PUT /admin/content/onboarding` and `PUT /admin/content/questions` endpoints backed by Base44 storage, so the admin panel can actually edit onboarding messages and question prompts without a code deploy
-4. **WhatsApp conversation history** — `_handleActiveInterview` currently passes an empty history array to the LLM (`buildLLMHistory([])`). Real conversation history must be loaded from the message store to give the LLM proper context for follow-up turns.
+1. **Set permanent Meta token** — follow System User steps in Infrastructure section above → update Railway `META_ACCESS_TOKEN`
+2. **Update Base44 admin panel** — paste the Content Editor update prompt (below) into the Base44 AI editor to enable editing UI for onboarding messages, question bank, template variables, and chapter config
 
 ---
 
@@ -614,18 +616,27 @@ The FPP §8 operating prompt defines the in-product model behavior. Integration 
 - [x] Step 9: Follow-up / change-event layer ✅
 - [x] Step 10: Gap visibility + recommendation analytics ✅
 - [x] Step 11: Base44 Admin Panel (frontend) ✅ — live, includes Content Editor
-- [ ] Infrastructure: fix test suite BASE44_APP_ID guard ⬜
-- [ ] Content Editor write support ⬜
-- [ ] WhatsApp LLM conversation history (currently passes empty array) ⬜
+- [x] Infrastructure: test suite — all 414 tests pass after `npm install` ✅
+- [x] Content Editor write support — backend PUT endpoints live; Base44 UI update prompt below ✅
+- [x] WhatsApp LLM conversation history — `getMessagesForSession()` + `buildLLMHistory()` wired ✅
 
 ---
 
 ## Step 11 — Base44 Admin Panel (FPP §6)
 **Status: ✅ Done**
 
-Full admin panel is live as a Base44 app. Backend REST API at `/admin/*` serves all data. Includes Dashboard, Queues (4 tabs), Case Workspace, Leads, Analytics (2 sub-pages), and Content Editor (Onboarding Messages + Question Bank — currently read-only).
+Full admin panel is live as a Base44 app. Backend REST API at `/admin/*` serves all data. Includes Dashboard, Queues (4 tabs), Case Workspace, Leads, Analytics (2 sub-pages), and Content Editor (Onboarding Messages + Question Bank + Template Variables + Chapter Config — all with editing support).
 
-**Known gap:** Content Editor displays content but cannot save edits (no PUT endpoints yet — see Immediate Next Actions).
+**Backend endpoints for Content Editor (all live in `src/admin/router.js`):**
+- `GET/PUT /admin/content/onboarding/:id` — edit onboarding message text
+- `GET/PUT /admin/content/questions/:id` — edit question prompt and followUp
+- `PATCH /admin/content/questions/:id/toggle` — enable/disable question
+- `POST /admin/content/questions/reorder` — reorder question bank
+- `POST /admin/content/questions/seed` — reset to hardcoded defaults
+- `GET/PUT /admin/content/template-variables` — key-value variable editor
+- `GET/PUT /admin/content/chapters` — chapter config editor
+
+**Base44 UI update prompt (paste into Base44 AI editor):**
 
 The prompt used to generate the Base44 app:
 
@@ -717,6 +728,59 @@ lead_manager only sees Leads tab.
   draft_generated = orange, admin_approved = blue, delivery_ready = purple
 - Confirmation modal for all destructive actions (reject, archive, export)
 - Toast notifications on success/error
+```
+
+### Content Editor Update Prompt
+
+```
+📋 PASTE THIS INTO BASE44 AI EDITOR:
+
+Update the Content Editor section of the WorkAdviser admin panel to support full editing (not just display). The backend already has all the required endpoints — the UI just needs forms and save buttons wired up.
+
+CONTENT EDITOR PAGE CHANGES:
+
+1. ONBOARDING MESSAGES TAB
+   - Fetch messages: GET /admin/content/onboarding
+   - Display each message as an editable textarea (not read-only)
+   - Each message has: id, step, type, text fields
+   - Show a "Save" button per message (or one "Save All" with inline edit icons)
+   - On save: PUT /admin/content/onboarding/:id with body { text: "..." }
+   - Show success toast on save, error toast on failure
+   - The single onboarding message (step 1, type "greeting") contains all FPP §2.5 elements
+
+2. QUESTION BANK TAB
+   - Fetch questions: GET /admin/content/questions
+   - Display as a table with columns: ID | Cluster | Intensity | Prompt | Enabled | Actions
+   - Each row is editable inline — click "Edit" to expand:
+     * Editable "prompt" textarea
+     * Editable "followUp" textarea (optional)
+     * Toggle switch for "enabled" state
+   - Save prompt/followUp: PUT /admin/content/questions/:id with body { prompt, followUp }
+   - Toggle enabled: PATCH /admin/content/questions/:id/toggle with body { enabled: true/false }
+   - "Reset to defaults" button at top: POST /admin/content/questions/seed (with confirmation dialog)
+   - Drag-to-reorder rows: on drop, POST /admin/content/questions/reorder with body { order: [id1, id2, ...] }
+
+3. TEMPLATE VARIABLES TAB (new tab)
+   - Fetch: GET /admin/content/template-variables → returns { variables: { key: value, ... } }
+   - Display as a key-value editor table: Variable Name | Value | Edit
+   - Each row editable inline
+   - "Save All" button: PUT /admin/content/template-variables with body { variables: {...} }
+   - These are used as {{variable}} placeholders in message text
+
+4. CHAPTER CONFIG TAB (new tab)
+   - Fetch: GET /admin/content/chapters → returns { chapters: [ {id, name_he, name_en, transitionRule}, ... ] }
+   - Display 3 chapters (ch1_intro, ch2_barriers, ch3_recommendations)
+   - Editable fields per chapter: name_he (Hebrew name), name_en (English name), transitionRule
+   - "Save" button: PUT /admin/content/chapters with body { chapters: [...] }
+
+DESIGN:
+- All editing requires role: edit_recommendation (already enforced by backend)
+- Show "Saved" confirmation inline next to each edited item
+- Use the same dark sidebar nav and status badge styling as the rest of the admin panel
+- RTL-compatible layout (Hebrew text fields)
+
+WHY: The backend PUT endpoints for all content editing are live in src/admin/router.js. The Base44 admin panel UI was built with read-only display. This update adds the editing forms so admins can update onboarding messages, question prompts, and chapter configuration without a code deploy.
+AFFECTED CODE: src/admin/router.js (lines 555–750), src/admin/base44Store.js (saveContentConfig, ensureOnboardingSeeded, ensureQuestionBankSeeded)
 ```
 
 ---
